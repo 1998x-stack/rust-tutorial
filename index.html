@@ -296,6 +296,41 @@
             container.innerHTML = '<div class="state-msg error">' + msg + '</div>';
         }
 
+        // file:// pages cannot reliably fetch local JSON in modern browsers.
+        // Keep the HTTP data-driven experience unchanged.
+        if (window.location.protocol === 'file:') {
+            document.title = 'Rust编程语言 · 课程目录';
+            emojiEl.textContent = '🦀';
+            titleEl.textContent = 'Rust编程语言 · 从入门到精通';
+            subEl.textContent = '离线章节导航';
+            footerEl.textContent = '28章 · 本地阅读模式';
+            for (var chapter = 1; chapter <= 28; chapter++) {
+                var number = String(chapter).padStart(2, '0');
+                var card = document.createElement('div');
+                card.className = 'card';
+                var heading = document.createElement('div');
+                heading.className = 'card-header';
+                var label = document.createElement('span');
+                label.className = 'chapter-num';
+                label.textContent = number;
+                heading.appendChild(label);
+                var title = document.createElement('span');
+                title.className = 'card-title';
+                title.textContent = '第 ' + chapter + ' 章';
+                heading.appendChild(title);
+                card.appendChild(heading);
+                var footer = document.createElement('div');
+                footer.className = 'card-footer';
+                var link = document.createElement('a');
+                link.href = number + '.html';
+                link.textContent = '开始学习';
+                footer.appendChild(link);
+                card.appendChild(footer);
+                container.appendChild(card);
+            }
+            return;
+        }
+
         fetch('courses.json')
             .then(function(res) {
                 if (!res.ok) throw new Error('HTTP ' + res.status);
