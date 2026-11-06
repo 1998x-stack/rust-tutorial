@@ -12,5 +12,5 @@
 - Security & regression review: no dependencies, credentials, workflows, permissions, or deployment changes; chapter links generated from fixed two-digit numeric identifiers.
 - Risk & rollback: offline titles are generic, and chapter count is fixed at 28; close Draft PR to keep main unchanged.
 - Follow-up: execute Node tests and browser E2E on file:// and HTTP before merging; consider generating offline metadata from courses.json at build time if chapters change.
-- Commit: pending
-- PR: pending
+- Commit: 8d5d9d50c40ca3a455a7eb394d15d11456a04cb9 (initial history commit; subsequent metadata update changes HEAD)
+- PR: https://github.com/1998x-stack/rust-tutorial/pull/1
