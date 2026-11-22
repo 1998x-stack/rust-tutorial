@@ -268,21 +268,81 @@
             border-radius: 20px;
             margin: 1rem 0;
         }
+
+        .toc { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 0 0 1rem; }
+        .toc a { text-decoration: none; color: #1f4d33; background: #eef7ea; border: 1px solid #cfe6c6; padding: 0.25rem 0.9rem; border-radius: 30px; font-size: 0.9rem; font-weight: 600; }
+        .toc a:focus-visible { outline: 3px solid #ea580c; outline-offset: 2px; }
+        .content-section { margin-top: 1.4rem; }
+        .content-section h2 { color: #7c2d12; border-left: 6px solid #f97316; padding-left: 14px; font-size: 1.45rem; margin: 1.2rem 0 0.8rem; }
+        figure { margin: 1.2rem 0; background: #fbfdf9; border: 1px solid #dfeed6; border-radius: 20px; padding: 1rem; }
+        figure svg { display: block; width: 100%; height: auto; }
+        figcaption { margin-top: 0.6rem; font-size: 0.88rem; color: #4b6b53; line-height: 1.6; }
     </style>
 </head>
 <body>
-<div class="container">
+<main class="container">
     <div class="header">
         <h1><span class="emoji"></span><span class="title-text"></span></h1>
         <div class="sub"></div>
     </div>
 
-    <div id="cardContainer" class="course-grid"></div>
+    <nav class="toc" aria-label="页面导航">
+        <a href="#path">学习路径</a>
+        <a href="#chapters">章节目录</a>
+    </nav>
+
+    <section id="path" class="content-section">
+        <h2>五阶段学习路径</h2>
+        <p>课程共 28 章，按知识依赖关系分为五个递进阶段：先建立语法与所有权直觉，再学习抽象工具，最后进入并发与工程实战。每一章既可独立阅读，也建议按顺序推进。</p>
+        <figure>
+            <svg viewBox="0 0 900 190" role="img" aria-labelledby="pathTitle pathDesc">
+                <title id="pathTitle">Rust 五阶段学习路径</title>
+                <desc id="pathDesc">从基础语法到实战生态的五个阶段，覆盖第 1 至 28 章。</desc>
+                <defs>
+                    <marker id="pathArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                        <path d="M0 0 L10 5 L0 10 z" fill="#ea580c"/>
+                    </marker>
+                </defs>
+                <g font-family="system-ui, 'PingFang SC', sans-serif">
+                    <rect x="12" y="35" width="152" height="92" rx="14" fill="#fff7ed" stroke="#f97316" stroke-width="2"/>
+                    <text x="88" y="72" text-anchor="middle" font-size="16" font-weight="700" fill="#7c2d12">基础语法</text>
+                    <text x="88" y="98" text-anchor="middle" font-size="13" fill="#9a3412">第 01–05 章</text>
+
+                    <rect x="192" y="35" width="152" height="92" rx="14" fill="#f0f9ff" stroke="#0ea5e9" stroke-width="2"/>
+                    <text x="268" y="72" text-anchor="middle" font-size="16" font-weight="700" fill="#075985">抽象与所有权</text>
+                    <text x="268" y="98" text-anchor="middle" font-size="13" fill="#0c4a6e">第 06–13 章</text>
+
+                    <rect x="372" y="35" width="152" height="92" rx="14" fill="#fef9c3" stroke="#eab308" stroke-width="2"/>
+                    <text x="448" y="72" text-anchor="middle" font-size="16" font-weight="700" fill="#713f12">函数式与工程</text>
+                    <text x="448" y="98" text-anchor="middle" font-size="13" fill="#854d0e">第 14–18 章</text>
+
+                    <rect x="552" y="35" width="152" height="92" rx="14" fill="#fdf2f8" stroke="#db2777" stroke-width="2"/>
+                    <text x="628" y="72" text-anchor="middle" font-size="16" font-weight="700" fill="#831843">内存与并发</text>
+                    <text x="628" y="98" text-anchor="middle" font-size="13" fill="#9d174d">第 19–22 章</text>
+
+                    <rect x="732" y="35" width="156" height="92" rx="14" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+                    <text x="810" y="72" text-anchor="middle" font-size="16" font-weight="700" fill="#14532d">实战与生态</text>
+                    <text x="810" y="98" text-anchor="middle" font-size="13" fill="#166534">第 23–28 章</text>
+
+                    <path d="M167 81 H190" stroke="#ea580c" stroke-width="2" marker-end="url(#pathArrow)"/>
+                    <path d="M347 81 H370" stroke="#ea580c" stroke-width="2" marker-end="url(#pathArrow)"/>
+                    <path d="M527 81 H550" stroke="#ea580c" stroke-width="2" marker-end="url(#pathArrow)"/>
+                    <path d="M707 81 H730" stroke="#ea580c" stroke-width="2" marker-end="url(#pathArrow)"/>
+                </g>
+            </svg>
+            <figcaption>图 1：五阶段学习路径（教学示意）。箭头表示推荐的先后依赖关系，每阶段列出对应章号区间。</figcaption>
+        </figure>
+    </section>
+
+    <section id="chapters" class="content-section">
+        <h2>章节目录</h2>
+        <div id="cardContainer" class="course-grid"></div>
+    </section>
 
     <div style="text-align:center;">
         <div class="footer"></div>
     </div>
-</div>
+</main>
 
 <script>
     (function() {
