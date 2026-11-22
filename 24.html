@@ -5,11 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>第24章 性能分析</title>
     <link rel="stylesheet" href="theme.css">
+    <style>
+        /* Fallback so code blocks and grids stay inside the viewport if the stylesheet is unavailable. */
+        pre { overflow-x: auto; max-width: 100%; }
+        code { overflow-wrap: anywhere; }
+        .main-content { min-width: 0; }
+        @media (max-width: 768px) { .container { display: block; } }
+    </style>
 </head>
 <body>
 <div class="double-border">
 <div class="container">
-    <div class="sidebar">
+    <nav class="sidebar" aria-label="课程章节目录">
         <h3>🦀 课程目录</h3>
         <ul class="chapter-list">
             <li><a href="01.html">第1章 Rust简介与安装</a></li>
@@ -41,8 +48,10 @@
             <li><a href="27.html">第27章 实战：Web API</a></li>
             <li><a href="28.html">第28章 2027 Edition展望</a></li>
         </ul>
-    </div>
-    <div class="main-content">
+    </nav>
+    <main class="main-content">
+
+        <h1>第24章 性能分析</h1>
 
         <h2>开篇：一次"加个--release"拯救了公司服务器</h2>
 
@@ -186,6 +195,41 @@ sudo sysctl -p /etc/sysctl.d/perf.conf</code></pre>
             <li><strong>pprof-rs</strong> — Rust原生CPU profiler，可以嵌入到程序中通过HTTP端点获取profile数据</li>
             <li><strong>hotspot</strong> — perf数据可视化GUI工具，比火焰图更便于交互式浏览</li>
         </ul>
+
+        <figure>
+            <svg viewBox="0 0 860 170" role="img" aria-labelledby="perfTitle perfDesc">
+                <title id="perfTitle">性能分析的工作流</title>
+                <desc id="perfDesc">从运行负载、采样、生成火焰图到定位热点函数并复测的迭代流程。</desc>
+                <g font-family="system-ui, 'PingFang SC', sans-serif">
+                    <rect x="15" y="40" width="150" height="80" rx="12" fill="#e0f2fe" stroke="#0ea5e9" stroke-width="2"/>
+                    <text x="90" y="72" text-anchor="middle" font-size="13" font-weight="700" fill="#075985">1. 运行负载</text>
+                    <text x="90" y="96" text-anchor="middle" font-size="11" fill="#0c4a6e">基准 / 真实流量</text>
+
+                    <rect x="185" y="40" width="150" height="80" rx="12" fill="#e0f2fe" stroke="#0ea5e9" stroke-width="2"/>
+                    <text x="260" y="72" text-anchor="middle" font-size="13" font-weight="700" fill="#075985">2. 采样</text>
+                    <text x="260" y="96" text-anchor="middle" font-size="11" fill="#0c4a6e">perf record</text>
+
+                    <rect x="355" y="40" width="150" height="80" rx="12" fill="#fef9c3" stroke="#eab308" stroke-width="2"/>
+                    <text x="430" y="72" text-anchor="middle" font-size="13" font-weight="700" fill="#713f12">3. 火焰图</text>
+                    <text x="430" y="96" text-anchor="middle" font-size="11" fill="#854d0e">折叠调用栈</text>
+
+                    <rect x="525" y="40" width="150" height="80" rx="12" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+                    <text x="600" y="72" text-anchor="middle" font-size="13" font-weight="700" fill="#14532d">4. 定位热点</text>
+                    <text x="600" y="96" text-anchor="middle" font-size="11" fill="#166534">最宽的栈帧</text>
+
+                    <rect x="695" y="40" width="150" height="80" rx="12" fill="#fdf2f8" stroke="#db2777" stroke-width="2"/>
+                    <text x="770" y="72" text-anchor="middle" font-size="13" font-weight="700" fill="#831843">5. 优化复测</text>
+                    <text x="770" y="96" text-anchor="middle" font-size="11" fill="#9d174d">度量驱动迭代</text>
+
+                    <path d="M167 80 H183" stroke="#94a3b8" stroke-width="2"/>
+                    <path d="M337 80 H353" stroke="#94a3b8" stroke-width="2"/>
+                    <path d="M507 80 H523" stroke="#94a3b8" stroke-width="2"/>
+                    <path d="M677 80 H693" stroke="#94a3b8" stroke-width="2"/>
+                    <text x="430" y="150" text-anchor="middle" font-size="12" fill="#475569">先测量，再优化：不要凭直觉猜瓶颈，用数据确认热点后再动手。</text>
+                </g>
+            </svg>
+            <figcaption>图 1：性能分析工作流（教学示意）。没有度量的优化是盲猜；先用采样拿到证据，优化后再用同一负载复测，才能确认改动真的有效。</figcaption>
+        </figure>
 
         <h2>内存分析</h2>
 
@@ -388,7 +432,7 @@ criterion = { version = "0.5", features = ["html_reports"] }</code></pre>
             <a href="index.html">📖 返回目录</a>
             <a href="25.html">下一章 →</a>
         </div>
-    </div>
+    </main>
 </div>
 </div>
 </body>

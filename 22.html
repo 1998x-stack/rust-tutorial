@@ -5,11 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>第22章 Unsafe Rust</title>
     <link rel="stylesheet" href="theme.css">
+    <style>
+        /* Fallback so code blocks and grids stay inside the viewport if the stylesheet is unavailable. */
+        pre { overflow-x: auto; max-width: 100%; }
+        code { overflow-wrap: anywhere; }
+        .main-content { min-width: 0; }
+        @media (max-width: 768px) { .container { display: block; } }
+    </style>
 </head>
 <body>
 <div class="double-border">
 <div class="container">
-    <div class="sidebar">
+    <nav class="sidebar" aria-label="课程章节目录">
         <h3>🦀 课程目录</h3>
         <ul class="chapter-list">
             <li><a href="01.html">第1章 Rust简介与安装</a></li>
@@ -41,8 +48,10 @@
             <li><a href="27.html">第27章 实战：Web API</a></li>
             <li><a href="28.html">第28章 2027 Edition展望</a></li>
         </ul>
-    </div>
-    <div class="main-content">
+    </nav>
+    <main class="main-content">
+
+        <h1>第22章 Unsafe Rust</h1>
 
         <h2>开篇：安全世界的"核按钮"</h2>
 
@@ -96,6 +105,35 @@
         </table>
 
         <p>请注意：<code>unsafe</code> <strong>不关闭借用检查</strong>。在unsafe块中，所有权规则、生命周期检查、借用规则仍然生效。它只开放了上述四种操作。这是一个常见的误解——认为unsafe是完全的"法外之地"——其实不是。</p>
+
+        <figure>
+            <svg viewBox="0 0 860 240" role="img" aria-labelledby="unsafeTitle unsafeDesc">
+                <title id="unsafeTitle">unsafe 开启的四类特权操作</title>
+                <desc id="unsafeDesc">unsafe 允许解引用裸指针、调用 unsafe 函数或 FFI、访问可变静态变量、实现 unsafe trait。</desc>
+                <g font-family="system-ui, 'PingFang SC', sans-serif">
+                    <rect x="20" y="24" width="390" height="90" rx="12" fill="#fee2e2" stroke="#ef4444" stroke-width="2"/>
+                    <text x="40" y="52" font-size="14" font-weight="700" fill="#991b1b">1. 解引用裸指针</text>
+                    <text x="40" y="78" font-size="12" fill="#7f1d1d">*const T / *mut T</text>
+                    <text x="40" y="100" font-size="12" fill="#7f1d1d">编译器不再验证它指向的内存是否有效</text>
+
+                    <rect x="450" y="24" width="390" height="90" rx="12" fill="#fef9c3" stroke="#eab308" stroke-width="2"/>
+                    <text x="470" y="52" font-size="14" font-weight="700" fill="#713f12">2. 调用 unsafe fn / extern</text>
+                    <text x="470" y="78" font-size="12" fill="#854d0e">FFI 边界、标准库的 unsafe 方法</text>
+                    <text x="470" y="100" font-size="12" fill="#854d0e">把安全责任交给外部契约</text>
+
+                    <rect x="20" y="128" width="390" height="90" rx="12" fill="#e0f2fe" stroke="#0ea5e9" stroke-width="2"/>
+                    <text x="40" y="156" font-size="14" font-weight="700" fill="#075985">3. 访问可变静态变量</text>
+                    <text x="40" y="182" font-size="12" fill="#0c4a6e">static mut GLOBAL: T</text>
+                    <text x="40" y="204" font-size="12" fill="#0c4a6e">需手动保证无数据竞争</text>
+
+                    <rect x="450" y="128" width="390" height="90" rx="12" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+                    <text x="470" y="156" font-size="14" font-weight="700" fill="#14532d">4. 实现 unsafe trait</text>
+                    <text x="470" y="182" font-size="12" fill="#166534">如手写 Send / Sync</text>
+                    <text x="470" y="204" font-size="12" fill="#166534">向编译器做不可验证的承诺</text>
+                </g>
+            </svg>
+            <figcaption>图 1：<code>unsafe</code> 的四类特权（教学示意）。<code>unsafe</code> 只是把编译器的一部分检查交还给程序员，并不关闭借用检查；能把 unsafe 块写得越小、并用安全抽象封装，才是好实践。</figcaption>
+        </figure>
 
         <h2>裸指针 — *const T / *mut T</h2>
 
@@ -378,7 +416,7 @@ unsafe impl&lt;T: Sync&gt; Sync for MySendPtr&lt;T&gt; {}</code></pre>
             <a href="index.html">📖 返回目录</a>
             <a href="23.html">下一章 →</a>
         </div>
-    </div>
+    </main>
 </div>
 </div>
 </body>

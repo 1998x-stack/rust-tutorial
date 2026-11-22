@@ -5,11 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>第21章 异步编程</title>
     <link rel="stylesheet" href="theme.css">
+    <style>
+        /* Fallback so code blocks and grids stay inside the viewport if the stylesheet is unavailable. */
+        pre { overflow-x: auto; max-width: 100%; }
+        code { overflow-wrap: anywhere; }
+        .main-content { min-width: 0; }
+        @media (max-width: 768px) { .container { display: block; } }
+    </style>
 </head>
 <body>
 <div class="double-border">
 <div class="container">
-    <div class="sidebar">
+    <nav class="sidebar" aria-label="课程章节目录">
         <h3>🦀 课程目录</h3>
         <ul class="chapter-list">
             <li><a href="01.html">第1章 Rust简介与安装</a></li>
@@ -41,8 +48,10 @@
             <li><a href="27.html">第27章 实战：Web API</a></li>
             <li><a href="28.html">第28章 2027 Edition展望</a></li>
         </ul>
-    </div>
-    <div class="main-content">
+    </nav>
+    <main class="main-content">
+
+        <h1>第21章 异步编程</h1>
 
         <h2>开篇：一万并发连接的挑战</h2>
 
@@ -148,6 +157,39 @@ async fn main() {
                 </tr>
             </tbody>
         </table>
+
+        <figure>
+            <svg viewBox="0 0 860 240" role="img" aria-labelledby="asyncTitle asyncDesc">
+                <title id="asyncTitle">async fn 到 Future 的编译与轮询</title>
+                <desc id="asyncDesc">async 函数被编译成状态机，由 executor 反复 poll，未就绪时挂起，就绪时返回值。</desc>
+                <g font-family="system-ui, 'PingFang SC', sans-serif">
+                    <rect x="20" y="60" width="200" height="62" rx="12" fill="#e0f2fe" stroke="#0ea5e9" stroke-width="2"/>
+                    <text x="120" y="88" text-anchor="middle" font-size="14" font-weight="700" fill="#075985">async fn foo()</text>
+                    <text x="120" y="110" text-anchor="middle" font-size="12" fill="#0c4a6e">异步函数</text>
+
+                    <rect x="290" y="60" width="200" height="62" rx="12" fill="#fef9c3" stroke="#eab308" stroke-width="2"/>
+                    <text x="390" y="88" text-anchor="middle" font-size="14" font-weight="700" fill="#713f12">Future（状态机）</text>
+                    <text x="390" y="110" text-anchor="middle" font-size="12" fill="#854d0e">惰性，不会自己跑</text>
+
+                    <path d="M222 91 H288" stroke="#94a3b8" stroke-width="2"/>
+                    <text x="255" y="82" text-anchor="middle" font-size="11" fill="#475569">编译</text>
+
+                    <path d="M492 91 H558" stroke="#94a3b8" stroke-width="2"/>
+                    <text x="525" y="82" text-anchor="middle" font-size="11" fill="#475569">executor.poll()</text>
+
+                    <rect x="560" y="30" width="286" height="52" rx="12" fill="#e5e7eb" stroke="#9ca3af"/>
+                    <text x="703" y="52" text-anchor="middle" font-size="13" font-weight="700" fill="#374151">Poll::Pending</text>
+                    <text x="703" y="72" text-anchor="middle" font-size="12" fill="#4b5563">挂起，注册 Waker 等待唤醒</text>
+
+                    <rect x="560" y="100" width="286" height="52" rx="12" fill="#dcfce7" stroke="#16a34a"/>
+                    <text x="703" y="122" text-anchor="middle" font-size="13" font-weight="700" fill="#14532d">Poll::Ready(v)</text>
+                    <text x="703" y="142" text-anchor="middle" font-size="12" fill="#166534">任务完成，返回值 v</text>
+
+                    <text x="430" y="210" text-anchor="middle" font-size="12" fill="#475569">.await 不会阻塞线程：它把控制权交回 executor，让同一线程去跑其他任务。</text>
+                </g>
+            </svg>
+            <figcaption>图 1：<code>async fn</code> 的执行模型（教学示意）。异步函数编译成状态机 Future，必须由 executor 驱动；<code>Pending</code> 时挂起而非阻塞，<code>Ready</code> 时带出结果。</figcaption>
+        </figure>
 
         <h2>Tokio运行时</h2>
 
@@ -461,7 +503,7 @@ async fn handler() -&gt; Json&lt;UserPosts&gt; {
             <a href="index.html">📖 返回目录</a>
             <a href="22.html">下一章 →</a>
         </div>
-    </div>
+    </main>
 </div>
 </div>
 </body>

@@ -5,11 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>第23章 常用库选型</title>
     <link rel="stylesheet" href="theme.css">
+    <style>
+        /* Fallback so code blocks and grids stay inside the viewport if the stylesheet is unavailable. */
+        pre { overflow-x: auto; max-width: 100%; }
+        code { overflow-wrap: anywhere; }
+        .main-content { min-width: 0; }
+        @media (max-width: 768px) { .container { display: block; } }
+    </style>
 </head>
 <body>
 <div class="double-border">
 <div class="container">
-    <div class="sidebar">
+    <nav class="sidebar" aria-label="课程章节目录">
         <h3>🦀 课程目录</h3>
         <ul class="chapter-list">
             <li><a href="01.html">第1章 Rust简介与安装</a></li>
@@ -41,8 +48,10 @@
             <li><a href="27.html">第27章 实战：Web API</a></li>
             <li><a href="28.html">第28章 2027 Edition展望</a></li>
         </ul>
-    </div>
-    <div class="main-content">
+    </nav>
+    <main class="main-content">
+
+        <h1>第23章 常用库选型</h1>
 
         <h2>开篇：一个JSON库引发的"血案"</h2>
 
@@ -114,6 +123,43 @@
         <div class="tip">
             <strong>选型原则</strong>：优先选择<strong>下载量大 + 维护活跃 + 文档完善</strong>的crate。crates.io页面上的"Last Updated"和"Recent Downloads"是很好的参考指标。对于新项目，不要追求"最新最酷"的库——稳定和社区共识更重要。
         </div>
+
+        <figure>
+            <svg viewBox="0 0 860 210" role="img" aria-labelledby="ecoTitle ecoDesc">
+                <title id="ecoTitle">四个高频生态库的分工</title>
+                <desc id="ecoDesc">Serde 负责序列化、Rayon 负责数据并行、clap 负责命令行、reqwest 负责 HTTP 客户端。</desc>
+                <g font-family="system-ui, 'PingFang SC', sans-serif">
+                    <rect x="12" y="28" width="200" height="154" rx="12" fill="#e0f2fe" stroke="#0ea5e9" stroke-width="2"/>
+                    <text x="112" y="60" text-anchor="middle" font-size="15" font-weight="700" fill="#075985">Serde</text>
+                    <text x="112" y="88" text-anchor="middle" font-size="12" fill="#0c4a6e">序列化 / 反序列化</text>
+                    <text x="112" y="120" text-anchor="middle" font-size="11" fill="#334155">JSON / YAML / TOML</text>
+                    <text x="112" y="142" text-anchor="middle" font-size="11" fill="#334155">统一接口</text>
+                    <text x="112" y="164" text-anchor="middle" font-size="11" fill="#334155">#[derive(Serialize)]</text>
+
+                    <rect x="224" y="28" width="200" height="154" rx="12" fill="#fef9c3" stroke="#eab308" stroke-width="2"/>
+                    <text x="324" y="60" text-anchor="middle" font-size="15" font-weight="700" fill="#713f12">Rayon</text>
+                    <text x="324" y="88" text-anchor="middle" font-size="12" fill="#854d0e">数据并行</text>
+                    <text x="324" y="120" text-anchor="middle" font-size="11" fill="#334155">把 iter 换成 par_iter</text>
+                    <text x="324" y="142" text-anchor="middle" font-size="11" fill="#334155">自动工作窃取</text>
+                    <text x="324" y="164" text-anchor="middle" font-size="11" fill="#334155">一行并行化</text>
+
+                    <rect x="436" y="28" width="200" height="154" rx="12" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+                    <text x="536" y="60" text-anchor="middle" font-size="15" font-weight="700" fill="#14532d">clap</text>
+                    <text x="536" y="88" text-anchor="middle" font-size="12" fill="#166534">命令行解析</text>
+                    <text x="536" y="120" text-anchor="middle" font-size="11" fill="#334155">派生式定义参数</text>
+                    <text x="536" y="142" text-anchor="middle" font-size="11" fill="#334155">自动生成 --help</text>
+                    <text x="536" y="164" text-anchor="middle" font-size="11" fill="#334155">校验与补全</text>
+
+                    <rect x="648" y="28" width="200" height="154" rx="12" fill="#fdf2f8" stroke="#db2777" stroke-width="2"/>
+                    <text x="748" y="60" text-anchor="middle" font-size="15" font-weight="700" fill="#831843">reqwest</text>
+                    <text x="748" y="88" text-anchor="middle" font-size="12" fill="#9d174d">HTTP 客户端</text>
+                    <text x="748" y="120" text-anchor="middle" font-size="11" fill="#334155">异步 / 阻塞两套 API</text>
+                    <text x="748" y="142" text-anchor="middle" font-size="11" fill="#334155">TLS 与连接池</text>
+                    <text x="748" y="164" text-anchor="middle" font-size="11" fill="#334155">JSON 集成</text>
+                </g>
+            </svg>
+            <figcaption>图 1：四个高频库的分工（教学示意）。选型时先看它是否是所在领域的事实标准，再评估维护活跃度与依赖体积；同一能力常有多个候选，本章给出的是常见默认选择。</figcaption>
+        </figure>
 
         <h2>Serde — Rust序列化的事实标准</h2>
 
@@ -534,7 +580,7 @@ pub enum ParseError {
             <a href="index.html">📖 返回目录</a>
             <a href="24.html">下一章 →</a>
         </div>
-    </div>
+    </main>
 </div>
 </div>
 </body>
