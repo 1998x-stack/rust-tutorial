@@ -5,11 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>第28章 2027 Edition展望</title>
     <link rel="stylesheet" href="theme.css">
+    <style>
+        /* Fallback so code blocks and grids stay inside the viewport if the stylesheet is unavailable. */
+        pre { overflow-x: auto; max-width: 100%; }
+        code { overflow-wrap: anywhere; }
+        .main-content { min-width: 0; }
+        @media (max-width: 768px) { .container { display: block; } }
+    </style>
 </head>
 <body>
 <div class="double-border">
 <div class="container">
-    <div class="sidebar">
+    <nav class="sidebar" aria-label="课程章节目录">
         <h3>🦀 课程目录</h3>
         <ul class="chapter-list">
             <li><a href="01.html">第1章 Rust简介与安装</a></li>
@@ -41,8 +48,10 @@
             <li><a href="27.html">第27章 实战：Web API</a></li>
             <li><a href="28.html" class="active">第28章 2027 Edition展望</a></li>
         </ul>
-    </div>
-    <div class="main-content">
+    </nav>
+    <main class="main-content">
+
+        <h1>第28章 2027 Edition展望</h1>
 
         <h2>这不是终点，而是起点</h2>
 
@@ -100,6 +109,38 @@
                 </tr>
             </tbody>
         </table>
+
+        <figure>
+            <svg viewBox="0 0 860 200" role="img" aria-labelledby="edTitle edDesc">
+                <title id="edTitle">Rust Edition 时间线</title>
+                <desc id="edDesc">从 2015 到 2024 的已发布 Edition 与 2027 预览；每个 Edition 可选启用，不破坏旧代码。</desc>
+                <g font-family="system-ui, 'PingFang SC', sans-serif">
+                    <path d="M60 108 H800" stroke="#94a3b8" stroke-width="3"/>
+                    <circle cx="90" cy="108" r="8" fill="#0ea5e9"/>
+                    <text x="90" y="92" text-anchor="middle" font-size="14" font-weight="700" fill="#075985">2015</text>
+                    <text x="90" y="140" text-anchor="middle" font-size="11" fill="#334155">1.0 稳定承诺</text>
+
+                    <circle cx="260" cy="108" r="8" fill="#0ea5e9"/>
+                    <text x="260" y="92" text-anchor="middle" font-size="14" font-weight="700" fill="#075985">2018</text>
+                    <text x="260" y="140" text-anchor="middle" font-size="11" fill="#334155">模块 / 异步</text>
+
+                    <circle cx="430" cy="108" r="8" fill="#0ea5e9"/>
+                    <text x="430" y="92" text-anchor="middle" font-size="14" font-weight="700" fill="#075985">2021</text>
+                    <text x="430" y="140" text-anchor="middle" font-size="11" fill="#334155">闭包 / const</text>
+
+                    <circle cx="600" cy="108" r="8" fill="#16a34a"/>
+                    <text x="600" y="92" text-anchor="middle" font-size="14" font-weight="700" fill="#14532d">2024</text>
+                    <text x="600" y="140" text-anchor="middle" font-size="11" fill="#334155">gen 块 / impl Trait</text>
+
+                    <circle cx="770" cy="108" r="8" fill="#eab308"/>
+                    <text x="770" y="92" text-anchor="middle" font-size="14" font-weight="700" fill="#713f12">2027</text>
+                    <text x="770" y="140" text-anchor="middle" font-size="11" fill="#854d0e">预览中</text>
+
+                    <text x="430" y="180" text-anchor="middle" font-size="12" fill="#475569">Edition 是可选的：在 Cargo.toml 中升级才会启用，旧代码不受影响。</text>
+                </g>
+            </svg>
+            <figcaption>图 1：Edition 时间线（教学示意）。Edition 不是新语言，而是允许在不破坏兼容性的前提下引入语法改进的机制；本章对 2027 的内容为预览性质，以官方公告为准。</figcaption>
+        </figure>
 
         <h2>2027 Edition预览</h2>
 
@@ -270,7 +311,7 @@ if let Some(user) = get_user()
             <a href="index.html">📖 返回目录</a>
             <a href="javascript:void(0)">下一章 →</a>
         </div>
-    </div>
+    </main>
 </div>
 </div>
 </body>

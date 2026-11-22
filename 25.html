@@ -5,11 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>第25章 宏编程入门</title>
     <link rel="stylesheet" href="theme.css">
+    <style>
+        /* Fallback so code blocks and grids stay inside the viewport if the stylesheet is unavailable. */
+        pre { overflow-x: auto; max-width: 100%; }
+        code { overflow-wrap: anywhere; }
+        .main-content { min-width: 0; }
+        @media (max-width: 768px) { .container { display: block; } }
+    </style>
 </head>
 <body>
 <div class="double-border">
 <div class="container">
-    <div class="sidebar">
+    <nav class="sidebar" aria-label="课程章节目录">
         <h3>🦀 课程目录</h3>
         <ul class="chapter-list">
             <li><a href="01.html">第1章 Rust简介与安装</a></li>
@@ -41,8 +48,10 @@
             <li><a href="27.html">第27章 实战：Web API</a></li>
             <li><a href="28.html">第28章 2027 Edition展望</a></li>
         </ul>
-    </div>
-    <div class="main-content">
+    </nav>
+    <main class="main-content">
+
+        <h1>第25章 宏编程入门</h1>
 
         <h2>开篇：面试官让我手写一个println!</h2>
 
@@ -361,6 +370,31 @@ fn main() {
             <li>如果你不确定 → <strong>先用声明宏</strong>，等发现不够用了再升级到过程宏</li>
         </ul>
 
+        <figure>
+            <svg viewBox="0 0 860 250" role="img" aria-labelledby="macroTitle macroDesc">
+                <title id="macroTitle">声明式宏与过程宏</title>
+                <desc id="macroDesc">macro_rules! 用模式匹配展开；过程宏是一段 Rust 代码，输入输出都是 TokenStream。</desc>
+                <g font-family="system-ui, 'PingFang SC', sans-serif">
+                    <rect x="12" y="24" width="400" height="204" rx="14" fill="#e0f2fe" stroke="#0ea5e9" stroke-width="2"/>
+                    <text x="212" y="56" text-anchor="middle" font-size="16" font-weight="700" fill="#075985">声明式宏 · macro_rules!</text>
+                    <text x="36" y="90" font-size="13" fill="#0c4a6e">用模式匹配 token 序列</text>
+                    <text x="36" y="118" font-size="13" fill="#0c4a6e">在编译期按规则展开成代码</text>
+                    <text x="36" y="146" font-size="13" fill="#0c4a6e">写法接近 match，但有 $ 元变量</text>
+                    <text x="36" y="174" font-size="13" fill="#0c4a6e">例子：vec!、println!、matches!</text>
+                    <text x="36" y="204" font-size="12" fill="#475569">无需额外 crate，定义就在同一个包内</text>
+
+                    <rect x="448" y="24" width="400" height="204" rx="14" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+                    <text x="648" y="56" text-anchor="middle" font-size="16" font-weight="700" fill="#14532d">过程宏 · procedural</text>
+                    <text x="472" y="90" font-size="13" fill="#166534">本质是一段 Rust 程序</text>
+                    <text x="472" y="118" font-size="13" fill="#166534">输入输出都是 TokenStream</text>
+                    <text x="472" y="146" font-size="13" fill="#166534">三种形态：derive / 属性 / 函数式</text>
+                    <text x="472" y="174" font-size="13" fill="#166534">例子：#[derive(Serialize)]、tokio::main</text>
+                    <text x="472" y="204" font-size="12" fill="#475569">需单独的 proc-macro crate</text>
+                </g>
+            </svg>
+            <figcaption>图 1：两类宏的对比（教学示意）。需要批量生成样板、且能用模式描述时用 <code>macro_rules!</code>；需要写逻辑解析语法树（如 derive 新 trait）时才上过程宏。</figcaption>
+        </figure>
+
         <h2>derive宏简介</h2>
 
         <p>你可能已经在大量使用derive宏而不自知——<code>#[derive(Debug, Clone, PartialEq)]</code>就是最常见的例子。derive宏是一种特殊的过程宏，它在编译期自动为结构体或枚举生成Trait的实现代码。</p>
@@ -496,7 +530,7 @@ fn main() {
             <a href="index.html">📖 返回目录</a>
             <a href="26.html">下一章 →</a>
         </div>
-    </div>
+    </main>
 </div>
 </div>
 </body>

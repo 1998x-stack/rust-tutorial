@@ -5,11 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>第26章 实战：CLI工具</title>
     <link rel="stylesheet" href="theme.css">
+    <style>
+        /* Fallback so code blocks and grids stay inside the viewport if the stylesheet is unavailable. */
+        pre { overflow-x: auto; max-width: 100%; }
+        code { overflow-wrap: anywhere; }
+        .main-content { min-width: 0; }
+        @media (max-width: 768px) { .container { display: block; } }
+    </style>
 </head>
 <body>
 <div class="double-border">
 <div class="container">
-    <div class="sidebar">
+    <nav class="sidebar" aria-label="课程章节目录">
         <h3>🦀 课程目录</h3>
         <ul class="chapter-list">
             <li><a href="01.html">第1章 Rust简介与安装</a></li>
@@ -41,8 +48,10 @@
             <li><a href="27.html">第27章 实战：Web API</a></li>
             <li><a href="28.html">第28章 2027 Edition展望</a></li>
         </ul>
-    </div>
-    <div class="main-content">
+    </nav>
+    <main class="main-content">
+
+        <h1>第26章 实战：CLI工具</h1>
 
         <h2>从"好用的工具都是别人写的"到自己动手</h2>
 
@@ -297,6 +306,36 @@ impl RepoAnalyzer {
             <strong>小技巧</strong>：<code>revwalk</code>的排序方式会影响分析结果。使用<code>git2::Sort::TIME</code>按时间排序，确保按提交顺序遍历。如果你只需要分析最近N个提交，利用<code>limit</code>参数提前跳出循环是重要的性能优化——特别是对拥有数万次提交的大型仓库。
         </div>
 
+        <figure>
+            <svg viewBox="0 0 860 180" role="img" aria-labelledby="cliTitle cliDesc">
+                <title id="cliTitle">CLI 工具的数据流</title>
+                <desc id="cliDesc">从 clap 解析参数、git2 打开仓库、统计提交到格式化输出的流水线。</desc>
+                <g font-family="system-ui, 'PingFang SC', sans-serif">
+                    <rect x="15" y="42" width="180" height="78" rx="12" fill="#e0f2fe" stroke="#0ea5e9" stroke-width="2"/>
+                    <text x="105" y="74" text-anchor="middle" font-size="13" font-weight="700" fill="#075985">1. clap 解析</text>
+                    <text x="105" y="98" text-anchor="middle" font-size="11" fill="#0c4a6e">参数 / 子命令</text>
+
+                    <rect x="225" y="42" width="180" height="78" rx="12" fill="#fef9c3" stroke="#eab308" stroke-width="2"/>
+                    <text x="315" y="74" text-anchor="middle" font-size="13" font-weight="700" fill="#713f12">2. git2 打开仓库</text>
+                    <text x="315" y="98" text-anchor="middle" font-size="11" fill="#854d0e">遍历 revision</text>
+
+                    <rect x="435" y="42" width="180" height="78" rx="12" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+                    <text x="525" y="74" text-anchor="middle" font-size="13" font-weight="700" fill="#14532d">3. 统计聚合</text>
+                    <text x="525" y="98" text-anchor="middle" font-size="11" fill="#166534">按作者 / 时间归类</text>
+
+                    <rect x="645" y="42" width="200" height="78" rx="12" fill="#fdf2f8" stroke="#db2777" stroke-width="2"/>
+                    <text x="745" y="74" text-anchor="middle" font-size="13" font-weight="700" fill="#831843">4. 格式化输出</text>
+                    <text x="745" y="98" text-anchor="middle" font-size="11" fill="#9d174d">表格 / JSON</text>
+
+                    <path d="M197 81 H223" stroke="#94a3b8" stroke-width="2"/>
+                    <path d="M407 81 H433" stroke="#94a3b8" stroke-width="2"/>
+                    <path d="M617 81 H643" stroke="#94a3b8" stroke-width="2"/>
+                    <text x="430" y="156" text-anchor="middle" font-size="12" fill="#475569">核心逻辑与 IO 分离：解析、取数、统计、渲染各自独立，便于单测与替换。</text>
+                </g>
+            </svg>
+            <figcaption>图 1：CLI 工具的数据流（教学示意）。把“取数据”与“算数据”“展示数据”分层，是让命令行工具可测试、可扩展的关键。</figcaption>
+        </figure>
+
         <h2>输出格式化</h2>
 
         <p>终端工具的用户体验很大程度上取决于输出格式。<code>colored</code> crate让字符串染色变得极其简单：</p>
@@ -482,7 +521,7 @@ path = "src/main.rs"</code></pre>
             <a href="index.html">📖 返回目录</a>
             <a href="27.html">下一章 →</a>
         </div>
-    </div>
+    </main>
 </div>
 </div>
 </body>
