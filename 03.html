@@ -5,11 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>第3章 函数与控制流</title>
     <link rel="stylesheet" href="theme.css">
+    <style>
+        /* Fallback so code blocks and grids stay inside the viewport if the stylesheet is unavailable. */
+        pre { overflow-x: auto; max-width: 100%; }
+        code { overflow-wrap: anywhere; }
+        .main-content { min-width: 0; }
+        @media (max-width: 768px) { .container { display: block; } }
+    </style>
 </head>
 <body>
 <div class="double-border">
 <div class="container">
-    <div class="sidebar">
+    <nav class="sidebar" aria-label="课程章节目录">
         <h3>🦀 课程目录</h3>
         <ul class="chapter-list">
             <li><a href="01.html">第1章 Rust简介与安装</a></li>
@@ -41,8 +48,10 @@
             <li><a href="27.html">第27章 实战：Web API</a></li>
             <li><a href="28.html">第28章 2027 Edition展望</a></li>
         </ul>
-    </div>
-    <div class="main-content">
+    </nav>
+    <main class="main-content">
+
+        <h1>第3章 函数与控制流</h1>
 
         <h2>引子：那个被花括号"坑"了的Python程序员</h2>
 
@@ -140,6 +149,45 @@ println!("{value}");  // 42</code></pre>
         <div class="tip">
             <strong>代码风格</strong>：把<code>if</code>作为表达式赋值给变量时，建议保持<code>if</code>和<code>else</code>分支的代码行数在2行以内。如果逻辑太复杂，拆成独立的函数会更清晰。没有人喜欢看一个占据了20行的"表达式"。
         </div>
+
+        <figure>
+            <svg viewBox="0 0 860 260" role="img" aria-labelledby="ctrlTitle ctrlDesc">
+                <title id="ctrlTitle">Rust 控制流构造对比</title>
+                <desc id="ctrlDesc">if/else、match、loop、while 与 for in 的适用场景以及是否产生值。</desc>
+                <g font-family="system-ui, 'PingFang SC', sans-serif">
+                    <rect x="12" y="14" width="836" height="30" rx="6" fill="#fff7ed"/>
+                    <text x="24" y="34" font-size="14" font-weight="700" fill="#7c2d12">构造</text>
+                    <text x="240" y="34" font-size="14" font-weight="700" fill="#7c2d12">适用场景</text>
+                    <text x="600" y="34" font-size="14" font-weight="700" fill="#7c2d12">是否产生值</text>
+
+                    <rect x="12" y="48" width="836" height="38" rx="6" fill="#fbfdf9"/>
+                    <text x="24" y="72" font-size="13" font-weight="600" fill="#1e293b">if / else</text>
+                    <text x="240" y="72" font-size="13" fill="#1e293b">二选一分支</text>
+                    <text x="600" y="72" font-size="13" fill="#166534">是：返回所选分支的值</text>
+
+                    <rect x="12" y="88" width="836" height="38" rx="6" fill="#fff7ed"/>
+                    <text x="24" y="112" font-size="13" font-weight="600" fill="#1e293b">match</text>
+                    <text x="240" y="112" font-size="13" fill="#1e293b">多分支、穷尽匹配</text>
+                    <text x="600" y="112" font-size="13" fill="#166534">是：返回匹配臂的值</text>
+
+                    <rect x="12" y="128" width="836" height="38" rx="6" fill="#fbfdf9"/>
+                    <text x="24" y="152" font-size="13" font-weight="600" fill="#1e293b">loop</text>
+                    <text x="240" y="152" font-size="13" fill="#1e293b">无限循环，直到显式退出</text>
+                    <text x="600" y="152" font-size="13" fill="#166534">是：break 可携带值</text>
+
+                    <rect x="12" y="168" width="836" height="38" rx="6" fill="#fff7ed"/>
+                    <text x="24" y="192" font-size="13" font-weight="600" fill="#1e293b">while</text>
+                    <text x="240" y="192" font-size="13" fill="#1e293b">条件为真时重复</text>
+                    <text x="600" y="192" font-size="13" fill="#9a3412">否：类型为 ()</text>
+
+                    <rect x="12" y="208" width="836" height="38" rx="6" fill="#fbfdf9"/>
+                    <text x="24" y="232" font-size="13" font-weight="600" fill="#1e293b">for ... in</text>
+                    <text x="240" y="232" font-size="13" fill="#1e293b">遍历迭代器 / 集合</text>
+                    <text x="600" y="232" font-size="13" fill="#9a3412">否：类型为 ()</text>
+                </g>
+            </svg>
+            <figcaption>图 1：控制流构造对比（教学示意）。<code>if/else</code>、<code>match</code>、<code>loop</code> 是表达式，会把分支或 <code>break</code> 的值带出来；<code>while</code> 与 <code>for</code> 不产生值。</figcaption>
+        </figure>
 
         <h2>循环</h2>
 
@@ -315,7 +363,7 @@ fn main() {
             <a href="index.html">📖 返回目录</a>
             <a href="04.html">下一章 →</a>
         </div>
-    </div>
+    </main>
 </div>
 </div>
 </body>

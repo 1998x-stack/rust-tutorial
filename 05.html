@@ -5,11 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>第5章 切片与字符串</title>
     <link rel="stylesheet" href="theme.css">
+    <style>
+        /* Fallback so code blocks and grids stay inside the viewport if the stylesheet is unavailable. */
+        pre { overflow-x: auto; max-width: 100%; }
+        code { overflow-wrap: anywhere; }
+        .main-content { min-width: 0; }
+        @media (max-width: 768px) { .container { display: block; } }
+    </style>
 </head>
 <body>
 <div class="double-border">
 <div class="container">
-    <div class="sidebar">
+    <nav class="sidebar" aria-label="课程章节目录">
         <h3>🦀 课程目录</h3>
         <ul class="chapter-list">
             <li><a href="01.html">第1章 Rust简介与安装</a></li>
@@ -41,8 +48,10 @@
             <li><a href="27.html">第27章 实战：Web API</a></li>
             <li><a href="28.html">第28章 2027 Edition展望</a></li>
         </ul>
-    </div>
-    <div class="main-content">
+    </nav>
+    <main class="main-content">
+
+        <h1>第5章 切片与字符串</h1>
 
         <h2>引子：一个中文分词工具的血泪史</h2>
 
@@ -179,6 +188,43 @@ takes_str("world");   // &str 直接传入</code></pre>
 
         <p>Rust选择了<strong>明确</strong>——不让字符串支持整数索引，迫使你思考你到底想要什么。</p>
 
+        <figure>
+            <svg viewBox="0 0 860 230" role="img" aria-labelledby="utf8Title utf8Desc">
+                <title id="utf8Title">“你好” 的 UTF-8 字节布局</title>
+                <desc id="utf8Desc">两个汉字各占 3 个字节，共 6 个字节；合法的字符串切片只能落在字符边界上。</desc>
+                <g font-family="system-ui, 'PingFang SC', sans-serif">
+                    <text x="70" y="34" font-size="15" font-weight="700" fill="#7c2d12">String::from("你好") 的 UTF-8 字节</text>
+                    <text x="225" y="80" text-anchor="middle" font-size="26" fill="#0c4a6e">你</text>
+                    <text x="495" y="80" text-anchor="middle" font-size="26" fill="#0c4a6e">好</text>
+                    <rect x="90" y="90" width="90" height="54" fill="#e0f2fe" stroke="#0ea5e9"/>
+                    <text x="135" y="124" text-anchor="middle" font-family="monospace" font-size="15" fill="#0c4a6e">E4</text>
+                    <rect x="180" y="90" width="90" height="54" fill="#e0f2fe" stroke="#0ea5e9"/>
+                    <text x="225" y="124" text-anchor="middle" font-family="monospace" font-size="15" fill="#0c4a6e">BD</text>
+                    <rect x="270" y="90" width="90" height="54" fill="#e0f2fe" stroke="#0ea5e9"/>
+                    <text x="315" y="124" text-anchor="middle" font-family="monospace" font-size="15" fill="#0c4a6e">A0</text>
+                    <rect x="360" y="90" width="90" height="54" fill="#fef9c3" stroke="#eab308"/>
+                    <text x="405" y="124" text-anchor="middle" font-family="monospace" font-size="15" fill="#713f12">E5</text>
+                    <rect x="450" y="90" width="90" height="54" fill="#fef9c3" stroke="#eab308"/>
+                    <text x="495" y="124" text-anchor="middle" font-family="monospace" font-size="15" fill="#713f12">A5</text>
+                    <rect x="540" y="90" width="90" height="54" fill="#fef9c3" stroke="#eab308"/>
+                    <text x="585" y="124" text-anchor="middle" font-family="monospace" font-size="15" fill="#713f12">BD</text>
+
+                    <text x="135" y="164" text-anchor="middle" font-size="12" fill="#475569">0</text>
+                    <text x="225" y="164" text-anchor="middle" font-size="12" fill="#475569">1</text>
+                    <text x="315" y="164" text-anchor="middle" font-size="12" fill="#475569">2</text>
+                    <text x="405" y="164" text-anchor="middle" font-size="12" fill="#475569">3</text>
+                    <text x="495" y="164" text-anchor="middle" font-size="12" fill="#475569">4</text>
+                    <text x="585" y="164" text-anchor="middle" font-size="12" fill="#475569">5</text>
+
+                    <path d="M90 84 V156" stroke="#16a34a" stroke-width="3"/>
+                    <path d="M360 84 V156" stroke="#16a34a" stroke-width="3"/>
+                    <path d="M630 84 V156" stroke="#16a34a" stroke-width="3"/>
+                    <text x="300" y="200" font-size="13" fill="#166534">绿色竖线 = 合法字符边界：s[0..3] 合法；s[0..1] 会 panic</text>
+                </g>
+            </svg>
+            <figcaption>图 1：“你好” 的 UTF-8 布局（教学示意）。两个汉字各占 3 字节，字节边界与字符边界并不重合，所以 Rust 不允许用整数直接索引 <code>String</code>。</figcaption>
+        </figure>
+
         <h3>字节、字符与字素簇</h3>
 
         <p>Rust从三个层级来看待字符串：</p>
@@ -272,7 +318,7 @@ fn main() {
             <a href="index.html">📖 返回目录</a>
             <a href="06.html">下一章 →</a>
         </div>
-    </div>
+    </main>
 </div>
 </div>
 </body>

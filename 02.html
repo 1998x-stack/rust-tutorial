@@ -5,11 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>第2章 变量与数据类型</title>
     <link rel="stylesheet" href="theme.css">
+    <style>
+        /* Fallback so code blocks and grids stay inside the viewport if the stylesheet is unavailable. */
+        pre { overflow-x: auto; max-width: 100%; }
+        code { overflow-wrap: anywhere; }
+        .main-content { min-width: 0; }
+        @media (max-width: 768px) { .container { display: block; } }
+    </style>
 </head>
 <body>
 <div class="double-border">
 <div class="container">
-    <div class="sidebar">
+    <nav class="sidebar" aria-label="课程章节目录">
         <h3>🦀 课程目录</h3>
         <ul class="chapter-list">
             <li><a href="01.html">第1章 Rust简介与安装</a></li>
@@ -41,8 +48,10 @@
             <li><a href="27.html">第27章 实战：Web API</a></li>
             <li><a href="28.html">第28章 2027 Edition展望</a></li>
         </ul>
-    </div>
-    <div class="main-content">
+    </nav>
+    <main class="main-content">
+
+        <h1>第2章 变量与数据类型</h1>
 
         <h2>引子：一个"为什么变量不能变"的故事</h2>
 
@@ -89,6 +98,59 @@ const PI: f64 = 3.14159265;</code></pre>
         <h2>标量类型</h2>
 
         <p>标量类型指的是"单个值"的类型。Rust有四种标量类型：整数、浮点数、布尔、字符。</p>
+
+        <figure>
+            <svg viewBox="0 0 860 320" role="img" aria-labelledby="scalarTitle scalarDesc">
+                <title id="scalarTitle">Rust 标量类型的内存占用</title>
+                <desc id="scalarDesc">常见整数、浮点、布尔与字符类型占用的字节数横条对比。</desc>
+                <g font-family="system-ui, 'PingFang SC', sans-serif" font-size="13">
+                    <text x="16" y="28" font-size="14" font-weight="700" fill="#7c2d12">类型（示例）</text>
+                    <text x="200" y="28" font-size="14" font-weight="700" fill="#7c2d12">占用字节数</text>
+                    <text x="560" y="28" font-size="14" font-weight="700" fill="#7c2d12">字节</text>
+
+                    <text x="16" y="58" fill="#1e293b">i8 / u8</text>
+                    <rect x="200" y="46" width="22" height="16" rx="3" fill="#0ea5e9"/>
+                    <text x="560" y="58" fill="#0c4a6e">1</text>
+
+                    <text x="16" y="84" fill="#1e293b">i16 / u16</text>
+                    <rect x="200" y="72" width="44" height="16" rx="3" fill="#0ea5e9"/>
+                    <text x="560" y="84" fill="#0c4a6e">2</text>
+
+                    <text x="16" y="110" fill="#1e293b">i32 / u32</text>
+                    <rect x="200" y="98" width="88" height="16" rx="3" fill="#0ea5e9"/>
+                    <text x="560" y="110" fill="#0c4a6e">4</text>
+
+                    <text x="16" y="136" fill="#1e293b">i64 / u64</text>
+                    <rect x="200" y="124" width="176" height="16" rx="3" fill="#0ea5e9"/>
+                    <text x="560" y="136" fill="#0c4a6e">8</text>
+
+                    <text x="16" y="162" fill="#1e293b">i128 / u128</text>
+                    <rect x="200" y="150" width="352" height="16" rx="3" fill="#0ea5e9"/>
+                    <text x="560" y="162" fill="#0c4a6e">16</text>
+
+                    <text x="16" y="188" fill="#1e293b">isize / usize</text>
+                    <rect x="200" y="176" width="176" height="16" rx="3" fill="#bae6fd" stroke="#0ea5e9" stroke-dasharray="4 3"/>
+                    <text x="560" y="188" fill="#0c4a6e">4 或 8</text>
+
+                    <text x="16" y="214" fill="#1e293b">f32</text>
+                    <rect x="200" y="202" width="88" height="16" rx="3" fill="#8b5cf6"/>
+                    <text x="560" y="214" fill="#5b21b6">4</text>
+
+                    <text x="16" y="240" fill="#1e293b">f64</text>
+                    <rect x="200" y="228" width="176" height="16" rx="3" fill="#8b5cf6"/>
+                    <text x="560" y="240" fill="#5b21b6">8</text>
+
+                    <text x="16" y="266" fill="#1e293b">bool</text>
+                    <rect x="200" y="254" width="22" height="16" rx="3" fill="#16a34a"/>
+                    <text x="560" y="266" fill="#166534">1</text>
+
+                    <text x="16" y="292" fill="#1e293b">char</text>
+                    <rect x="200" y="280" width="88" height="16" rx="3" fill="#f59e0b"/>
+                    <text x="560" y="292" fill="#92400e">4</text>
+                </g>
+            </svg>
+            <figcaption>图 1：标量类型的字节占用（教学示意）。整数按位宽递增；char 固定 4 字节（一个 Unicode 标量值）；isize/usize 的宽度由目标平台的指针宽度决定。</figcaption>
+        </figure>
 
         <h3>整数类型</h3>
 
@@ -291,7 +353,7 @@ spaces = spaces.len();     // 类型不匹配！&amp;str != usize</code></pre>
             <a href="index.html">📖 返回目录</a>
             <a href="03.html">下一章 →</a>
         </div>
-    </div>
+    </main>
 </div>
 </div>
 </body>

@@ -5,11 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>第4章 所有权初探</title>
     <link rel="stylesheet" href="theme.css">
+    <style>
+        /* Fallback so code blocks and grids stay inside the viewport if the stylesheet is unavailable. */
+        pre { overflow-x: auto; max-width: 100%; }
+        code { overflow-wrap: anywhere; }
+        .main-content { min-width: 0; }
+        @media (max-width: 768px) { .container { display: block; } }
+    </style>
 </head>
 <body>
 <div class="double-border">
 <div class="container">
-    <div class="sidebar">
+    <nav class="sidebar" aria-label="课程章节目录">
         <h3>🦀 课程目录</h3>
         <ul class="chapter-list">
             <li><a href="01.html">第1章 Rust简介与安装</a></li>
@@ -41,8 +48,10 @@
             <li><a href="27.html">第27章 实战：Web API</a></li>
             <li><a href="28.html">第28章 2027 Edition展望</a></li>
         </ul>
-    </div>
-    <div class="main-content">
+    </nav>
+    <main class="main-content">
+
+        <h1>第4章 所有权初探</h1>
 
         <h2>引子：C语言老兵的"use-after-free"噩梦</h2>
 
@@ -86,6 +95,36 @@
         </table>
 
         <p>简单来说：<strong>栈上数据不需要所有权操心</strong>——函数进出栈帧时天然地分配和释放。真正需要所有权系统管理的是<strong>堆上数据</strong>——谁负责释放？何时释放？Rust用所有权给出了一个确定的答案。</p>
+
+        <figure>
+            <svg viewBox="0 0 860 240" role="img" aria-labelledby="ownTitle ownDesc">
+                <title id="ownTitle">String 的栈堆布局与所有权</title>
+                <desc id="ownDesc">栈上的变量 s 保存指针、长度与容量，指向堆上存放的实际字节；作用域结束时所有权系统释放堆内存。</desc>
+                <defs>
+                    <marker id="ownArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                        <path d="M0 0 L10 5 L0 10 z" fill="#ea580c"/>
+                    </marker>
+                </defs>
+                <g font-family="system-ui, 'PingFang SC', sans-serif">
+                    <rect x="20" y="28" width="330" height="184" rx="14" fill="#eff6ff" stroke="#0ea5e9" stroke-width="2"/>
+                    <text x="185" y="54" text-anchor="middle" font-size="16" font-weight="700" fill="#075985">栈（Stack）· 栈帧</text>
+                    <rect x="44" y="72" width="150" height="120" rx="10" fill="#ffffff" stroke="#60a5fa"/>
+                    <text x="60" y="100" font-size="14" font-weight="700" fill="#1e3a8a">s : String</text>
+                    <text x="60" y="128" font-size="13" fill="#334155">ptr</text>
+                    <text x="60" y="152" font-size="13" fill="#334155">len = 5</text>
+                    <text x="60" y="176" font-size="13" fill="#334155">cap = 5</text>
+
+                    <rect x="510" y="28" width="330" height="184" rx="14" fill="#fefce8" stroke="#eab308" stroke-width="2"/>
+                    <text x="675" y="54" text-anchor="middle" font-size="16" font-weight="700" fill="#713f12">堆（Heap）</text>
+                    <rect x="534" y="90" width="282" height="60" rx="10" fill="#ffffff" stroke="#facc15"/>
+                    <text x="675" y="128" text-anchor="middle" font-size="22" font-family="monospace" fill="#1e293b">"hello"</text>
+                    <text x="675" y="180" text-anchor="middle" font-size="12" fill="#854d0e">运行时分配 · 由所有者负责释放</text>
+
+                    <path d="M196 128 H530" stroke="#ea580c" stroke-width="2" marker-end="url(#ownArrow)"/>
+                </g>
+            </svg>
+            <figcaption>图 1：<code>String</code> 的栈堆布局（教学示意）。栈上只保存定长的指针、长度与容量；堆上存放实际字节。变量离开作用域时，<code>drop</code> 自动释放堆内存——这正是所有权要管理的对象。</figcaption>
+        </figure>
 
         <h3>作用域与释放</h3>
 
@@ -311,7 +350,7 @@ println!("{r3}");</code></pre>
             <a href="index.html">📖 返回目录</a>
             <a href="05.html">下一章 →</a>
         </div>
-    </div>
+    </main>
 </div>
 </div>
 </body>
