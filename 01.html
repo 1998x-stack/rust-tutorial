@@ -5,11 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>第1章 Rust简介与安装</title>
     <link rel="stylesheet" href="theme.css">
+    <style>
+        /* Fallback so code blocks and grids stay inside the viewport if the stylesheet is unavailable. */
+        pre { overflow-x: auto; max-width: 100%; }
+        code { overflow-wrap: anywhere; }
+        .main-content { min-width: 0; }
+        @media (max-width: 768px) { .container { display: block; } }
+    </style>
 </head>
 <body>
 <div class="double-border">
 <div class="container">
-    <div class="sidebar">
+    <nav class="sidebar" aria-label="课程章节目录">
         <h3>🦀 课程目录</h3>
         <ul class="chapter-list">
             <li><a href="01.html" class="active">第1章 Rust简介与安装</a></li>
@@ -41,8 +48,10 @@
             <li><a href="27.html">第27章 实战：Web API</a></li>
             <li><a href="28.html">第28章 2027 Edition展望</a></li>
         </ul>
-    </div>
-    <div class="main-content">
+    </nav>
+    <main class="main-content">
+
+        <h1>第1章 Rust简介与安装</h1>
 
         <h2>开篇：一次内存泄漏引发的学车冲动</h2>
 
@@ -149,6 +158,36 @@
         <div class="tip">
             <strong>Rust的内存安全保证</strong>不是靠"运行时监控"实现的，而是靠编译器静态分析。这意味着零运行时开销——这是Java、Go、Python等GC语言做不到的。
         </div>
+
+        <figure>
+            <svg viewBox="0 0 860 230" role="img" aria-labelledby="memTitle memDesc">
+                <title id="memTitle">三种内存管理策略对比</title>
+                <desc id="memDesc">手动管理、垃圾回收与所有权借用检查在检查时机、运行时开销与风险上的差异。</desc>
+                <g font-family="system-ui, 'PingFang SC', sans-serif">
+                    <rect x="10" y="30" width="270" height="170" rx="14" fill="#fee2e2" stroke="#ef4444" stroke-width="2"/>
+                    <text x="145" y="60" text-anchor="middle" font-size="17" font-weight="700" fill="#991b1b">手动管理 · C/C++</text>
+                    <text x="30" y="95" font-size="13" fill="#7f1d1d">检查时机：无（靠人）</text>
+                    <text x="30" y="122" font-size="13" fill="#7f1d1d">运行时开销：零</text>
+                    <text x="30" y="149" font-size="13" fill="#7f1d1d">风险：泄漏 / 悬垂指针</text>
+                    <text x="30" y="176" font-size="13" fill="#7f1d1d">use-after-free</text>
+
+                    <rect x="295" y="30" width="270" height="170" rx="14" fill="#fef9c3" stroke="#eab308" stroke-width="2"/>
+                    <text x="430" y="60" text-anchor="middle" font-size="17" font-weight="700" fill="#713f12">垃圾回收 · Java/Go</text>
+                    <text x="315" y="95" font-size="13" fill="#854d0e">检查时机：运行时</text>
+                    <text x="315" y="122" font-size="13" fill="#854d0e">运行时开销：GC 停顿</text>
+                    <text x="315" y="149" font-size="13" fill="#854d0e">风险：基本消除</text>
+                    <text x="315" y="176" font-size="13" fill="#854d0e">代价：内存与延迟</text>
+
+                    <rect x="580" y="30" width="270" height="170" rx="14" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+                    <text x="715" y="60" text-anchor="middle" font-size="17" font-weight="700" fill="#14532d">所有权 · Rust</text>
+                    <text x="600" y="95" font-size="13" fill="#166534">检查时机：编译期</text>
+                    <text x="600" y="122" font-size="13" fill="#166534">运行时开销：零</text>
+                    <text x="600" y="149" font-size="13" fill="#166534">风险：编译期拒绝</text>
+                    <text x="600" y="176" font-size="13" fill="#166534">无需 GC</text>
+                </g>
+            </svg>
+            <figcaption>图 2：三种内存管理策略对比（教学示意）。Rust 把检查移到编译期：既保留零运行时开销，又消除悬垂与数据竞争。</figcaption>
+        </figure>
 
         <h3>零成本抽象（Zero-Cost Abstractions）</h3>
 
@@ -362,7 +401,7 @@ cargo fmt</code></pre>
             <a href="index.html">📖 返回目录</a>
             <a href="02.html">下一章 →</a>
         </div>
-    </div>
+    </main>
 </div>
 </div>
 </body>
