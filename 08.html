@@ -5,11 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>第8章 项目管理与模块</title>
     <link rel="stylesheet" href="theme.css">
+    <style>
+        /* Fallback so code blocks and grids stay inside the viewport if the stylesheet is unavailable. */
+        pre { overflow-x: auto; max-width: 100%; }
+        code { overflow-wrap: anywhere; }
+        .main-content { min-width: 0; }
+        @media (max-width: 768px) { .container { display: block; } }
+    </style>
 </head>
 <body>
 <div class="double-border">
 <div class="container">
-    <div class="sidebar">
+    <nav class="sidebar" aria-label="课程章节目录">
         <h3>🦀 课程目录</h3>
         <ul class="chapter-list">
             <li><a href="01.html">第1章 Rust简介与安装</a></li>
@@ -41,8 +48,10 @@
             <li><a href="27.html">第27章 实战：Web API</a></li>
             <li><a href="28.html">第28章 2027 Edition展望</a></li>
         </ul>
-    </div>
-    <div class="main-content">
+    </nav>
+    <main class="main-content">
+
+        <h1>第8章 项目管理与模块</h1>
 
         <h2>开篇：一个文件撑破天的噩梦</h2>
 
@@ -152,6 +161,34 @@ pub fn bind() {}</code></pre>
         <div class="highlight">
             <strong>Rust 2024 Edition变化</strong>：从Rust 2024开始，<code>mod.rs</code>惯例被逐步淘汰。强烈建议使用同名的<code>.rs</code>文件加上同名目录的模式。例如<code>network.rs</code> + <code>network/</code>，而不是<code>network/mod.rs</code>。
         </div>
+
+        <figure>
+            <svg viewBox="0 0 860 280" role="img" aria-labelledby="modTitle modDesc">
+                <title id="modTitle">模块树的层级与可见性</title>
+                <desc id="modDesc">crate 根包含 mod front_of_house，其下又有 hosting 与 serving 子模块，pub 控制哪些项对外可见。</desc>
+                <g font-family="system-ui, 'PingFang SC', sans-serif">
+                    <rect x="330" y="20" width="200" height="46" rx="10" fill="#fff7ed" stroke="#f97316" stroke-width="2"/>
+                    <text x="430" y="49" text-anchor="middle" font-size="14" font-weight="700" fill="#7c2d12">crate 根 · main.rs</text>
+
+                    <rect x="330" y="106" width="200" height="46" rx="10" fill="#e0f2fe" stroke="#0ea5e9" stroke-width="2"/>
+                    <text x="430" y="135" text-anchor="middle" font-size="14" font-weight="700" fill="#075985">mod front_of_house</text>
+
+                    <rect x="90" y="196" width="280" height="62" rx="10" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+                    <text x="230" y="222" text-anchor="middle" font-size="14" font-weight="700" fill="#14532d">mod hosting</text>
+                    <text x="230" y="244" text-anchor="middle" font-size="12" font-family="monospace" fill="#166534">pub fn add_to_waitlist()</text>
+
+                    <rect x="500" y="196" width="280" height="62" rx="10" fill="#fef9c3" stroke="#eab308" stroke-width="2"/>
+                    <text x="640" y="222" text-anchor="middle" font-size="14" font-weight="700" fill="#713f12">mod serving</text>
+                    <text x="640" y="244" text-anchor="middle" font-size="12" font-family="monospace" fill="#854d0e">fn take_order()</text>
+
+                    <path d="M430 66 V106" stroke="#94a3b8" stroke-width="2"/>
+                    <path d="M430 152 V174 H230 V196" fill="none" stroke="#94a3b8" stroke-width="2"/>
+                    <path d="M430 152 V174 H640 V196" fill="none" stroke="#94a3b8" stroke-width="2"/>
+                    <text x="20" y="272" font-size="12" fill="#475569">带 pub 的项可被父模块外部访问；未标 pub 的项仅在同一模块内可见。</text>
+                </g>
+            </svg>
+            <figcaption>图 1：模块树与可见性（教学示意）。模块形成树形层级，路径从 crate 根或 <code>crate::</code> 出发；<code>pub</code> 决定项能否跨模块被访问。</figcaption>
+        </figure>
 
         <h2>路径与可见性</h2>
 
@@ -368,7 +405,7 @@ core = { path = "../core" }</code></pre>
             <a href="index.html">📖 返回目录</a>
             <a href="09.html">下一章 →</a>
         </div>
-    </div>
+    </main>
 </div>
 </div>
 </body>

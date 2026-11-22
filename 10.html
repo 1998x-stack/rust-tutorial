@@ -5,11 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>第10章 错误处理</title>
     <link rel="stylesheet" href="theme.css">
+    <style>
+        /* Fallback so code blocks and grids stay inside the viewport if the stylesheet is unavailable. */
+        pre { overflow-x: auto; max-width: 100%; }
+        code { overflow-wrap: anywhere; }
+        .main-content { min-width: 0; }
+        @media (max-width: 768px) { .container { display: block; } }
+    </style>
 </head>
 <body>
 <div class="double-border">
 <div class="container">
-    <div class="sidebar">
+    <nav class="sidebar" aria-label="课程章节目录">
         <h3>🦀 课程目录</h3>
         <ul class="chapter-list">
             <li><a href="01.html">第1章 Rust简介与安装</a></li>
@@ -41,8 +48,10 @@
             <li><a href="27.html">第27章 实战：Web API</a></li>
             <li><a href="28.html">第28章 2027 Edition展望</a></li>
         </ul>
-    </div>
-    <div class="main-content">
+    </nav>
+    <main class="main-content">
+
+        <h1>第10章 错误处理</h1>
 
         <h2>开篇：那个用了unwrap的生产事故</h2>
 
@@ -200,6 +209,31 @@ fn parse_number(s: &amp;str) -&gt; Result&lt;i32, ParseIntError&gt; {
             <strong>?在main中的使用</strong>：从Rust 2021 Edition开始，<code>main</code>函数可以返回<code>Result</code>：<code>fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt;</code>。这样你就能在<code>main</code>中使用<code>?</code>了。程序出错时，会以非零退出码结束并打印错误信息。
         </div>
 
+        <figure>
+            <svg viewBox="0 0 860 210" role="img" aria-labelledby="qTitle qDesc">
+                <title id="qTitle">? 运算符的错误传播</title>
+                <desc id="qDesc">? 在成功时把值绑定给变量并继续，失败时提前把 Err 返回给调用者。</desc>
+                <g font-family="system-ui, 'PingFang SC', sans-serif">
+                    <rect x="270" y="18" width="320" height="46" rx="10" fill="#fff7ed" stroke="#f97316" stroke-width="2"/>
+                    <text x="430" y="47" text-anchor="middle" font-size="14" font-weight="700" fill="#7c2d12">let f = File::open(path)?;</text>
+
+                    <path d="M430 64 V92" stroke="#94a3b8" stroke-width="2"/>
+                    <path d="M180 92 H680" stroke="#94a3b8" stroke-width="2"/>
+                    <path d="M180 92 V116" stroke="#94a3b8" stroke-width="2"/>
+                    <path d="M680 92 V116" stroke="#94a3b8" stroke-width="2"/>
+
+                    <rect x="40" y="118" width="280" height="66" rx="10" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+                    <text x="180" y="146" text-anchor="middle" font-size="14" font-weight="700" fill="#14532d">Ok(f)</text>
+                    <text x="180" y="170" text-anchor="middle" font-size="12" fill="#166534">值绑定给 f，继续执行</text>
+
+                    <rect x="540" y="118" width="280" height="66" rx="10" fill="#fee2e2" stroke="#ef4444" stroke-width="2"/>
+                    <text x="680" y="146" text-anchor="middle" font-size="14" font-weight="700" fill="#991b1b">Err(e)</text>
+                    <text x="680" y="170" text-anchor="middle" font-size="12" fill="#7f1d1d">函数立即 return Err(e) 给调用者</text>
+                </g>
+            </svg>
+            <figcaption>图 1：<code>?</code> 运算符的传播路径（教学示意）。它把“成功继续、失败上抛”的样板代码压缩成一个字符，前提是当前函数的返回类型能承接这个错误。</figcaption>
+        </figure>
+
         <h2>自定义错误类型</h2>
 
         <p>随着项目变大，你会发现需要自己的错误类型。Rust中自定义错误的最佳实践是定义一个<strong>枚举</strong>，为每种错误原因创建一个变体：</p>
@@ -291,7 +325,7 @@ fn main() -&gt; Result&lt;()&gt; {
             <a href="index.html">📖 返回目录</a>
             <a href="11.html">下一章 →</a>
         </div>
-    </div>
+    </main>
 </div>
 </div>
 </body>

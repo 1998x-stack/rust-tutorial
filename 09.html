@@ -5,11 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>第9章 集合类型</title>
     <link rel="stylesheet" href="theme.css">
+    <style>
+        /* Fallback so code blocks and grids stay inside the viewport if the stylesheet is unavailable. */
+        pre { overflow-x: auto; max-width: 100%; }
+        code { overflow-wrap: anywhere; }
+        .main-content { min-width: 0; }
+        @media (max-width: 768px) { .container { display: block; } }
+    </style>
 </head>
 <body>
 <div class="double-border">
 <div class="container">
-    <div class="sidebar">
+    <nav class="sidebar" aria-label="课程章节目录">
         <h3>🦀 课程目录</h3>
         <ul class="chapter-list">
             <li><a href="01.html">第1章 Rust简介与安装</a></li>
@@ -41,8 +48,10 @@
             <li><a href="27.html">第27章 实战：Web API</a></li>
             <li><a href="28.html">第28章 2027 Edition展望</a></li>
         </ul>
-    </div>
-    <div class="main-content">
+    </nav>
+    <main class="main-content">
+
+        <h1>第9章 集合类型</h1>
 
         <h2>开篇：一个错误的集合选择让API慢了100倍</h2>
 
@@ -222,6 +231,45 @@ let back = deque.back();        // Some(&3)</code></pre>
             <strong>什么时候用VecDeque而不是Vec？</strong>当你的使用模式是"先进先出"（FIFO）时——比如任务队列、广度优先搜索的待访问列表。Vec在头部插入/删除是O(n)，而VecDeque在两端都是O(1)的。但如果你只需要尾部操作，Vec总是更快（更简单的内存布局）。
         </div>
 
+        <figure>
+            <svg viewBox="0 0 860 250" role="img" aria-labelledby="collTitle collDesc">
+                <title id="collTitle">四种标准集合的选型对照</title>
+                <desc id="collDesc">Vec、VecDeque、HashMap 与 HashSet 的索引方式、平均访问复杂度与典型用途。</desc>
+                <g font-family="system-ui, 'PingFang SC', sans-serif">
+                    <rect x="12" y="16" width="836" height="34" rx="6" fill="#fff7ed"/>
+                    <text x="28" y="39" font-size="14" font-weight="700" fill="#7c2d12">集合</text>
+                    <text x="220" y="39" font-size="14" font-weight="700" fill="#7c2d12">索引 / 键</text>
+                    <text x="470" y="39" font-size="14" font-weight="700" fill="#7c2d12">平均访问</text>
+                    <text x="610" y="39" font-size="14" font-weight="700" fill="#7c2d12">典型用途</text>
+
+                    <rect x="12" y="52" width="836" height="42" rx="6" fill="#fbfdf9"/>
+                    <text x="28" y="79" font-size="13" font-weight="600" fill="#1e293b">Vec&lt;T&gt;</text>
+                    <text x="220" y="79" font-size="13" fill="#1e293b">整数下标</text>
+                    <text x="470" y="79" font-size="13" fill="#166534">O(1)</text>
+                    <text x="610" y="79" font-size="13" fill="#1e293b">顺序存储、栈</text>
+
+                    <rect x="12" y="96" width="836" height="42" rx="6" fill="#fff7ed"/>
+                    <text x="28" y="123" font-size="13" font-weight="600" fill="#1e293b">VecDeque&lt;T&gt;</text>
+                    <text x="220" y="123" font-size="13" fill="#1e293b">两端</text>
+                    <text x="470" y="123" font-size="13" fill="#166534">O(1) 两端</text>
+                    <text x="610" y="123" font-size="13" fill="#1e293b">队列 / 双端队列</text>
+
+                    <rect x="12" y="140" width="836" height="42" rx="6" fill="#fbfdf9"/>
+                    <text x="28" y="167" font-size="13" font-weight="600" fill="#1e293b">HashMap&lt;K, V&gt;</text>
+                    <text x="220" y="167" font-size="13" fill="#1e293b">键 K</text>
+                    <text x="470" y="167" font-size="13" fill="#166534">平均 O(1)</text>
+                    <text x="610" y="167" font-size="13" fill="#1e293b">查表 / 缓存</text>
+
+                    <rect x="12" y="184" width="836" height="42" rx="6" fill="#fff7ed"/>
+                    <text x="28" y="211" font-size="13" font-weight="600" fill="#1e293b">HashSet&lt;T&gt;</text>
+                    <text x="220" y="211" font-size="13" fill="#1e293b">值本身</text>
+                    <text x="470" y="211" font-size="13" fill="#166534">平均 O(1)</text>
+                    <text x="610" y="211" font-size="13" fill="#1e293b">去重 / 集合运算</text>
+                </g>
+            </svg>
+            <figcaption>图 1：四种标准集合选型对照（教学示意）。复杂度为平均情况；哈希集合的最坏情况可能退化，需要良好的哈希与容量规划。</figcaption>
+        </figure>
+
         <h2>四种集合的选型指南</h2>
 
         <table>
@@ -310,7 +358,7 @@ let doubled: Vec&lt;i32&gt; = v.iter().map(|x| x * 2).collect();</code></pre>
             <a href="index.html">📖 返回目录</a>
             <a href="10.html">下一章 →</a>
         </div>
-    </div>
+    </main>
 </div>
 </div>
 </body>
