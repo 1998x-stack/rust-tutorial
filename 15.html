@@ -5,11 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>第15章 测试体系</title>
     <link rel="stylesheet" href="theme.css">
+    <style>
+        /* Fallback so code blocks and grids stay inside the viewport if the stylesheet is unavailable. */
+        pre { overflow-x: auto; max-width: 100%; }
+        code { overflow-wrap: anywhere; }
+        .main-content { min-width: 0; }
+        @media (max-width: 768px) { .container { display: block; } }
+    </style>
 </head>
 <body>
 <div class="double-border">
 <div class="container">
-    <div class="sidebar">
+    <nav class="sidebar" aria-label="课程章节目录">
         <h3>🦀 课程目录</h3>
         <ul class="chapter-list">
             <li><a href="01.html">第1章 Rust简介与安装</a></li>
@@ -41,8 +48,10 @@
             <li><a href="27.html">第27章 实战：Web API</a></li>
             <li><a href="28.html">第28章 2027 Edition展望</a></li>
         </ul>
-    </div>
-    <div class="main-content">
+    </nav>
+    <main class="main-content">
+
+        <h1>第15章 测试体系</h1>
 
         <h2>开篇：那个被"已测过"坑死的夜间发布</h2>
 
@@ -270,6 +279,35 @@ fn test_multiple_scenarios() {
             └──────────────┘
         </div>
 
+        <figure>
+            <svg viewBox="0 0 860 250" role="img" aria-labelledby="testTitle testDesc">
+                <title id="testTitle">三种测试的位置与可见性</title>
+                <desc id="testDesc">单元测试与代码同文件，集成测试放在 tests 目录，文档测试来自文档注释中的代码块。</desc>
+                <g font-family="system-ui, 'PingFang SC', sans-serif">
+                    <rect x="20" y="24" width="360" height="202" rx="14" fill="#fff7ed" stroke="#f97316" stroke-width="2"/>
+                    <text x="40" y="54" font-size="14" font-weight="700" fill="#7c2d12">项目结构</text>
+                    <text x="40" y="86" font-family="monospace" font-size="12" fill="#334155">my_crate/</text>
+                    <text x="40" y="112" font-family="monospace" font-size="12" fill="#0c4a6e">├─ src/lib.rs        # 单元测试</text>
+                    <text x="40" y="138" font-family="monospace" font-size="12" fill="#166534">├─ tests/api_test.rs # 集成测试</text>
+                    <text x="40" y="164" font-family="monospace" font-size="12" fill="#854d0e">└─ /// 示例代码     # 文档测试</text>
+                    <text x="40" y="200" font-size="12" fill="#475569">cargo test 一次跑完全部三类测试</text>
+
+                    <rect x="404" y="24" width="436" height="58" rx="12" fill="#e0f2fe" stroke="#0ea5e9"/>
+                    <text x="422" y="50" font-size="13" font-weight="700" fill="#075985">单元测试</text>
+                    <text x="422" y="72" font-size="12" fill="#0c4a6e">同文件中的 #[cfg(test)] mod，可访问私有项</text>
+
+                    <rect x="404" y="96" width="436" height="58" rx="12" fill="#dcfce7" stroke="#16a34a"/>
+                    <text x="422" y="122" font-size="13" font-weight="700" fill="#14532d">集成测试</text>
+                    <text x="422" y="144" font-size="12" fill="#166534">tests/ 目录，作为外部 crate 仅用公开 API</text>
+
+                    <rect x="404" y="168" width="436" height="58" rx="12" fill="#fef9c3" stroke="#eab308"/>
+                    <text x="422" y="194" font-size="13" font-weight="700" fill="#713f12">文档测试</text>
+                    <text x="422" y="216" font-size="12" fill="#854d0e">/// 代码块，既是文档示例又可被测试</text>
+                </g>
+            </svg>
+            <figcaption>图 1：三类测试的位置与可见性（教学示意）。单元测试验证内部实现，集成测试从外部视角验证公开 API，文档测试让示例代码始终可运行。</figcaption>
+        </figure>
+
         <h2>文档测试 — /// doc comments with code blocks</h2>
 
         <p>这是Rust最让人惊喜的特性之一。你在文档注释（<code>///</code>）中写的代码块，会被自动当作测试来运行！这意味着你的文档永远不会过时——如果代码和文档不一致，<code>cargo test</code>会告诉你。</p>
@@ -392,7 +430,7 @@ criterion_main!(benches);</code></pre>
             <a href="index.html">📖 返回目录</a>
             <a href="16.html">下一章 →</a>
         </div>
-    </div>
+    </main>
 </div>
 </div>
 </body>

@@ -5,11 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>第13章 生命周期</title>
     <link rel="stylesheet" href="theme.css">
+    <style>
+        /* Fallback so code blocks and grids stay inside the viewport if the stylesheet is unavailable. */
+        pre { overflow-x: auto; max-width: 100%; }
+        code { overflow-wrap: anywhere; }
+        .main-content { min-width: 0; }
+        @media (max-width: 768px) { .container { display: block; } }
+    </style>
 </head>
 <body>
 <div class="double-border">
 <div class="container">
-    <div class="sidebar">
+    <nav class="sidebar" aria-label="课程章节目录">
         <h3>🦀 课程目录</h3>
         <ul class="chapter-list">
             <li><a href="01.html">第1章 Rust简介与安装</a></li>
@@ -41,8 +48,10 @@
             <li><a href="27.html">第27章 实战：Web API</a></li>
             <li><a href="28.html">第28章 2027 Edition展望</a></li>
         </ul>
-    </div>
-    <div class="main-content">
+    </nav>
+    <main class="main-content">
+
+        <h1>第13章 生命周期</h1>
 
         <h2>开篇：Rust最"劝退"的概念</h2>
 
@@ -117,6 +126,26 @@ impl&lt;'a&gt; Excerpt&lt;'a&gt; {
 }</code></pre>
 
         <p>这意味着<code>Excerpt</code>实例不能比它引用的<code>part</code>字符串活得更久——否则会出现悬垂引用。</p>
+
+        <figure>
+            <svg viewBox="0 0 860 230" role="img" aria-labelledby="lifeTitle lifeDesc">
+                <title id="lifeTitle">longest 的输入与输出生命周期</title>
+                <desc id="lifeDesc">两个输入引用的生命周期不同，返回引用只能保证在两者重叠的区间内有效。</desc>
+                <g font-family="system-ui, 'PingFang SC', sans-serif">
+                    <text x="60" y="48" font-size="13" font-weight="700" fill="#075985">x: &amp;'a str</text>
+                    <rect x="60" y="56" width="340" height="26" rx="6" fill="#bae6fd" stroke="#0ea5e9"/>
+                    <text x="40" y="120" font-size="13" font-weight="700" fill="#713f12">y: &amp;'a str</text>
+                    <rect x="220" y="98" width="420" height="26" rx="6" fill="#fde68a" stroke="#eab308"/>
+
+                    <rect x="220" y="150" width="180" height="26" rx="6" fill="#bbf7d0" stroke="#16a34a" stroke-width="2"/>
+                    <text x="310" y="168" text-anchor="middle" font-size="12" font-weight="700" fill="#14532d">输出有效区间</text>
+                    <path d="M220 140 V182" stroke="#16a34a" stroke-dasharray="4 3"/>
+                    <path d="M400 140 V182" stroke="#16a34a" stroke-dasharray="4 3"/>
+                    <text x="310" y="204" text-anchor="middle" font-size="12" fill="#166534">返回引用的寿命 = 两个输入周期的交集</text>
+                </g>
+            </svg>
+            <figcaption>图 1：<code>longest&lt;'a&gt;(x: &amp;'a str, y: &amp;'a str) -&gt; &amp;'a str</code> 的生命周期关系（教学示意）。标注 <code>'a</code> 取两个输入的较小者，保证返回的引用永不会悬垂。</figcaption>
+        </figure>
 
         <h2>生命周期省略规则</h2>
 
@@ -249,7 +278,7 @@ fn process&lt;T: 'static&gt;(val: T) {
             <a href="index.html">📖 返回目录</a>
             <a href="14.html">下一章 →</a>
         </div>
-    </div>
+    </main>
 </div>
 </div>
 </body>

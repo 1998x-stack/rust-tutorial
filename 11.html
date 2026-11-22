@@ -5,11 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>第11章 泛型</title>
     <link rel="stylesheet" href="theme.css">
+    <style>
+        /* Fallback so code blocks and grids stay inside the viewport if the stylesheet is unavailable. */
+        pre { overflow-x: auto; max-width: 100%; }
+        code { overflow-wrap: anywhere; }
+        .main-content { min-width: 0; }
+        @media (max-width: 768px) { .container { display: block; } }
+    </style>
 </head>
 <body>
 <div class="double-border">
 <div class="container">
-    <div class="sidebar">
+    <nav class="sidebar" aria-label="课程章节目录">
         <h3>🦀 课程目录</h3>
         <ul class="chapter-list">
             <li><a href="01.html">第1章 Rust简介与安装</a></li>
@@ -41,8 +48,10 @@
             <li><a href="27.html">第27章 实战：Web API</a></li>
             <li><a href="28.html">第28章 2027 Edition展望</a></li>
         </ul>
-    </div>
-    <div class="main-content">
+    </nav>
+    <main class="main-content">
+
+        <h1>第11章 泛型</h1>
 
         <h2>开篇：代码复制粘贴的痛苦</h2>
 
@@ -179,6 +188,32 @@ where
             <strong>impl Trait语法</strong>：如果类型参数只在一个位置出现，可以用<code>impl Trait</code>简写：<code>fn print(val: impl Display)</code>等价于<code>fn print&lt;T: Display&gt;(val: T)</code>。但前者不能用于指定返回类型（因为调用者无法推断具体类型）。我们会在第12章Trait中详细展开。
         </div>
 
+        <figure>
+            <svg viewBox="0 0 860 230" role="img" aria-labelledby="monoTitle monoDesc">
+                <title id="monoTitle">泛型的单态化过程</title>
+                <desc id="monoDesc">编译期为每个具体类型生成一份专用函数，因此泛型调用没有运行时查找开销。</desc>
+                <g font-family="system-ui, 'PingFang SC', sans-serif">
+                    <rect x="270" y="18" width="320" height="48" rx="10" fill="#fff7ed" stroke="#f97316" stroke-width="2"/>
+                    <text x="430" y="48" text-anchor="middle" font-size="14" font-weight="700" fill="#7c2d12">fn largest&lt;T&gt;(list: &amp;[T]) -&gt; T</text>
+
+                    <path d="M430 66 V104" stroke="#94a3b8" stroke-width="2"/>
+                    <text x="430" y="126" text-anchor="middle" font-size="13" font-weight="700" fill="#475569">编译期 Monomorphization</text>
+
+                    <rect x="80" y="150" width="320" height="62" rx="10" fill="#e0f2fe" stroke="#0ea5e9" stroke-width="2"/>
+                    <text x="240" y="176" text-anchor="middle" font-size="14" font-weight="700" fill="#075985">largest::&lt;i32&gt;</text>
+                    <text x="240" y="198" text-anchor="middle" font-size="12" fill="#0c4a6e">专用于 i32 的机器码</text>
+
+                    <rect x="460" y="150" width="320" height="62" rx="10" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+                    <text x="620" y="176" text-anchor="middle" font-size="14" font-weight="700" fill="#14532d">largest::&lt;f64&gt;</text>
+                    <text x="620" y="198" text-anchor="middle" font-size="12" fill="#166534">专用于 f64 的机器码</text>
+
+                    <path d="M410 132 L245 150" stroke="#94a3b8" stroke-width="2"/>
+                    <path d="M450 132 L615 150" stroke="#94a3b8" stroke-width="2"/>
+                </g>
+            </svg>
+            <figcaption>图 1：泛型的单态化（教学示意）。编译器为每种具体类型各生成一份代码，得到静态调用、无运行时查找——这就是“零成本抽象”的来源，代价是代码体积可能增大。</figcaption>
+        </figure>
+
         <h2>性能与Monomorphization</h2>
 
         <p>很多人不愿意用泛型，是担心"泛型有运行时开销"。在Rust中，这个担心完全多余。<strong>Monomorphization</strong>（单态化）是Rust编译器处理泛型的方式——<strong>在编译时为每个具体类型生成独立的代码副本</strong>。</p>
@@ -245,7 +280,7 @@ let sum: u32 = my_counter.sum();</code></pre>
             <a href="index.html">📖 返回目录</a>
             <a href="12.html">下一章 →</a>
         </div>
-    </div>
+    </main>
 </div>
 </div>
 </body>

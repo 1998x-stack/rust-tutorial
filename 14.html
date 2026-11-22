@@ -5,11 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>第14章 闭包与迭代器</title>
     <link rel="stylesheet" href="theme.css">
+    <style>
+        /* Fallback so code blocks and grids stay inside the viewport if the stylesheet is unavailable. */
+        pre { overflow-x: auto; max-width: 100%; }
+        code { overflow-wrap: anywhere; }
+        .main-content { min-width: 0; }
+        @media (max-width: 768px) { .container { display: block; } }
+    </style>
 </head>
 <body>
 <div class="double-border">
 <div class="container">
-    <div class="sidebar">
+    <nav class="sidebar" aria-label="课程章节目录">
         <h3>🦀 课程目录</h3>
         <ul class="chapter-list">
             <li><a href="01.html">第1章 Rust简介与安装</a></li>
@@ -41,8 +48,10 @@
             <li><a href="27.html">第27章 实战：Web API</a></li>
             <li><a href="28.html">第28章 2027 Edition展望</a></li>
         </ul>
-    </div>
-    <div class="main-content">
+    </nav>
+    <main class="main-content">
+
+        <h1>第14章 闭包与迭代器</h1>
 
         <h2>开篇：一段200行变20行的神奇经历</h2>
 
@@ -183,6 +192,25 @@ fn call_fn&lt;F&gt;(f: F) where F: Fn() {
     f();
     f();  // Fn 闭包可以安全地调用多次
 }</code></pre>
+
+        <figure>
+            <svg viewBox="0 0 860 250" role="img" aria-labelledby="fnTitle fnDesc">
+                <title id="fnTitle">Fn / FnMut / FnOnce 的能力包含关系</title>
+                <desc id="fnDesc">Fn 是能力最强的约束，实现它的闭包也实现 FnMut 与 FnOnce。</desc>
+                <g font-family="system-ui, 'PingFang SC', sans-serif">
+                    <rect x="40" y="26" width="780" height="188" rx="16" fill="#fee2e2" stroke="#ef4444" stroke-width="2"/>
+                    <text x="58" y="54" font-size="14" font-weight="700" fill="#991b1b">FnOnce · 至少可调用一次（可消耗捕获）</text>
+
+                    <rect x="120" y="72" width="620" height="126" rx="14" fill="#fef9c3" stroke="#eab308" stroke-width="2"/>
+                    <text x="138" y="100" font-size="14" font-weight="700" fill="#713f12">FnMut · 可多次调用，可修改捕获</text>
+
+                    <rect x="200" y="118" width="460" height="64" rx="12" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+                    <text x="218" y="146" font-size="14" font-weight="700" fill="#14532d">Fn · 可多次调用，只读捕获</text>
+                    <text x="218" y="170" font-size="12" fill="#166534">能力最强：满足 Fn 就自动满足 FnMut 与 FnOnce</text>
+                </g>
+            </svg>
+            <figcaption>图 1：三种闭包 trait 的包含关系（教学示意）。函数参数接受哪种 trait，就决定了闭包能不能修改或消耗捕获的变量；<code>Fn</code> ⊂ <code>FnMut</code> ⊂ <code>FnOnce</code>。</figcaption>
+        </figure>
 
         <h2>Iterator trait</h2>
 
@@ -373,7 +401,7 @@ impl&lt;T&gt; IntoIterator for MyCollection&lt;T&gt; {
             <a href="index.html">📖 返回目录</a>
             <a href="15.html">下一章 →</a>
         </div>
-    </div>
+    </main>
 </div>
 </div>
 </body>

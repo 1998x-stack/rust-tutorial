@@ -5,11 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>第12章 Trait</title>
     <link rel="stylesheet" href="theme.css">
+    <style>
+        /* Fallback so code blocks and grids stay inside the viewport if the stylesheet is unavailable. */
+        pre { overflow-x: auto; max-width: 100%; }
+        code { overflow-wrap: anywhere; }
+        .main-content { min-width: 0; }
+        @media (max-width: 768px) { .container { display: block; } }
+    </style>
 </head>
 <body>
 <div class="double-border">
 <div class="container">
-    <div class="sidebar">
+    <nav class="sidebar" aria-label="课程章节目录">
         <h3>🦀 课程目录</h3>
         <ul class="chapter-list">
             <li><a href="01.html">第1章 Rust简介与安装</a></li>
@@ -41,8 +48,10 @@
             <li><a href="27.html">第27章 实战：Web API</a></li>
             <li><a href="28.html">第28章 2027 Edition展望</a></li>
         </ul>
-    </div>
-    <div class="main-content">
+    </nav>
+    <main class="main-content">
+
+        <h1>第12章 Trait</h1>
 
         <h2>开篇：接口思维的转变</h2>
 
@@ -175,6 +184,29 @@ where
     format!("t: {}, u: {}", t.summarize(), u.summarize())
 }</code></pre>
 
+        <figure>
+            <svg viewBox="0 0 860 240" role="img" aria-labelledby="dispTitle dispDesc">
+                <title id="dispTitle">静态分发与动态分发</title>
+                <desc id="dispDesc">泛型与 impl Trait 在编译期确定类型，dyn Trait 在运行时经 vtable 分发。</desc>
+                <g font-family="system-ui, 'PingFang SC', sans-serif">
+                    <rect x="12" y="24" width="376" height="192" rx="14" fill="#e0f2fe" stroke="#0ea5e9" stroke-width="2"/>
+                    <text x="200" y="58" text-anchor="middle" font-size="16" font-weight="700" fill="#075985">静态分发 · 泛型 / impl Trait</text>
+                    <text x="36" y="94" font-size="13" fill="#0c4a6e">具体类型在编译期确定</text>
+                    <text x="36" y="122" font-size="13" fill="#0c4a6e">每个类型单态化成一份代码</text>
+                    <text x="36" y="150" font-size="13" fill="#0c4a6e">调用可直接内联，无查表</text>
+                    <text x="36" y="178" font-size="13" fill="#0c4a6e">代价：代码体积可能变大</text>
+
+                    <rect x="472" y="24" width="376" height="192" rx="14" fill="#fef9c3" stroke="#eab308" stroke-width="2"/>
+                    <text x="660" y="58" text-anchor="middle" font-size="16" font-weight="700" fill="#713f12">动态分发 · dyn Trait</text>
+                    <text x="496" y="94" font-size="13" fill="#854d0e">具体类型运行时才知道</text>
+                    <text x="496" y="122" font-size="13" fill="#854d0e">胖指针 = 数据指针 + vtable</text>
+                    <text x="496" y="150" font-size="13" fill="#854d0e">通过虚表间接跳转</text>
+                    <text x="496" y="178" font-size="13" fill="#854d0e">代价：一次间接调用开销</text>
+                </g>
+            </svg>
+            <figcaption>图 1：两种分发方式（教学示意）。需要极致性能、类型集合固定时选静态分发；需要把不同类型放进同一集合、按接口编程时选 <code>dyn Trait</code>。</figcaption>
+        </figure>
+
         <h2>Trait对象与动态分发</h2>
 
         <p>前面的<code>impl Trait</code>和泛型绑定的方式都是<strong>静态分发</strong>（Static Dispatch）——编译器为每个具体类型生成独立的函数副本。另一种方式是<strong>动态分发</strong>（Dynamic Dispatch）——通过<code>dyn Trait</code>在运行时通过虚函数表调用方法。</p>
@@ -299,7 +331,7 @@ println!("{}", u1 == u2);     // PartialEq</code></pre>
             <a href="index.html">📖 返回目录</a>
             <a href="13.html">下一章 →</a>
         </div>
-    </div>
+    </main>
 </div>
 </div>
 </body>
