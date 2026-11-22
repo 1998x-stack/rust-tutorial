@@ -5,11 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>第18章 日志与调试</title>
     <link rel="stylesheet" href="theme.css">
+    <style>
+        /* Fallback so code blocks and grids stay inside the viewport if the stylesheet is unavailable. */
+        pre { overflow-x: auto; max-width: 100%; }
+        code { overflow-wrap: anywhere; }
+        .main-content { min-width: 0; }
+        @media (max-width: 768px) { .container { display: block; } }
+    </style>
 </head>
 <body>
 <div class="double-border">
 <div class="container">
-    <div class="sidebar">
+    <nav class="sidebar" aria-label="课程章节目录">
         <h3>🦀 课程目录</h3>
         <ul class="chapter-list">
             <li><a href="01.html">第1章 Rust简介与安装</a></li>
@@ -41,8 +48,10 @@
             <li><a href="27.html">第27章 实战：Web API</a></li>
             <li><a href="28.html">第28章 2027 Edition展望</a></li>
         </ul>
-    </div>
-    <div class="main-content">
+    </nav>
+    <main class="main-content">
+
+        <h1>第18章 日志与调试</h1>
 
         <h2>开篇：那个只有println!的生产事故</h2>
 
@@ -134,6 +143,38 @@ RUST_LOG=info,noisy_crate=off cargo run</code></pre>
         <div class="tip">
             <strong>小技巧</strong>：<code>env_logger</code>只是入门级别的后端。对于生产级应用，考虑使用<code>log4rs</code>（支持滚动文件、JSON格式、远程发送）或<code>slog</code>（结构化日志的老牌库）。Rust社区的生态丰富到你可以选择任何层面——从轻量级到企业级都有对应方案。
         </div>
+
+        <figure>
+            <svg viewBox="0 0 860 210" role="img" aria-labelledby="logTitle logDesc">
+                <title id="logTitle">日志级别与过滤</title>
+                <desc id="logDesc">以 RUST_LOG=info 为例，ERROR/WARN/INFO 会输出，DEBUG 与 TRACE 被过滤。</desc>
+                <g font-family="system-ui, 'PingFang SC', sans-serif">
+                    <text x="40" y="34" font-size="14" font-weight="700" fill="#7c2d12">级别（从上到下逐级更详细）</text>
+                    <text x="560" y="34" font-size="14" font-weight="700" fill="#7c2d12">RUST_LOG=info 时</text>
+
+                    <rect x="40" y="48" width="480" height="26" rx="6" fill="#dcfce7" stroke="#16a34a"/>
+                    <text x="56" y="66" font-size="13" font-weight="700" fill="#14532d">ERROR</text>
+                    <text x="560" y="66" font-size="13" fill="#166534">输出 · 最严重</text>
+
+                    <rect x="40" y="80" width="480" height="26" rx="6" fill="#dcfce7" stroke="#16a34a"/>
+                    <text x="56" y="98" font-size="13" font-weight="700" fill="#14532d">WARN</text>
+                    <text x="560" y="98" font-size="13" fill="#166534">输出</text>
+
+                    <rect x="40" y="112" width="480" height="26" rx="6" fill="#dcfce7" stroke="#16a34a"/>
+                    <text x="56" y="130" font-size="13" font-weight="700" fill="#14532d">INFO</text>
+                    <text x="560" y="130" font-size="13" fill="#166534">输出 · 过滤阈值</text>
+
+                    <rect x="40" y="144" width="480" height="26" rx="6" fill="#e5e7eb" stroke="#9ca3af"/>
+                    <text x="56" y="162" font-size="13" font-weight="700" fill="#374151">DEBUG</text>
+                    <text x="560" y="162" font-size="13" fill="#6b7280">被过滤</text>
+
+                    <rect x="40" y="176" width="480" height="26" rx="6" fill="#e5e7eb" stroke="#9ca3af"/>
+                    <text x="56" y="194" font-size="13" font-weight="700" fill="#374151">TRACE</text>
+                    <text x="560" y="194" font-size="13" fill="#6b7280">被过滤 · 最详细</text>
+                </g>
+            </svg>
+            <figcaption>图 1：日志级别过滤（教学示意）。环境变量设定阈值后，等级低于阈值的记录不会输出；生产环境常用 <code>info</code>，排查问题时临时调到 <code>debug</code>。</figcaption>
+        </figure>
 
         <h2>tracing生态 — span、event、结构化日志、OpenTelemetry</h2>
 
@@ -373,7 +414,7 @@ rr replay
             <a href="index.html">📖 返回目录</a>
             <a href="19.html">下一章 →</a>
         </div>
-    </div>
+    </main>
 </div>
 </div>
 </body>

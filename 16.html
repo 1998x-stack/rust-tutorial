@@ -5,11 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>第16章 Cargo生态进阶</title>
     <link rel="stylesheet" href="theme.css">
+    <style>
+        /* Fallback so code blocks and grids stay inside the viewport if the stylesheet is unavailable. */
+        pre { overflow-x: auto; max-width: 100%; }
+        code { overflow-wrap: anywhere; }
+        .main-content { min-width: 0; }
+        @media (max-width: 768px) { .container { display: block; } }
+    </style>
 </head>
 <body>
 <div class="double-border">
 <div class="container">
-    <div class="sidebar">
+    <nav class="sidebar" aria-label="课程章节目录">
         <h3>🦀 课程目录</h3>
         <ul class="chapter-list">
             <li><a href="01.html">第1章 Rust简介与安装</a></li>
@@ -41,8 +48,10 @@
             <li><a href="27.html">第27章 实战：Web API</a></li>
             <li><a href="28.html">第28章 2027 Edition展望</a></li>
         </ul>
-    </div>
-    <div class="main-content">
+    </nav>
+    <main class="main-content">
+
+        <h1>第16章 Cargo生态进阶</h1>
 
         <h2>开篇：那个忘记锁版本的惨痛教训</h2>
 
@@ -124,6 +133,28 @@ my_utils = { path = "../my_utils" }</code></pre>
         <div class="highlight">
             <strong>SemVer实战原则</strong>：你的库如果发布了1.0.0之后，<strong>永远不要</strong>在次版本中做破坏性API变更。这是Rust社区的铁律。一个反例是<code>tokio</code>团队在1.x版本中通过feature flag来引入新功能，完全不需要用户改代码——这才是SemVer的典范实践。
         </div>
+
+        <figure>
+            <svg viewBox="0 0 860 200" role="img" aria-labelledby="semverTitle semverDesc">
+                <title id="semverTitle">语义化版本 “1.2.3” 允许的升级范围</title>
+                <desc id="semverDesc">脱字符约束允许升级到同主版本的任意新版本，但不会跨到 2.0.0 这类破坏性版本。</desc>
+                <g font-family="system-ui, 'PingFang SC', sans-serif">
+                    <path d="M80 110 H780" stroke="#94a3b8" stroke-width="2"/>
+                    <rect x="300" y="96" width="480" height="28" rx="6" fill="#bbf7d0" stroke="#16a34a"/>
+                    <text x="540" y="116" text-anchor="middle" font-size="13" font-weight="700" fill="#14532d">^1.2.3 允许的升级范围：&gt;= 1.2.3 且 &lt; 2.0.0</text>
+
+                    <path d="M80 110 V124" stroke="#94a3b8" stroke-width="2"/>
+                    <text x="80" y="146" text-anchor="middle" font-size="12" fill="#475569">1.0.0</text>
+                    <path d="M300 110 V124" stroke="#16a34a" stroke-width="2"/>
+                    <text x="300" y="146" text-anchor="middle" font-size="12" fill="#166534">1.2.3（当前）</text>
+                    <path d="M780 110 V124" stroke="#ef4444" stroke-width="2"/>
+                    <text x="780" y="146" text-anchor="middle" font-size="12" fill="#991b1b">2.0.0 破坏性</text>
+
+                    <text x="80" y="180" font-size="12" fill="#475569">主版本变化 = 破坏性变更；次版本 = 向后兼容的新功能；修订号 = 向后兼容的修复。</text>
+                </g>
+            </svg>
+            <figcaption>图 1：语义化版本约束（教学示意）。<code>Cargo.toml</code> 写 <code>serde = "1.0"</code> 即 <code>^1.0</code>，允许自动升级到 1.x 的最新版，但不会跨主版本。</figcaption>
+        </figure>
 
         <h2>Features — 条件编译、默认features、feature组合</h2>
 
@@ -355,7 +386,7 @@ members = [
             <a href="index.html">📖 返回目录</a>
             <a href="17.html">下一章 →</a>
         </div>
-    </div>
+    </main>
 </div>
 </div>
 </body>

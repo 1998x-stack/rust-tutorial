@@ -5,11 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>第17章 常见实用Trait</title>
     <link rel="stylesheet" href="theme.css">
+    <style>
+        /* Fallback so code blocks and grids stay inside the viewport if the stylesheet is unavailable. */
+        pre { overflow-x: auto; max-width: 100%; }
+        code { overflow-wrap: anywhere; }
+        .main-content { min-width: 0; }
+        @media (max-width: 768px) { .container { display: block; } }
+    </style>
 </head>
 <body>
 <div class="double-border">
 <div class="container">
-    <div class="sidebar">
+    <nav class="sidebar" aria-label="课程章节目录">
         <h3>🦀 课程目录</h3>
         <ul class="chapter-list">
             <li><a href="01.html">第1章 Rust简介与安装</a></li>
@@ -41,8 +48,10 @@
             <li><a href="27.html">第27章 实战：Web API</a></li>
             <li><a href="28.html">第28章 2027 Edition展望</a></li>
         </ul>
-    </div>
-    <div class="main-content">
+    </nav>
+    <main class="main-content">
+
+        <h1>第17章 常见实用Trait</h1>
 
         <h2>开篇：那个因为忘记实现Display而被骂了一整年的API</h2>
 
@@ -225,6 +234,33 @@ fn main() {
         <div class="highlight">
             <strong>设计哲学</strong>：Rust社区强烈推荐实现<code>From&lt;T&gt;</code>而不是<code>Into&lt;T&gt;</code>——因为前者会自动提供后者的实现。标准库中的<code>String::from("hello")</code>、<code>PathBuf::from("/tmp")</code>都遵循这一模式。当你设计一个API时，尽量提供<code>From</code>实现，让调用方可以用<code>.into()</code>来享受类型推导的便利。
         </div>
+
+        <figure>
+            <svg viewBox="0 0 860 210" role="img" aria-labelledby="fromTitle fromDesc">
+                <title id="fromTitle">From 与 Into 的对应关系</title>
+                <desc id="fromDesc">实现了 From&lt;A&gt; for B 就自动获得 Into&lt;B&gt; for A，两者互为镜像。</desc>
+                <g font-family="system-ui, 'PingFang SC', sans-serif">
+                    <rect x="110" y="40" width="160" height="64" rx="12" fill="#e0f2fe" stroke="#0ea5e9" stroke-width="2"/>
+                    <text x="190" y="80" text-anchor="middle" font-size="20" font-weight="700" fill="#075985">A</text>
+                    <rect x="590" y="40" width="160" height="64" rx="12" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+                    <text x="670" y="80" text-anchor="middle" font-size="20" font-weight="700" fill="#14532d">B</text>
+
+                    <path d="M272 60 H588" stroke="#0ea5e9" stroke-width="2" marker-end="url(#fromArrow)"/>
+                    <text x="430" y="52" text-anchor="middle" font-size="12" fill="#0c4a6e">impl From&lt;A&gt; for B</text>
+                    <path d="M588 90 H272" stroke="#16a34a" stroke-width="2" marker-end="url(#fromArrow2)"/>
+                    <text x="430" y="108" text-anchor="middle" font-size="12" fill="#166534">Into&lt;B&gt; for A（自动获得）</text>
+
+                    <text x="430" y="160" text-anchor="middle" font-family="monospace" font-size="14" fill="#7c2d12">let b: B = a.into();</text>
+                    <text x="430" y="188" text-anchor="middle" font-size="12" fill="#475569">只实现 From，就同时拿到了 Into——不要手写两者</text>
+
+                    <defs>
+                        <marker id="fromArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#0ea5e9"/></marker>
+                        <marker id="fromArrow2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#16a34a"/></marker>
+                    </defs>
+                </g>
+            </svg>
+            <figcaption>图 1：<code>From</code> 与 <code>Into</code> 的镜像关系（教学示意）。标准库为 <code>T: Into&lt;U&gt;</code> 提供泛型实现，使 <code>From</code> 的实现自动“升级”为 <code>Into</code>。</figcaption>
+        </figure>
 
         <h2>Deref与DerefMut — 智能指针解引用、Deref coercion</h2>
 
@@ -421,7 +457,7 @@ trait Copy: Clone { }  // Copy 是 Clone 的子trait</code></pre>
             <a href="index.html">📖 返回目录</a>
             <a href="18.html">下一章 →</a>
         </div>
-    </div>
+    </main>
 </div>
 </div>
 </body>

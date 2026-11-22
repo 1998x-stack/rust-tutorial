@@ -5,11 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>第20章 并发编程</title>
     <link rel="stylesheet" href="theme.css">
+    <style>
+        /* Fallback so code blocks and grids stay inside the viewport if the stylesheet is unavailable. */
+        pre { overflow-x: auto; max-width: 100%; }
+        code { overflow-wrap: anywhere; }
+        .main-content { min-width: 0; }
+        @media (max-width: 768px) { .container { display: block; } }
+    </style>
 </head>
 <body>
 <div class="double-border">
 <div class="container">
-    <div class="sidebar">
+    <nav class="sidebar" aria-label="课程章节目录">
         <h3>🦀 课程目录</h3>
         <ul class="chapter-list">
             <li><a href="01.html">第1章 Rust简介与安装</a></li>
@@ -41,8 +48,10 @@
             <li><a href="27.html">第27章 实战：Web API</a></li>
             <li><a href="28.html">第28章 2027 Edition展望</a></li>
         </ul>
-    </div>
-    <div class="main-content">
+    </nav>
+    <main class="main-content">
+
+        <h1>第20章 并发编程</h1>
 
         <h2>开篇：一次数据竞争的"编译期救赎"</h2>
 
@@ -243,6 +252,33 @@ fn main() {
 
         <p><strong>RwLock vs Mutex</strong>：读多写少用<code>RwLock</code>，读写相当或写多读少用<code>Mutex</code>。<code>RwLock</code>有额外的管理开销，在写密集场景下性能可能不如<code>Mutex</code>。</p>
 
+        <figure>
+            <svg viewBox="0 0 860 260" role="img" aria-labelledby="arcTitle arcDesc">
+                <title id="arcTitle">Arc&lt;Mutex&lt;T&gt;&gt; 跨线程共享状态</title>
+                <desc id="arcDesc">多个线程各自克隆一份 Arc 引用同一份 Mutex 数据，通过 lock 串行访问。</desc>
+                <g font-family="system-ui, 'PingFang SC', sans-serif">
+                    <rect x="300" y="22" width="260" height="56" rx="12" fill="#fef9c3" stroke="#eab308" stroke-width="2"/>
+                    <text x="430" y="48" text-anchor="middle" font-size="15" font-weight="700" fill="#713f12">Arc&lt;Mutex&lt;Vec&lt;i32&gt;&gt;&gt;</text>
+                    <text x="430" y="68" text-anchor="middle" font-size="12" fill="#854d0e">共享所有权 + 互斥锁</text>
+
+                    <path d="M410 78 L210 150" stroke="#94a3b8" stroke-width="2"/>
+                    <path d="M430 78 V150" stroke="#94a3b8" stroke-width="2"/>
+                    <path d="M450 78 L650 150" stroke="#94a3b8" stroke-width="2"/>
+
+                    <rect x="60" y="152" width="280" height="66" rx="12" fill="#e0f2fe" stroke="#0ea5e9" stroke-width="2"/>
+                    <text x="200" y="180" text-anchor="middle" font-size="14" font-weight="700" fill="#075985">线程 1</text>
+                    <text x="200" y="202" text-anchor="middle" font-size="12" fill="#0c4a6e">let guard = data.lock().unwrap();</text>
+
+                    <rect x="520" y="152" width="280" height="66" rx="12" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+                    <text x="660" y="180" text-anchor="middle" font-size="14" font-weight="700" fill="#14532d">线程 2</text>
+                    <text x="660" y="202" text-anchor="middle" font-size="12" fill="#166534">同一时刻只能一个持有锁</text>
+
+                    <text x="430" y="246" text-anchor="middle" font-size="12" fill="#475569">每个线程用 Arc::clone 拿到一份引用；Mutex 把可变访问串行化，消除数据竞争。</text>
+                </g>
+            </svg>
+            <figcaption>图 1：<code>Arc&lt;Mutex&lt;T&gt;&gt;</code> 共享状态模式（教学示意）。<code>Arc</code> 负责多线程下的共享所有权，<code>Mutex</code> 负责把并发写变成互斥访问；<code>Send</code> / <code>Sync</code> 则保证这套组合在编译期是安全的。</figcaption>
+        </figure>
+
         <h2>Send与Sync — 自动trait</h2>
 
         <p>Rust中并发安全的核心是两个<strong>标记trait</strong>（没有方法的trait）：</p>
@@ -408,7 +444,7 @@ fn main() {
             <a href="index.html">📖 返回目录</a>
             <a href="21.html">下一章 →</a>
         </div>
-    </div>
+    </main>
 </div>
 </div>
 </body>

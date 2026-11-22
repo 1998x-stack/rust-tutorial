@@ -5,11 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>第19章 智能指针</title>
     <link rel="stylesheet" href="theme.css">
+    <style>
+        /* Fallback so code blocks and grids stay inside the viewport if the stylesheet is unavailable. */
+        pre { overflow-x: auto; max-width: 100%; }
+        code { overflow-wrap: anywhere; }
+        .main-content { min-width: 0; }
+        @media (max-width: 768px) { .container { display: block; } }
+    </style>
 </head>
 <body>
 <div class="double-border">
 <div class="container">
-    <div class="sidebar">
+    <nav class="sidebar" aria-label="课程章节目录">
         <h3>🦀 课程目录</h3>
         <ul class="chapter-list">
             <li><a href="01.html">第1章 Rust简介与安装</a></li>
@@ -41,8 +48,10 @@
             <li><a href="27.html">第27章 实战：Web API</a></li>
             <li><a href="28.html">第28章 2027 Edition展望</a></li>
         </ul>
-    </div>
-    <div class="main-content">
+    </nav>
+    <main class="main-content">
+
+        <h1>第19章 智能指针</h1>
 
         <h2>开篇：逃不掉的指针话题</h2>
 
@@ -383,6 +392,53 @@ fn main() {
 
         <p>教训：<strong>RefCell不是免罪金牌</strong>。每当你在代码中写下<code>RefCell</code>，都要问自己：这段代码能否通过重构避免运行时借用检查？如果答案是否定的，至少确保<code>borrow</code>和<code>borrow_mut</code>的作用域尽可能地短，并且用断言或日志在关键路径上确认借用顺序的正确性。</p>
 
+        <figure>
+            <svg viewBox="0 0 860 290" role="img" aria-labelledby="ptrTitle ptrDesc">
+                <title id="ptrTitle">智能指针能力对照</title>
+                <desc id="ptrDesc">Box、Rc、Arc、RefCell 与 Cell 在所有权、可变性与线程安全性上的差异。</desc>
+                <g font-family="system-ui, 'PingFang SC', sans-serif">
+                    <rect x="12" y="14" width="836" height="34" rx="6" fill="#fff7ed"/>
+                    <text x="28" y="37" font-size="14" font-weight="700" fill="#7c2d12">类型</text>
+                    <text x="190" y="37" font-size="14" font-weight="700" fill="#7c2d12">所有权</text>
+                    <text x="380" y="37" font-size="14" font-weight="700" fill="#7c2d12">可变性</text>
+                    <text x="610" y="37" font-size="14" font-weight="700" fill="#7c2d12">线程安全</text>
+
+                    <rect x="12" y="50" width="836" height="40" rx="6" fill="#fbfdf9"/>
+                    <text x="28" y="76" font-size="13" font-weight="600" fill="#1e293b">Box&lt;T&gt;</text>
+                    <text x="190" y="76" font-size="13" fill="#1e293b">独占</text>
+                    <text x="380" y="76" font-size="13" fill="#1e293b">编译期可变</text>
+                    <text x="610" y="76" font-size="13" fill="#166534">随 T（T: Send 即可）</text>
+
+                    <rect x="12" y="92" width="836" height="40" rx="6" fill="#fff7ed"/>
+                    <text x="28" y="118" font-size="13" font-weight="600" fill="#1e293b">Rc&lt;T&gt;</text>
+                    <text x="190" y="118" font-size="13" fill="#1e293b">共享（计数）</text>
+                    <text x="380" y="118" font-size="13" fill="#1e293b">不可变共享</text>
+                    <text x="610" y="118" font-size="13" fill="#9a3412">非线程安全</text>
+
+                    <rect x="12" y="134" width="836" height="40" rx="6" fill="#fbfdf9"/>
+                    <text x="28" y="160" font-size="13" font-weight="600" fill="#1e293b">Arc&lt;T&gt;</text>
+                    <text x="190" y="160" font-size="13" fill="#1e293b">共享（原子计数）</text>
+                    <text x="380" y="160" font-size="13" fill="#1e293b">不可变共享</text>
+                    <text x="610" y="160" font-size="13" fill="#166534">线程安全（T: Send+Sync）</text>
+
+                    <rect x="12" y="176" width="836" height="40" rx="6" fill="#fff7ed"/>
+                    <text x="28" y="202" font-size="13" font-weight="600" fill="#1e293b">RefCell&lt;T&gt;</text>
+                    <text x="190" y="202" font-size="13" fill="#1e293b">独占</text>
+                    <text x="380" y="202" font-size="13" fill="#1e293b">运行时借用检查</text>
+                    <text x="610" y="202" font-size="13" fill="#9a3412">非线程安全</text>
+
+                    <rect x="12" y="218" width="836" height="40" rx="6" fill="#fbfdf9"/>
+                    <text x="28" y="244" font-size="13" font-weight="600" fill="#1e293b">Cell&lt;T&gt;</text>
+                    <text x="190" y="244" font-size="13" fill="#1e293b">独占</text>
+                    <text x="380" y="244" font-size="13" fill="#1e293b">按值替换（Copy）</text>
+                    <text x="610" y="244" font-size="13" fill="#9a3412">非线程安全</text>
+
+                    <text x="28" y="278" font-size="12" fill="#475569">组合常见用法：Arc&lt;Mutex&lt;T&gt;&gt; 跨线程共享可变状态；Rc&lt;RefCell&lt;T&gt;&gt; 单线程共享可变数据。</text>
+                </g>
+            </svg>
+            <figcaption>图 1：智能指针能力对照（教学示意）。独占用 <code>Box</code>，单线程共享用 <code>Rc</code>，跨线程共享用 <code>Arc</code>，需要在不可变共享下修改则叠加 <code>RefCell</code> / <code>Mutex</code>。</figcaption>
+        </figure>
+
         <h2>本章小结</h2>
 
         <p>智能指针是Rust所有权系统的"补充包"——它们在你需要突破标准借用规则时提供了有原则的替代方案。我们学习了：<code>Box</code>用于堆分配和递归类型；<code>Rc/Arc</code>用于共享所有权，分别面向单线程和多线程；<code>RefCell</code>用于运行时借用检查，但要以panic为代价；<code>Cell</code>对Copy类型提供了零开销的内嵌可变性；<code>Weak</code>则帮助我们打破循环引用的死锁。</p>
@@ -396,7 +452,7 @@ fn main() {
             <a href="index.html">📖 返回目录</a>
             <a href="20.html">下一章 →</a>
         </div>
-    </div>
+    </main>
 </div>
 </div>
 </body>
