@@ -400,6 +400,17 @@ core = { path = "../core" }</code></pre>
 
         <p>模块系统是Rust项目中"看得见"的骨架，而下一章我们要讲的内容则是Rust程序中最常用的"容器"——<strong>集合类型</strong>。Vec、HashMap、HashSet、VecDeque——这些标准库的数据结构你会天天打交道，就像厨师离不开锅碗瓢盆。准备好了吗？第9章见。</p>
 
+        <section class="quiz" aria-labelledby="quiz-08-h">
+            <h3 id="quiz-08-h">自测：默认可见性</h3>
+            <p>不加任何修饰时，模块中定义的项默认对模块外部可见吗？</p>
+            <div class="quiz-options" role="group" aria-label="选择答案">
+                <button type="button" class="quiz-opt" data-ok="0" data-msg="Rust 默认是私有，不是公开。">默认公开可见</button>
+                <button type="button" class="quiz-opt" data-ok="1" data-msg="正确。Rust 默认私有，需要显式 pub 才能对外暴露。">默认私有，需 pub 才能对外公开</button>
+                <button type="button" class="quiz-opt" data-ok="0" data-msg="函数与类型一视同仁，都默认私有。">函数默认私有，类型默认公开</button>
+            </div>
+            <p class="quiz-feedback" role="status" aria-live="polite"></p>
+        </section>
+
         <div class="footer-nav">
             <a href="07.html">← 上一章</a>
             <a href="index.html">📖 返回目录</a>
@@ -408,5 +419,25 @@ core = { path = "../core" }</code></pre>
     </main>
 </div>
 </div>
+<script>
+(function () {
+    Array.prototype.forEach.call(document.querySelectorAll('.quiz'), function (quiz) {
+        var fb = quiz.querySelector('.quiz-feedback');
+        Array.prototype.forEach.call(quiz.querySelectorAll('.quiz-opt'), function (btn) {
+            btn.addEventListener('click', function () {
+                var ok = btn.getAttribute('data-ok') === '1';
+                Array.prototype.forEach.call(quiz.querySelectorAll('.quiz-opt'), function (b) {
+                    b.removeAttribute('aria-pressed');
+                    b.removeAttribute('data-state');
+                });
+                btn.setAttribute('aria-pressed', 'true');
+                btn.setAttribute('data-state', ok ? 'right' : 'wrong');
+                fb.textContent = btn.getAttribute('data-msg') || '';
+                fb.className = 'quiz-feedback ' + (ok ? 'ok' : 'no');
+            });
+        });
+    });
+})();
+</script>
 </body>
 </html>

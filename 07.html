@@ -372,6 +372,17 @@ match c {
 
         <p>枚举和模式匹配的组合是Rust安全编程的基石。配合第6章的结构体，你已经有了构建复杂数据类型的基本工具。下一章，我们将跳出单个文件，学习Rust的<strong>项目管理与模块系统</strong>——如何把代码组织成模块，如何管理依赖，以及Rust独特的路径系统。</p>
 
+        <section class="quiz" aria-labelledby="quiz-07-h">
+            <h3 id="quiz-07-h">自测：match 的穷尽性</h3>
+            <p>对一个 <code>Option&lt;i32&gt;</code> 写 match，只写了 <code>Some(x) =&gt; ...</code> 一个分支而漏掉 <code>None</code>，会怎样？</p>
+            <div class="quiz-options" role="group" aria-label="选择答案">
+                <button type="button" class="quiz-opt" data-ok="1" data-msg="正确。match 必须穷尽所有可能，漏掉 None 会在编译期报 non-exhaustive patterns。">编译错误：未穷尽所有情况</button>
+                <button type="button" class="quiz-opt" data-ok="0" data-msg="Rust 在编译期就会拦下不穷尽的 match，不会拖到运行时。">编译通过，但 None 时运行时 panic</button>
+                <button type="button" class="quiz-opt" data-ok="0" data-msg="Rust 不会隐式替 None 补默认值，必须显式处理。">编译通过，None 时返回默认值</button>
+            </div>
+            <p class="quiz-feedback" role="status" aria-live="polite"></p>
+        </section>
+
         <div class="footer-nav">
             <a href="06.html">← 上一章</a>
             <a href="index.html">📖 返回目录</a>
@@ -380,5 +391,25 @@ match c {
     </main>
 </div>
 </div>
+<script>
+(function () {
+    Array.prototype.forEach.call(document.querySelectorAll('.quiz'), function (quiz) {
+        var fb = quiz.querySelector('.quiz-feedback');
+        Array.prototype.forEach.call(quiz.querySelectorAll('.quiz-opt'), function (btn) {
+            btn.addEventListener('click', function () {
+                var ok = btn.getAttribute('data-ok') === '1';
+                Array.prototype.forEach.call(quiz.querySelectorAll('.quiz-opt'), function (b) {
+                    b.removeAttribute('aria-pressed');
+                    b.removeAttribute('data-state');
+                });
+                btn.setAttribute('aria-pressed', 'true');
+                btn.setAttribute('data-state', ok ? 'right' : 'wrong');
+                fb.textContent = btn.getAttribute('data-msg') || '';
+                fb.className = 'quiz-feedback ' + (ok ? 'ok' : 'no');
+            });
+        });
+    });
+})();
+</script>
 </body>
 </html>

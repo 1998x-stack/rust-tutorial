@@ -385,6 +385,17 @@ fn main() {
 
         <p>下一章，我们将继续类型系统的旅程——学习<strong>枚举与模式匹配</strong>，看看Rust如何用枚举来表达"一个值可能是A或B或C"，以及<code>match</code>如何安全地处理每一种可能性。</p>
 
+        <section class="quiz" aria-labelledby="quiz-06-h">
+            <h3 id="quiz-06-h">自测：方法的 self 形式</h3>
+            <p>以下哪种 <code>self</code> 形式会让方法取结构体的所有权（调用后原值不能再使用）？</p>
+            <div class="quiz-options" role="group" aria-label="选择答案">
+                <button type="button" class="quiz-opt" data-ok="0" data-msg="&amp;self 是不可变借用，调用后原值仍然可用。">&amp;self</button>
+                <button type="button" class="quiz-opt" data-ok="0" data-msg="&amp;mut self 是可变借用，调用后原值仍然可用。">&amp;mut self</button>
+                <button type="button" class="quiz-opt" data-ok="1" data-msg="正确。self 会移动（move）结构体，调用后原绑定失效。">self</button>
+            </div>
+            <p class="quiz-feedback" role="status" aria-live="polite"></p>
+        </section>
+
         <div class="footer-nav">
             <a href="05.html">← 上一章</a>
             <a href="index.html">📖 返回目录</a>
@@ -393,5 +404,25 @@ fn main() {
     </main>
 </div>
 </div>
+<script>
+(function () {
+    Array.prototype.forEach.call(document.querySelectorAll('.quiz'), function (quiz) {
+        var fb = quiz.querySelector('.quiz-feedback');
+        Array.prototype.forEach.call(quiz.querySelectorAll('.quiz-opt'), function (btn) {
+            btn.addEventListener('click', function () {
+                var ok = btn.getAttribute('data-ok') === '1';
+                Array.prototype.forEach.call(quiz.querySelectorAll('.quiz-opt'), function (b) {
+                    b.removeAttribute('aria-pressed');
+                    b.removeAttribute('data-state');
+                });
+                btn.setAttribute('aria-pressed', 'true');
+                btn.setAttribute('data-state', ok ? 'right' : 'wrong');
+                fb.textContent = btn.getAttribute('data-msg') || '';
+                fb.className = 'quiz-feedback ' + (ok ? 'ok' : 'no');
+            });
+        });
+    });
+})();
+</script>
 </body>
 </html>
