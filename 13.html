@@ -273,6 +273,17 @@ fn process&lt;T: 'static&gt;(val: T) {
 
         <p>生命周期和泛型、trait一起，构成了Rust类型系统的三大支柱。掌握了这些，你已经具备了阅读和理解大多数Rust代码的能力。接下来我们要进入一个非常实用的主题——<strong>闭包与迭代器</strong>。它们会充分展示Rust函数式编程的魅力，也是编写简洁、高效Rust代码的关键。第14章见！</p>
 
+        <section class="quiz" aria-labelledby="quiz-13-h">
+            <h3 id="quiz-13-h">自测：生命周期标注的作用</h3>
+            <p>给函数加上生命周期标注（如 <code>&amp;'a str</code>），它的实际作用是？</p>
+            <div class="quiz-options" role="group" aria-label="选择答案">
+                <button type="button" class="quiz-opt" data-ok="0" data-msg="标注不会延长或缩短引用本身的实际存活时间。">改变引用实际存活的时间</button>
+                <button type="button" class="quiz-opt" data-ok="1" data-msg="正确。标注是把多个引用之间的关系描述给编译器，供其静态校验借用合法性。">描述多个引用之间的关系，帮编译器验证借用是否合法</button>
+                <button type="button" class="quiz-opt" data-ok="0" data-msg="生命周期完全是编译期概念，不会带来运行时检查。">让引用在运行时得到检查</button>
+            </div>
+            <p class="quiz-feedback" role="status" aria-live="polite"></p>
+        </section>
+
         <div class="footer-nav">
             <a href="12.html">← 上一章</a>
             <a href="index.html">📖 返回目录</a>
@@ -281,5 +292,25 @@ fn process&lt;T: 'static&gt;(val: T) {
     </main>
 </div>
 </div>
+<script>
+(function () {
+    Array.prototype.forEach.call(document.querySelectorAll('.quiz'), function (quiz) {
+        var fb = quiz.querySelector('.quiz-feedback');
+        Array.prototype.forEach.call(quiz.querySelectorAll('.quiz-opt'), function (btn) {
+            btn.addEventListener('click', function () {
+                var ok = btn.getAttribute('data-ok') === '1';
+                Array.prototype.forEach.call(quiz.querySelectorAll('.quiz-opt'), function (b) {
+                    b.removeAttribute('aria-pressed');
+                    b.removeAttribute('data-state');
+                });
+                btn.setAttribute('aria-pressed', 'true');
+                btn.setAttribute('data-state', ok ? 'right' : 'wrong');
+                fb.textContent = btn.getAttribute('data-msg') || '';
+                fb.className = 'quiz-feedback ' + (ok ? 'ok' : 'no');
+            });
+        });
+    });
+})();
+</script>
 </body>
 </html>

@@ -381,6 +381,17 @@ members = [
 
         <p>下一章我们将回过头来学习Rust中那些"每天都在用"的实用Trait——Display、From、Deref、Drop、Clone等。这些trait看似不起眼，但几乎出现在了每一行Rust代码中。理解了它们，才算真正理解了Rust的设计哲学。</p>
 
+        <section class="quiz" aria-labelledby="quiz-16-h">
+            <h3 id="quiz-16-h">自测：语义化版本约束</h3>
+            <p>Cargo.toml 中写 <code>serde = "1.0"</code>，默认允许哪些版本？</p>
+            <div class="quiz-options" role="group" aria-label="选择答案">
+                <button type="button" class="quiz-opt" data-ok="0" data-msg="精确锁定需要写 =1.0.0，而不是 1.0。">只允许 1.0.0，精确锁定</button>
+                <button type="button" class="quiz-opt" data-ok="1" data-msg="正确。1.0 等价于 ^1.0，允许 >=1.0.0 且 <2.0.0 的兼容更新。">允许 &gt;=1.0.0 且 &lt;2.0.0 的兼容更新</button>
+                <button type="button" class="quiz-opt" data-ok="0" data-msg="它不会允许跨主版本的更新。">允许任意版本，包括 2.0 以上</button>
+            </div>
+            <p class="quiz-feedback" role="status" aria-live="polite"></p>
+        </section>
+
         <div class="footer-nav">
             <a href="15.html">← 上一章</a>
             <a href="index.html">📖 返回目录</a>
@@ -389,5 +400,25 @@ members = [
     </main>
 </div>
 </div>
+<script>
+(function () {
+    Array.prototype.forEach.call(document.querySelectorAll('.quiz'), function (quiz) {
+        var fb = quiz.querySelector('.quiz-feedback');
+        Array.prototype.forEach.call(quiz.querySelectorAll('.quiz-opt'), function (btn) {
+            btn.addEventListener('click', function () {
+                var ok = btn.getAttribute('data-ok') === '1';
+                Array.prototype.forEach.call(quiz.querySelectorAll('.quiz-opt'), function (b) {
+                    b.removeAttribute('aria-pressed');
+                    b.removeAttribute('data-state');
+                });
+                btn.setAttribute('aria-pressed', 'true');
+                btn.setAttribute('data-state', ok ? 'right' : 'wrong');
+                fb.textContent = btn.getAttribute('data-msg') || '';
+                fb.className = 'quiz-feedback ' + (ok ? 'ok' : 'no');
+            });
+        });
+    });
+})();
+</script>
 </body>
 </html>

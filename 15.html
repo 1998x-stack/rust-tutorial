@@ -425,6 +425,17 @@ criterion_main!(benches);</code></pre>
 
         <p>下一章我们将继续深入Cargo生态——学习依赖管理、feature配置、profile优化、发布crate，以及各种提升开发效率的cargo子命令。测试写好了，是时候把这些代码打包发布给整个世界了。</p>
 
+        <section class="quiz" aria-labelledby="quiz-15-h">
+            <h3 id="quiz-15-h">自测：单元测试与集成测试</h3>
+            <p>放在 <code>tests/</code> 目录下的集成测试，能直接调用被测 crate 的私有函数吗？</p>
+            <div class="quiz-options" role="group" aria-label="选择答案">
+                <button type="button" class="quiz-opt" data-ok="0" data-msg="集成测试是外部使用者视角，无法绕过可见性直接调用私有项。">能，可以随意访问所有函数</button>
+                <button type="button" class="quiz-opt" data-ok="1" data-msg="正确。集成测试只能访问公开 API；测试私有函数应在源文件内的 #[cfg(test)] mod tests 中写单元测试。">不能，只能访问公开 API</button>
+                <button type="button" class="quiz-opt" data-ok="0" data-msg="pub(crate) 只对同一 crate 内部可见，外部集成测试仍看不到。">加 pub(crate) 后就可以</button>
+            </div>
+            <p class="quiz-feedback" role="status" aria-live="polite"></p>
+        </section>
+
         <div class="footer-nav">
             <a href="14.html">← 上一章</a>
             <a href="index.html">📖 返回目录</a>
@@ -433,5 +444,25 @@ criterion_main!(benches);</code></pre>
     </main>
 </div>
 </div>
+<script>
+(function () {
+    Array.prototype.forEach.call(document.querySelectorAll('.quiz'), function (quiz) {
+        var fb = quiz.querySelector('.quiz-feedback');
+        Array.prototype.forEach.call(quiz.querySelectorAll('.quiz-opt'), function (btn) {
+            btn.addEventListener('click', function () {
+                var ok = btn.getAttribute('data-ok') === '1';
+                Array.prototype.forEach.call(quiz.querySelectorAll('.quiz-opt'), function (b) {
+                    b.removeAttribute('aria-pressed');
+                    b.removeAttribute('data-state');
+                });
+                btn.setAttribute('aria-pressed', 'true');
+                btn.setAttribute('data-state', ok ? 'right' : 'wrong');
+                fb.textContent = btn.getAttribute('data-msg') || '';
+                fb.className = 'quiz-feedback ' + (ok ? 'ok' : 'no');
+            });
+        });
+    });
+})();
+</script>
 </body>
 </html>

@@ -396,6 +396,17 @@ impl&lt;T&gt; IntoIterator for MyCollection&lt;T&gt; {
 
         <p>掌握闭包和迭代器意味着你已经从"会写Rust"进阶到了"会用好Rust"。下节课我们将进入Rust开发中非常重要的一环——<strong>测试体系</strong>。如何用<code>cargo test</code>为你的Rust代码编写单元测试、集成测试和文档测试？第15章见！</p>
 
+        <section class="quiz" aria-labelledby="quiz-14-h">
+            <h3 id="quiz-14-h">自测：闭包实现的 Fn 系列 trait</h3>
+            <p>一个闭包如果会消耗（move 出）它捕获的变量，它会实现哪个 trait？</p>
+            <div class="quiz-options" role="group" aria-label="选择答案">
+                <button type="button" class="quiz-opt" data-ok="0" data-msg="Fn 只能多次不可变地借用捕获变量，不会消耗它们。">Fn</button>
+                <button type="button" class="quiz-opt" data-ok="0" data-msg="FnMut 只会可变地借用捕获变量，不会把它们 move 出去。">FnMut</button>
+                <button type="button" class="quiz-opt" data-ok="1" data-msg="正确。FnOnce 表示闭包会消耗捕获值，因此只能调用一次。">FnOnce</button>
+            </div>
+            <p class="quiz-feedback" role="status" aria-live="polite"></p>
+        </section>
+
         <div class="footer-nav">
             <a href="13.html">← 上一章</a>
             <a href="index.html">📖 返回目录</a>
@@ -404,5 +415,25 @@ impl&lt;T&gt; IntoIterator for MyCollection&lt;T&gt; {
     </main>
 </div>
 </div>
+<script>
+(function () {
+    Array.prototype.forEach.call(document.querySelectorAll('.quiz'), function (quiz) {
+        var fb = quiz.querySelector('.quiz-feedback');
+        Array.prototype.forEach.call(quiz.querySelectorAll('.quiz-opt'), function (btn) {
+            btn.addEventListener('click', function () {
+                var ok = btn.getAttribute('data-ok') === '1';
+                Array.prototype.forEach.call(quiz.querySelectorAll('.quiz-opt'), function (b) {
+                    b.removeAttribute('aria-pressed');
+                    b.removeAttribute('data-state');
+                });
+                btn.setAttribute('aria-pressed', 'true');
+                btn.setAttribute('data-state', ok ? 'right' : 'wrong');
+                fb.textContent = btn.getAttribute('data-msg') || '';
+                fb.className = 'quiz-feedback ' + (ok ? 'ok' : 'no');
+            });
+        });
+    });
+})();
+</script>
 </body>
 </html>
