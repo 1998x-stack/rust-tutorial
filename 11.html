@@ -275,6 +275,17 @@ let sum: u32 = my_counter.sum();</code></pre>
 
         <p>泛型单独使用只是热身。下一章我们要看的是Rust中最重要、最核心的抽象机制——<strong>Trait</strong>。它是对"行为"的类型化描述，是泛型约束的基础，也是Rust实现多态的方式。你可以把trait理解为Rust版的"接口"——但它远比接口更灵活、更强大。第12章，我们正式进入Trait的世界。</p>
 
+        <section class="quiz" aria-labelledby="quiz-11-h">
+            <h3 id="quiz-11-h">自测：泛型的零成本实现</h3>
+            <p>Rust 的泛型函数在编译时通常如何实现“零成本抽象”？</p>
+            <div class="quiz-options" role="group" aria-label="选择答案">
+                <button type="button" class="quiz-opt" data-ok="0" data-msg="虚表与动态分发是 trait 对象（dyn Trait）的机制，不是泛型的默认方式。">运行时用虚表动态分发</button>
+                <button type="button" class="quiz-opt" data-ok="1" data-msg="正确。单态化会为每个具体类型生成一份专用代码，因此没有运行时开销。">单态化：为每个使用的具体类型生成专用代码</button>
+                <button type="button" class="quiz-opt" data-ok="0" data-msg="泛型代码在编译期就被展开为具体实现，不是解释执行。">解释执行，在运行时决定类型</button>
+            </div>
+            <p class="quiz-feedback" role="status" aria-live="polite"></p>
+        </section>
+
         <div class="footer-nav">
             <a href="10.html">← 上一章</a>
             <a href="index.html">📖 返回目录</a>
@@ -283,5 +294,25 @@ let sum: u32 = my_counter.sum();</code></pre>
     </main>
 </div>
 </div>
+<script>
+(function () {
+    Array.prototype.forEach.call(document.querySelectorAll('.quiz'), function (quiz) {
+        var fb = quiz.querySelector('.quiz-feedback');
+        Array.prototype.forEach.call(quiz.querySelectorAll('.quiz-opt'), function (btn) {
+            btn.addEventListener('click', function () {
+                var ok = btn.getAttribute('data-ok') === '1';
+                Array.prototype.forEach.call(quiz.querySelectorAll('.quiz-opt'), function (b) {
+                    b.removeAttribute('aria-pressed');
+                    b.removeAttribute('data-state');
+                });
+                btn.setAttribute('aria-pressed', 'true');
+                btn.setAttribute('data-state', ok ? 'right' : 'wrong');
+                fb.textContent = btn.getAttribute('data-msg') || '';
+                fb.className = 'quiz-feedback ' + (ok ? 'ok' : 'no');
+            });
+        });
+    });
+})();
+</script>
 </body>
 </html>

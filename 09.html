@@ -353,6 +353,17 @@ let doubled: Vec&lt;i32&gt; = v.iter().map(|x| x * 2).collect();</code></pre>
 
         <p>但真正的代码世界并不是永远风平浪静的。接下来我们要面对一个重要的主题——<strong>错误处理</strong>。如何优雅地应对异常情况？怎么保证你的程序在出问题时不会突然崩溃？Rust的错误处理哲学与其他语言完全不同，它会把错误纳入类型系统，让你<strong>不得不</strong>面对它们。第10章，让我们直面Rust的错误处理。</p>
 
+        <section class="quiz" aria-labelledby="quiz-09-h">
+            <h3 id="quiz-09-h">自测：索引访问的边界</h3>
+            <p>对 <code>let v = vec![1, 2, 3]; let x = v[5];</code> 会发生什么？</p>
+            <div class="quiz-options" role="group" aria-label="选择答案">
+                <button type="button" class="quiz-opt" data-ok="0" data-msg="Vec 的索引是运行时检查的，这段代码能通过编译。">编译错误</button>
+                <button type="button" class="quiz-opt" data-ok="1" data-msg="正确。索引越界会 panic；若想返回 Option，应改用 v.get(5)。">运行时 panic</button>
+                <button type="button" class="quiz-opt" data-ok="0" data-msg="返回 None 的是 v.get(5)，而不是索引运算符 v[5]。">返回 None</button>
+            </div>
+            <p class="quiz-feedback" role="status" aria-live="polite"></p>
+        </section>
+
         <div class="footer-nav">
             <a href="08.html">← 上一章</a>
             <a href="index.html">📖 返回目录</a>
@@ -361,5 +372,25 @@ let doubled: Vec&lt;i32&gt; = v.iter().map(|x| x * 2).collect();</code></pre>
     </main>
 </div>
 </div>
+<script>
+(function () {
+    Array.prototype.forEach.call(document.querySelectorAll('.quiz'), function (quiz) {
+        var fb = quiz.querySelector('.quiz-feedback');
+        Array.prototype.forEach.call(quiz.querySelectorAll('.quiz-opt'), function (btn) {
+            btn.addEventListener('click', function () {
+                var ok = btn.getAttribute('data-ok') === '1';
+                Array.prototype.forEach.call(quiz.querySelectorAll('.quiz-opt'), function (b) {
+                    b.removeAttribute('aria-pressed');
+                    b.removeAttribute('data-state');
+                });
+                btn.setAttribute('aria-pressed', 'true');
+                btn.setAttribute('data-state', ok ? 'right' : 'wrong');
+                fb.textContent = btn.getAttribute('data-msg') || '';
+                fb.className = 'quiz-feedback ' + (ok ? 'ok' : 'no');
+            });
+        });
+    });
+})();
+</script>
 </body>
 </html>

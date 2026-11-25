@@ -320,6 +320,17 @@ fn main() -&gt; Result&lt;()&gt; {
 
         <p>从下一章开始，我们将进入Rust"零成本抽象"的核心主题之一——<strong>泛型</strong>。理解泛型是理解Rust标准库和生态的钥匙。准备好迎接<code>&lt;T&gt;</code>的世界了吗？第11章见。</p>
 
+        <section class="quiz" aria-labelledby="quiz-10-h">
+            <h3 id="quiz-10-h">自测：? 运算符的行为</h3>
+            <p>在返回 <code>Result</code> 的函数中，<code>?</code> 遇到 <code>Err</code> 时会怎样？</p>
+            <div class="quiz-options" role="group" aria-label="选择答案">
+                <button type="button" class="quiz-opt" data-ok="0" data-msg="? 不会 panic，它只是把错误传给调用者。">立即 panic</button>
+                <button type="button" class="quiz-opt" data-ok="1" data-msg="正确。? 会把 Err 作为函数返回值提前返回，Ok 则取出内部值继续。">提前返回该 Err，把错误传播给调用者</button>
+                <button type="button" class="quiz-opt" data-ok="0" data-msg="? 不会静默忽略错误，这是它与 unwrap_or 类方法的重要区别。">忽略错误、继续执行</button>
+            </div>
+            <p class="quiz-feedback" role="status" aria-live="polite"></p>
+        </section>
+
         <div class="footer-nav">
             <a href="09.html">← 上一章</a>
             <a href="index.html">📖 返回目录</a>
@@ -328,5 +339,25 @@ fn main() -&gt; Result&lt;()&gt; {
     </main>
 </div>
 </div>
+<script>
+(function () {
+    Array.prototype.forEach.call(document.querySelectorAll('.quiz'), function (quiz) {
+        var fb = quiz.querySelector('.quiz-feedback');
+        Array.prototype.forEach.call(quiz.querySelectorAll('.quiz-opt'), function (btn) {
+            btn.addEventListener('click', function () {
+                var ok = btn.getAttribute('data-ok') === '1';
+                Array.prototype.forEach.call(quiz.querySelectorAll('.quiz-opt'), function (b) {
+                    b.removeAttribute('aria-pressed');
+                    b.removeAttribute('data-state');
+                });
+                btn.setAttribute('aria-pressed', 'true');
+                btn.setAttribute('data-state', ok ? 'right' : 'wrong');
+                fb.textContent = btn.getAttribute('data-msg') || '';
+                fb.className = 'quiz-feedback ' + (ok ? 'ok' : 'no');
+            });
+        });
+    });
+})();
+</script>
 </body>
 </html>

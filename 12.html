@@ -326,6 +326,17 @@ println!("{}", u1 == u2);     // PartialEq</code></pre>
 
         <p>理解了trait，你已经掌握了Rust设计哲学中"基于行为的抽象"的精髓。但还有一个概念与trait紧密交织——<strong>生命周期</strong>。在带有引用的函数签名和结构体中，你经常会同时使用trait约束和生命周期标注。第13章，我们专门来讲生命周期——Rust中最让人"烧脑"但又必须掌握的概念。</p>
 
+        <section class="quiz" aria-labelledby="quiz-12-h">
+            <h3 id="quiz-12-h">自测：孤儿规则</h3>
+            <p>“孤儿规则”（Orphan Rule）对 trait 实现施加了什么限制？</p>
+            <div class="quiz-options" role="group" aria-label="选择答案">
+                <button type="button" class="quiz-opt" data-ok="0" data-msg="规则只要求 trait 或类型之一属于当前 crate，不要求两者都是本地的。">trait 和类型必须都是本 crate 定义的</button>
+                <button type="button" class="quiz-opt" data-ok="1" data-msg="正确。只要 trait 或目标类型至少有一个在当前 crate 中，就能写 impl。">trait 或目标类型至少有一个在当前 crate 中定义</button>
+                <button type="button" class="quiz-opt" data-ok="0" data-msg="并非完全不能：只要满足“至少一个本地”的条件，就可以为外部类型实现 trait。">完全不能为外部类型实现任何 trait</button>
+            </div>
+            <p class="quiz-feedback" role="status" aria-live="polite"></p>
+        </section>
+
         <div class="footer-nav">
             <a href="11.html">← 上一章</a>
             <a href="index.html">📖 返回目录</a>
@@ -334,5 +345,25 @@ println!("{}", u1 == u2);     // PartialEq</code></pre>
     </main>
 </div>
 </div>
+<script>
+(function () {
+    Array.prototype.forEach.call(document.querySelectorAll('.quiz'), function (quiz) {
+        var fb = quiz.querySelector('.quiz-feedback');
+        Array.prototype.forEach.call(quiz.querySelectorAll('.quiz-opt'), function (btn) {
+            btn.addEventListener('click', function () {
+                var ok = btn.getAttribute('data-ok') === '1';
+                Array.prototype.forEach.call(quiz.querySelectorAll('.quiz-opt'), function (b) {
+                    b.removeAttribute('aria-pressed');
+                    b.removeAttribute('data-state');
+                });
+                btn.setAttribute('aria-pressed', 'true');
+                btn.setAttribute('data-state', ok ? 'right' : 'wrong');
+                fb.textContent = btn.getAttribute('data-msg') || '';
+                fb.className = 'quiz-feedback ' + (ok ? 'ok' : 'no');
+            });
+        });
+    });
+})();
+</script>
 </body>
 </html>
