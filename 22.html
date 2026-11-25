@@ -411,6 +411,17 @@ unsafe impl&lt;T: Sync&gt; Sync for MySendPtr&lt;T&gt; {}</code></pre>
 
         <p>下一章我们将脱离安全/unsafe的讨论，进入更加实用的领域——常用库选型。你将了解Rust生态中那些经过时间检验的优质crate，以及如何在项目中做出正确的技术选型。打开第23章，继续前进。</p>
 
+        <section class="quiz" aria-labelledby="quiz-22-h">
+            <h3 id="quiz-22-h">自测：unsafe 到底做了什么</h3>
+            <p>关于 <code>unsafe</code> 块，下列哪种说法正确？</p>
+            <div class="quiz-options" role="group" aria-label="选择答案">
+                <button type="button" class="quiz-opt" data-ok="0" data-msg="unsafe 不会关闭所有检查，类型、借用等大部分规则仍然生效。">关闭所有安全检查，允许任意行为</button>
+                <button type="button" class="quiz-opt" data-ok="1" data-msg="正确。unsafe 只是解锁几种特权操作，正确性责任由你承担，其余检查照常。">解锁几种特权操作，安全责任由你承担</button>
+                <button type="button" class="quiz-opt" data-ok="0" data-msg="unsafe 不会自动带来性能提升，它只是解锁特权操作。">让代码自动变快</button>
+            </div>
+            <p class="quiz-feedback" role="status" aria-live="polite"></p>
+        </section>
+
         <div class="footer-nav">
             <a href="21.html">← 上一章</a>
             <a href="index.html">📖 返回目录</a>
@@ -419,5 +430,25 @@ unsafe impl&lt;T: Sync&gt; Sync for MySendPtr&lt;T&gt; {}</code></pre>
     </main>
 </div>
 </div>
+<script>
+(function () {
+    Array.prototype.forEach.call(document.querySelectorAll('.quiz'), function (quiz) {
+        var fb = quiz.querySelector('.quiz-feedback');
+        Array.prototype.forEach.call(quiz.querySelectorAll('.quiz-opt'), function (btn) {
+            btn.addEventListener('click', function () {
+                var ok = btn.getAttribute('data-ok') === '1';
+                Array.prototype.forEach.call(quiz.querySelectorAll('.quiz-opt'), function (b) {
+                    b.removeAttribute('aria-pressed');
+                    b.removeAttribute('data-state');
+                });
+                btn.setAttribute('aria-pressed', 'true');
+                btn.setAttribute('data-state', ok ? 'right' : 'wrong');
+                fb.textContent = btn.getAttribute('data-msg') || '';
+                fb.className = 'quiz-feedback ' + (ok ? 'ok' : 'no');
+            });
+        });
+    });
+})();
+</script>
 </body>
 </html>

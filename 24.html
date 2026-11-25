@@ -427,6 +427,17 @@ criterion = { version = "0.5", features = ["html_reports"] }</code></pre>
 
         <p>下一章我们将进入Rust中一个非常有趣的话题——<strong>宏编程</strong>。如果说本章教你"如何让代码跑得更快"，那么下一章将教你"如何让写代码本身也更快"。宏是Rust元编程的核心武器，准备好了吗？</p>
 
+        <section class="quiz" aria-labelledby="quiz-24-h">
+            <h3 id="quiz-24-h">自测：--release 默认开启什么</h3>
+            <p>关于 release 构建（<code>--release</code>），下列说法哪一项正确？</p>
+            <div class="quiz-options" role="group" aria-label="选择答案">
+                <button type="button" class="quiz-opt" data-ok="0" data-msg="LTO 默认是关闭的，需要手动设置 lto = true。">默认同时开启 LTO 和单 codegen unit</button>
+                <button type="button" class="quiz-opt" data-ok="1" data-msg="正确。release 会启用优化并关闭 debug 断言，但 LTO 需手动开启。">启用优化并关闭 debug 断言，但不自动开启 LTO</button>
+                <button type="button" class="quiz-opt" data-ok="0" data-msg="release 模式在 stable 上即可用，不需要 nightly。">只能在 nightly 上使用</button>
+            </div>
+            <p class="quiz-feedback" role="status" aria-live="polite"></p>
+        </section>
+
         <div class="footer-nav">
             <a href="23.html">← 上一章</a>
             <a href="index.html">📖 返回目录</a>
@@ -435,5 +446,25 @@ criterion = { version = "0.5", features = ["html_reports"] }</code></pre>
     </main>
 </div>
 </div>
+<script>
+(function () {
+    Array.prototype.forEach.call(document.querySelectorAll('.quiz'), function (quiz) {
+        var fb = quiz.querySelector('.quiz-feedback');
+        Array.prototype.forEach.call(quiz.querySelectorAll('.quiz-opt'), function (btn) {
+            btn.addEventListener('click', function () {
+                var ok = btn.getAttribute('data-ok') === '1';
+                Array.prototype.forEach.call(quiz.querySelectorAll('.quiz-opt'), function (b) {
+                    b.removeAttribute('aria-pressed');
+                    b.removeAttribute('data-state');
+                });
+                btn.setAttribute('aria-pressed', 'true');
+                btn.setAttribute('data-state', ok ? 'right' : 'wrong');
+                fb.textContent = btn.getAttribute('data-msg') || '';
+                fb.className = 'quiz-feedback ' + (ok ? 'ok' : 'no');
+            });
+        });
+    });
+})();
+</script>
 </body>
 </html>

@@ -575,6 +575,17 @@ pub enum ParseError {
 
         <p>掌握了这些库，你已经能够独立完成大部分Rust应用开发了。从第24章开始，我们将提升一个维度——不再只是"能用这些库"，而是"如何写出高性能的Rust代码"。性能分析工具和优化技巧将是我们下一站的内容。</p>
 
+        <section class="quiz" aria-labelledby="quiz-23-h">
+            <h3 id="quiz-23-h">自测：Serde 的常规用法</h3>
+            <p>让一个结构体支持 Serde 序列化，最常见的方式是？</p>
+            <div class="quiz-options" role="group" aria-label="选择答案">
+                <button type="button" class="quiz-opt" data-ok="0" data-msg="Display 只负责文本格式化，与 Serde 的序列化无关。">手动为它实现 Display</button>
+                <button type="button" class="quiz-opt" data-ok="1" data-msg="正确。加 #[derive(Serialize, Deserialize)] 即可让 Serde 派生实现。">加 #[derive(Serialize, Deserialize)]</button>
+                <button type="button" class="quiz-opt" data-ok="0" data-msg="Copy 只控制赋值时是否位复制，无法提供序列化能力。">让结构体实现 Copy</button>
+            </div>
+            <p class="quiz-feedback" role="status" aria-live="polite"></p>
+        </section>
+
         <div class="footer-nav">
             <a href="22.html">← 上一章</a>
             <a href="index.html">📖 返回目录</a>
@@ -583,5 +594,25 @@ pub enum ParseError {
     </main>
 </div>
 </div>
+<script>
+(function () {
+    Array.prototype.forEach.call(document.querySelectorAll('.quiz'), function (quiz) {
+        var fb = quiz.querySelector('.quiz-feedback');
+        Array.prototype.forEach.call(quiz.querySelectorAll('.quiz-opt'), function (btn) {
+            btn.addEventListener('click', function () {
+                var ok = btn.getAttribute('data-ok') === '1';
+                Array.prototype.forEach.call(quiz.querySelectorAll('.quiz-opt'), function (b) {
+                    b.removeAttribute('aria-pressed');
+                    b.removeAttribute('data-state');
+                });
+                btn.setAttribute('aria-pressed', 'true');
+                btn.setAttribute('data-state', ok ? 'right' : 'wrong');
+                fb.textContent = btn.getAttribute('data-msg') || '';
+                fb.className = 'quiz-feedback ' + (ok ? 'ok' : 'no');
+            });
+        });
+    });
+})();
+</script>
 </body>
 </html>
