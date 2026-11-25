@@ -409,6 +409,17 @@ rr replay
 
         <p>下一章我们将进入一个全新的话题——智能指针。之前我们多次提到<code>Box&lt;T&gt;</code>、<code>Rc&lt;T&gt;</code>、<code>RefCell&lt;T&gt;</code>，但从未深入讲解。第19章将会全面拆解这些智能指针：它们的工作原理、使用场景、以及那些让你头疼的借用规则。</p>
 
+        <section class="quiz" aria-labelledby="quiz-18-h">
+            <h3 id="quiz-18-h">自测：日志级别的顺序</h3>
+            <p>在 <code>log</code> 体系中，日志级别由高（严重）到低依次是？</p>
+            <div class="quiz-options" role="group" aria-label="选择答案">
+                <button type="button" class="quiz-opt" data-ok="1" data-msg="正确。过滤到某个级别时，会保留它及更严重的级别（如设 Warn 则保留 Error/Warn）。">Error &gt; Warn &gt; Info &gt; Debug &gt; Trace</button>
+                <button type="button" class="quiz-opt" data-ok="0" data-msg="这个顺序弄反了，Trace 是最详细、最低的级别。">Trace &gt; Debug &gt; Info &gt; Warn &gt; Error</button>
+                <button type="button" class="quiz-opt" data-ok="0" data-msg="Error 才是最严重的级别，不是 Debug。">Debug &gt; Info &gt; Warn &gt; Error &gt; Trace</button>
+            </div>
+            <p class="quiz-feedback" role="status" aria-live="polite"></p>
+        </section>
+
         <div class="footer-nav">
             <a href="17.html">← 上一章</a>
             <a href="index.html">📖 返回目录</a>
@@ -417,5 +428,25 @@ rr replay
     </main>
 </div>
 </div>
+<script>
+(function () {
+    Array.prototype.forEach.call(document.querySelectorAll('.quiz'), function (quiz) {
+        var fb = quiz.querySelector('.quiz-feedback');
+        Array.prototype.forEach.call(quiz.querySelectorAll('.quiz-opt'), function (btn) {
+            btn.addEventListener('click', function () {
+                var ok = btn.getAttribute('data-ok') === '1';
+                Array.prototype.forEach.call(quiz.querySelectorAll('.quiz-opt'), function (b) {
+                    b.removeAttribute('aria-pressed');
+                    b.removeAttribute('data-state');
+                });
+                btn.setAttribute('aria-pressed', 'true');
+                btn.setAttribute('data-state', ok ? 'right' : 'wrong');
+                fb.textContent = btn.getAttribute('data-msg') || '';
+                fb.className = 'quiz-feedback ' + (ok ? 'ok' : 'no');
+            });
+        });
+    });
+})();
+</script>
 </body>
 </html>

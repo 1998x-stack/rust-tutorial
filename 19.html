@@ -447,6 +447,17 @@ fn main() {
 
         <p>下一章我们将进入并发编程的世界——在那里，<code>Arc&lt;Mutex&lt;T&gt;&gt;</code>会成为你最亲密的战友。打开第20章，让我们开始处理多线程的挑战。</p>
 
+        <section class="quiz" aria-labelledby="quiz-19-h">
+            <h3 id="quiz-19-h">自测：RefCell 的借用检查时机</h3>
+            <p><code>RefCell&lt;T&gt;</code> 的借用规则是在什么时候检查的？</p>
+            <div class="quiz-options" role="group" aria-label="选择答案">
+                <button type="button" class="quiz-opt" data-ok="0" data-msg="编译期检查借用是普通引用的规则；RefCell 把它推迟到了运行时。">编译期</button>
+                <button type="button" class="quiz-opt" data-ok="1" data-msg="正确。RefCell 在运行时跟踪借用，违反规则时 panic（而不是编译错误）。">运行时，违反规则时 panic</button>
+                <button type="button" class="quiz-opt" data-ok="0" data-msg="RefCell 仍会检查借用，只是改到运行时。">从不检查</button>
+            </div>
+            <p class="quiz-feedback" role="status" aria-live="polite"></p>
+        </section>
+
         <div class="footer-nav">
             <a href="18.html">← 上一章</a>
             <a href="index.html">📖 返回目录</a>
@@ -455,5 +466,25 @@ fn main() {
     </main>
 </div>
 </div>
+<script>
+(function () {
+    Array.prototype.forEach.call(document.querySelectorAll('.quiz'), function (quiz) {
+        var fb = quiz.querySelector('.quiz-feedback');
+        Array.prototype.forEach.call(quiz.querySelectorAll('.quiz-opt'), function (btn) {
+            btn.addEventListener('click', function () {
+                var ok = btn.getAttribute('data-ok') === '1';
+                Array.prototype.forEach.call(quiz.querySelectorAll('.quiz-opt'), function (b) {
+                    b.removeAttribute('aria-pressed');
+                    b.removeAttribute('data-state');
+                });
+                btn.setAttribute('aria-pressed', 'true');
+                btn.setAttribute('data-state', ok ? 'right' : 'wrong');
+                fb.textContent = btn.getAttribute('data-msg') || '';
+                fb.className = 'quiz-feedback ' + (ok ? 'ok' : 'no');
+            });
+        });
+    });
+})();
+</script>
 </body>
 </html>

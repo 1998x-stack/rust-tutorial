@@ -439,6 +439,17 @@ fn main() {
 
         <p>并发编程是你成为Rust高级开发者的必经之路。标准库线程是基础，但如果你的应用需要在I/O密集型场景下处理成千上万的并发任务，OS线程的开销就成了瓶颈——这时候我们需要<strong>异步编程</strong>。下一章我们将深入async/await的世界，学习如何用少量线程处理海量并发。打开第21章，继续前行。</p>
 
+        <section class="quiz" aria-labelledby="quiz-20-h">
+            <h3 id="quiz-20-h">自测：Mutex 与编译期保证</h3>
+            <p>Rust 如何能让你在编译期就避免多线程数据竞争？</p>
+            <div class="quiz-options" role="group" aria-label="选择答案">
+                <button type="button" class="quiz-opt" data-ok="0" data-msg="Rust 靠的是类型系统，而不是靠锁死或运行时监控。">运行时给数据加锁并监控竞争</button>
+                <button type="button" class="quiz-opt" data-ok="1" data-msg="正确。Mutex/Arc 配合 Send/Sync 自动 trait，在编译期就限制哪些值能安全跨线程共享。">通过所有权与 Send/Sync，限制可安全跨线程共享的类型</button>
+                <button type="button" class="quiz-opt" data-ok="0" data-msg="Rust 不会自动复制数据到每个线程，共享靠 Arc 等显式机制。">自动为每个线程复制一份数据</button>
+            </div>
+            <p class="quiz-feedback" role="status" aria-live="polite"></p>
+        </section>
+
         <div class="footer-nav">
             <a href="19.html">← 上一章</a>
             <a href="index.html">📖 返回目录</a>
@@ -447,5 +458,25 @@ fn main() {
     </main>
 </div>
 </div>
+<script>
+(function () {
+    Array.prototype.forEach.call(document.querySelectorAll('.quiz'), function (quiz) {
+        var fb = quiz.querySelector('.quiz-feedback');
+        Array.prototype.forEach.call(quiz.querySelectorAll('.quiz-opt'), function (btn) {
+            btn.addEventListener('click', function () {
+                var ok = btn.getAttribute('data-ok') === '1';
+                Array.prototype.forEach.call(quiz.querySelectorAll('.quiz-opt'), function (b) {
+                    b.removeAttribute('aria-pressed');
+                    b.removeAttribute('data-state');
+                });
+                btn.setAttribute('aria-pressed', 'true');
+                btn.setAttribute('data-state', ok ? 'right' : 'wrong');
+                fb.textContent = btn.getAttribute('data-msg') || '';
+                fb.className = 'quiz-feedback ' + (ok ? 'ok' : 'no');
+            });
+        });
+    });
+})();
+</script>
 </body>
 </html>
