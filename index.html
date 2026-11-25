@@ -272,6 +272,14 @@
         .toc { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 0 0 1rem; }
         .toc a { text-decoration: none; color: #1f4d33; background: #eef7ea; border: 1px solid #cfe6c6; padding: 0.25rem 0.9rem; border-radius: 30px; font-size: 0.9rem; font-weight: 600; }
         .toc a:focus-visible { outline: 3px solid #ea580c; outline-offset: 2px; }
+        .filters { margin: 0.6rem 0 1rem; display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; }
+        .filters label { font-weight: 600; color: #7c2d12; }
+        .filters input[type="search"] { flex: 1 1 220px; min-width: 0; padding: 0.5rem 0.9rem; border: 2px solid #fed7aa; border-radius: 30px; font-size: 0.95rem; color: #1e293b; background: #fffbf5; }
+        .filters input[type="search"]:focus-visible { outline: 3px solid #ea580c; outline-offset: 2px; }
+        .stage-filter { padding: 0.4rem 1rem; border-radius: 30px; border: 2px solid #fed7aa; background: #fff7ed; color: #9a3412; font-weight: 600; font-size: 0.85rem; cursor: pointer; }
+        .stage-filter[aria-pressed="true"] { background: #ea580c; color: #fff; border-color: #c2410c; }
+        .stage-filter:focus-visible { outline: 3px solid #ea580c; outline-offset: 2px; }
+        .filter-empty { color: #9a3412; background: #fef9c3; border: 1px solid #facc15; border-radius: 16px; padding: 0.8rem 1rem; margin: 0 0 1rem; }
         .content-section { margin-top: 1.4rem; }
         .content-section h2 { color: #7c2d12; border-left: 6px solid #f97316; padding-left: 14px; font-size: 1.45rem; margin: 1.2rem 0 0.8rem; }
         figure { margin: 1.2rem 0; background: #fbfdf9; border: 1px solid #dfeed6; border-radius: 20px; padding: 1rem; }
@@ -336,6 +344,17 @@
 
     <section id="chapters" class="content-section">
         <h2>章节目录</h2>
+        <div class="filters" role="group" aria-label="章节筛选">
+            <label for="chapterSearch">搜索章节</label>
+            <input type="search" id="chapterSearch" placeholder="输入标题或关键词，如“所有权”“并发”" autocomplete="off">
+            <button type="button" class="stage-filter" data-range="1-28" aria-pressed="true">全部</button>
+            <button type="button" class="stage-filter" data-range="1-5" aria-pressed="false">基础语法</button>
+            <button type="button" class="stage-filter" data-range="6-13" aria-pressed="false">抽象与所有权</button>
+            <button type="button" class="stage-filter" data-range="14-18" aria-pressed="false">函数式与工程</button>
+            <button type="button" class="stage-filter" data-range="19-22" aria-pressed="false">内存与并发</button>
+            <button type="button" class="stage-filter" data-range="23-28" aria-pressed="false">实战与生态</button>
+        </div>
+        <p id="filterStatus" class="filter-empty" role="status" aria-live="polite" hidden></p>
         <div id="cardContainer" class="course-grid"></div>
     </section>
 
@@ -411,13 +430,46 @@
                     link.textContent = '开始学习 ';
                     footerDiv.appendChild(link);
                     card.appendChild(footerDiv);
+                    card.dataset.num = course.num;
+                    card.dataset.key = (course.title + ' ' + (course.topics || []).join(' ')).toLowerCase();
 
                     container.appendChild(card);
                 });
+
             })
             .catch(function(err) {
                 showError('课程数据加载失败: ' + err.message + '。请刷新页面重试。');
             });
+
+        var searchEl = document.getElementById('chapterSearch');
+        var stageBtns = Array.prototype.slice.call(document.querySelectorAll('.stage-filter'));
+        var statusEl = document.getElementById('filterStatus');
+
+        function applyFilter() {
+            var cards = Array.prototype.slice.call(container.querySelectorAll('.card'));
+            var q = (searchEl.value || '').trim().toLowerCase();
+            var active = stageBtns.filter(function(b) { return b.getAttribute('aria-pressed') === 'true'; })[0];
+            var range = active ? active.dataset.range.split('-').map(Number) : null;
+            var visible = 0;
+            cards.forEach(function(card) {
+                var n = parseInt(card.dataset.num, 10);
+                var show = (!q || card.dataset.key.indexOf(q) !== -1)
+                    && (!range || (n >= range[0] && n <= range[1]));
+                card.hidden = !show;
+                if (show) visible++;
+            });
+            statusEl.hidden = visible !== 0;
+            statusEl.textContent = visible === 0 ? '没有匹配的章节，请尝试其它关键词。' : '';
+        }
+
+        searchEl.addEventListener('input', applyFilter);
+        stageBtns.forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                stageBtns.forEach(function(b) { b.setAttribute('aria-pressed', 'false'); });
+                btn.setAttribute('aria-pressed', 'true');
+                applyFilter();
+            });
+        });
     })();
 </script>
 
