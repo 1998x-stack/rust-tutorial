@@ -525,6 +525,17 @@ fn main() {
 
         <p>从下一章开始，我们将进入本课程的实战篇——用三章的篇幅，从零到一构建一个完整的Rust CLI工具。你会把前面25章学到的所有知识用上：所有权、Trait、闭包、并发、异步、unsafe，以及今天学的宏。准备好了吗？打开第26章，我们开工！</p>
 
+        <section class="quiz" aria-labelledby="quiz-25-h">
+            <h3 id="quiz-25-h">自测：宏中的 $(...)* 重复</h3>
+            <p>在 <code>macro_rules!</code> 的匹配器里，<code>$( ... )*</code> 的作用是？</p>
+            <div class="quiz-options" role="group" aria-label="选择答案">
+                <button type="button" class="quiz-opt" data-ok="0" data-msg="定义单个参数用元变量 $name:type，而不是 $(...)*。">定义一个宏参数</button>
+                <button type="button" class="quiz-opt" data-ok="1" data-msg="正确。$(...)* 表示重复零次或多次，$(...)+ 则表示至少一次。">表示重复匹配零次或多次</button>
+                <button type="button" class="quiz-opt" data-ok="0" data-msg="可选参数用 $(...)? 表达，而不是 *。">表示一个可选参数（零或一次）</button>
+            </div>
+            <p class="quiz-feedback" role="status" aria-live="polite"></p>
+        </section>
+
         <div class="footer-nav">
             <a href="24.html">← 上一章</a>
             <a href="index.html">📖 返回目录</a>
@@ -533,5 +544,25 @@ fn main() {
     </main>
 </div>
 </div>
+<script>
+(function () {
+    Array.prototype.forEach.call(document.querySelectorAll('.quiz'), function (quiz) {
+        var fb = quiz.querySelector('.quiz-feedback');
+        Array.prototype.forEach.call(quiz.querySelectorAll('.quiz-opt'), function (btn) {
+            btn.addEventListener('click', function () {
+                var ok = btn.getAttribute('data-ok') === '1';
+                Array.prototype.forEach.call(quiz.querySelectorAll('.quiz-opt'), function (b) {
+                    b.removeAttribute('aria-pressed');
+                    b.removeAttribute('data-state');
+                });
+                btn.setAttribute('aria-pressed', 'true');
+                btn.setAttribute('data-state', ok ? 'right' : 'wrong');
+                fb.textContent = btn.getAttribute('data-msg') || '';
+                fb.className = 'quiz-feedback ' + (ok ? 'ok' : 'no');
+            });
+        });
+    });
+})();
+</script>
 </body>
 </html>

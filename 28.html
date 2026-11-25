@@ -306,6 +306,17 @@ if let Some(user) = get_user()
 
         <p><strong>祝编码愉快！</strong></p>
 
+        <section class="quiz" aria-labelledby="quiz-28-h">
+            <h3 id="quiz-28-h">自测：Edition 的意义</h3>
+            <p>Rust 的 Edition（如 2018/2021/2024）是如何工作的？</p>
+            <div class="quiz-options" role="group" aria-label="选择答案">
+                <button type="button" class="quiz-opt" data-ok="0" data-msg="Edition 恰恰是为了避免破坏现有代码，而不是每几年推倒重来。">每三年破坏一次，必须重写所有代码</button>
+                <button type="button" class="quiz-opt" data-ok="1" data-msg="正确。各 crate 可用不同 Edition，并在同一依赖图中共存，升级可选。">在保持兼容的前提下引入新语法，各 crate 按 Edition 共存</button>
+                <button type="button" class="quiz-opt" data-ok="0" data-msg="Edition 与 SemVer 大版本不同，升级 Edition 不会连带破坏依赖。">完全等同于 SemVer 大版本号</button>
+            </div>
+            <p class="quiz-feedback" role="status" aria-live="polite"></p>
+        </section>
+
         <div class="footer-nav">
             <a href="27.html">← 上一章</a>
             <a href="index.html">📖 返回目录</a>
@@ -314,5 +325,25 @@ if let Some(user) = get_user()
     </main>
 </div>
 </div>
+<script>
+(function () {
+    Array.prototype.forEach.call(document.querySelectorAll('.quiz'), function (quiz) {
+        var fb = quiz.querySelector('.quiz-feedback');
+        Array.prototype.forEach.call(quiz.querySelectorAll('.quiz-opt'), function (btn) {
+            btn.addEventListener('click', function () {
+                var ok = btn.getAttribute('data-ok') === '1';
+                Array.prototype.forEach.call(quiz.querySelectorAll('.quiz-opt'), function (b) {
+                    b.removeAttribute('aria-pressed');
+                    b.removeAttribute('data-state');
+                });
+                btn.setAttribute('aria-pressed', 'true');
+                btn.setAttribute('data-state', ok ? 'right' : 'wrong');
+                fb.textContent = btn.getAttribute('data-msg') || '';
+                fb.className = 'quiz-feedback ' + (ok ? 'ok' : 'no');
+            });
+        });
+    });
+})();
+</script>
 </body>
 </html>

@@ -516,6 +516,17 @@ path = "src/main.rs"</code></pre>
 
         <p>下一章，我们将转向网络世界——用Axum框架搭建一个完整的RESTful Web API，把Rust带到服务器端。这是Rust另一个大放异彩的领域。</p>
 
+        <section class="quiz" aria-labelledby="quiz-26-h">
+            <h3 id="quiz-26-h">自测：clap 的工作方式</h3>
+            <p>关于命令行解析库 <code>clap</code>，下列哪种说法正确？</p>
+            <div class="quiz-options" role="group" aria-label="选择答案">
+                <button type="button" class="quiz-opt" data-ok="0" data-msg="clap 同时支持位置参数、选项与子命令，不限于位置参数。">只能解析位置参数</button>
+                <button type="button" class="quiz-opt" data-ok="1" data-msg="正确。derive 模式从结构体生成解析逻辑，自动带出 --help 与错误提示。">可从结构体 derive 出解析逻辑，并自动生成帮助</button>
+                <button type="button" class="quiz-opt" data-ok="0" data-msg="clap 的主要价值就是免去手写解析循环。">必须自己手写参数解析循环</button>
+            </div>
+            <p class="quiz-feedback" role="status" aria-live="polite"></p>
+        </section>
+
         <div class="footer-nav">
             <a href="25.html">← 上一章</a>
             <a href="index.html">📖 返回目录</a>
@@ -524,5 +535,25 @@ path = "src/main.rs"</code></pre>
     </main>
 </div>
 </div>
+<script>
+(function () {
+    Array.prototype.forEach.call(document.querySelectorAll('.quiz'), function (quiz) {
+        var fb = quiz.querySelector('.quiz-feedback');
+        Array.prototype.forEach.call(quiz.querySelectorAll('.quiz-opt'), function (btn) {
+            btn.addEventListener('click', function () {
+                var ok = btn.getAttribute('data-ok') === '1';
+                Array.prototype.forEach.call(quiz.querySelectorAll('.quiz-opt'), function (b) {
+                    b.removeAttribute('aria-pressed');
+                    b.removeAttribute('data-state');
+                });
+                btn.setAttribute('aria-pressed', 'true');
+                btn.setAttribute('data-state', ok ? 'right' : 'wrong');
+                fb.textContent = btn.getAttribute('data-msg') || '';
+                fb.className = 'quiz-feedback ' + (ok ? 'ok' : 'no');
+            });
+        });
+    });
+})();
+</script>
 </body>
 </html>

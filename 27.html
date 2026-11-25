@@ -543,6 +543,17 @@ CMD ["todo-api"]</code></pre>
 
         <p>从下一章开始，我们将把目光从代码转向未来——Rust 2027 Edition有什么新特性？Rust的生态和就业市场走向何方？下一章是这门课程的收官篇，我们聊聊Rust的未来和你的成长之路。</p>
 
+        <section class="quiz" aria-labelledby="quiz-27-h">
+            <h3 id="quiz-27-h">自测：sqlx 编译期校验</h3>
+            <p>相比运行时的 <code>query()</code>，<code>sqlx::query!()</code> 宏的主要特点是？</p>
+            <div class="quiz-options" role="group" aria-label="选择答案">
+                <button type="button" class="quiz-opt" data-ok="0" data-msg="恰恰相反：它在编译期就检查 SQL，而不是推到运行时才解析。">把 SQL 解析推迟到运行时</button>
+                <button type="button" class="quiz-opt" data-ok="1" data-msg="正确。它会在编译期连接数据库校验 SQL 与列类型（因此构建时需要 DATABASE_URL）。">在编译期校验 SQL 语句与列类型</button>
+                <button type="button" class="quiz-opt" data-ok="0" data-msg="sqlx 支持多种数据库后端，不限于 PostgreSQL。">只能用于 PostgreSQL</button>
+            </div>
+            <p class="quiz-feedback" role="status" aria-live="polite"></p>
+        </section>
+
         <div class="footer-nav">
             <a href="26.html">← 上一章</a>
             <a href="index.html">📖 返回目录</a>
@@ -551,5 +562,25 @@ CMD ["todo-api"]</code></pre>
     </main>
 </div>
 </div>
+<script>
+(function () {
+    Array.prototype.forEach.call(document.querySelectorAll('.quiz'), function (quiz) {
+        var fb = quiz.querySelector('.quiz-feedback');
+        Array.prototype.forEach.call(quiz.querySelectorAll('.quiz-opt'), function (btn) {
+            btn.addEventListener('click', function () {
+                var ok = btn.getAttribute('data-ok') === '1';
+                Array.prototype.forEach.call(quiz.querySelectorAll('.quiz-opt'), function (b) {
+                    b.removeAttribute('aria-pressed');
+                    b.removeAttribute('data-state');
+                });
+                btn.setAttribute('aria-pressed', 'true');
+                btn.setAttribute('data-state', ok ? 'right' : 'wrong');
+                fb.textContent = btn.getAttribute('data-msg') || '';
+                fb.className = 'quiz-feedback ' + (ok ? 'ok' : 'no');
+            });
+        });
+    });
+})();
+</script>
 </body>
 </html>
