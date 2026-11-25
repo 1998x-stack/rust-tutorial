@@ -345,6 +345,17 @@ println!("{r3}");</code></pre>
 
         <p>下一章，我们将把这些知识应用到实践中——学习Rust中最常用的两种数据类型：<strong>切片与字符串</strong>。你会看到所有权系统如何让字符串操作既安全又高效。</p>
 
+        <section class="quiz" aria-labelledby="quiz-04-h">
+            <h3 id="quiz-04-h">自测：借用规则</h3>
+            <p>在同一作用域内，Rust 对引用的规则是？</p>
+            <div class="quiz-options" role="group" aria-label="选择答案">
+                <button type="button" class="quiz-opt" data-ok="0" data-msg="可变引用在任意时刻只能有一个，不能靠“不同时使用”绕过。">可以有多个可变引用，只要不同时使用</button>
+                <button type="button" class="quiz-opt" data-ok="1" data-msg="正确。任意多个不可变引用，或至多一个可变引用；两者不能同时存在。">可以有多个不可变引用，或至多一个可变引用，但两者不能共存</button>
+                <button type="button" class="quiz-opt" data-ok="0" data-msg="可变与不可变引用互斥，不能同时存在。">可变引用和不可变引用可以任意共存</button>
+            </div>
+            <p class="quiz-feedback" role="status" aria-live="polite"></p>
+        </section>
+
         <div class="footer-nav">
             <a href="03.html">← 上一章</a>
             <a href="index.html">📖 返回目录</a>
@@ -353,5 +364,25 @@ println!("{r3}");</code></pre>
     </main>
 </div>
 </div>
+<script>
+(function () {
+    Array.prototype.forEach.call(document.querySelectorAll('.quiz'), function (quiz) {
+        var fb = quiz.querySelector('.quiz-feedback');
+        Array.prototype.forEach.call(quiz.querySelectorAll('.quiz-opt'), function (btn) {
+            btn.addEventListener('click', function () {
+                var ok = btn.getAttribute('data-ok') === '1';
+                Array.prototype.forEach.call(quiz.querySelectorAll('.quiz-opt'), function (b) {
+                    b.removeAttribute('aria-pressed');
+                    b.removeAttribute('data-state');
+                });
+                btn.setAttribute('aria-pressed', 'true');
+                btn.setAttribute('data-state', ok ? 'right' : 'wrong');
+                fb.textContent = btn.getAttribute('data-msg') || '';
+                fb.className = 'quiz-feedback ' + (ok ? 'ok' : 'no');
+            });
+        });
+    });
+})();
+</script>
 </body>
 </html>

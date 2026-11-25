@@ -396,6 +396,17 @@ cargo fmt</code></pre>
 
         <p>从下一章开始，我们将真正进入Rust语言的核心——变量与数据类型。你将开始接触Rust最与众不同的地方：不可变性、类型推导、以及为所有权系统打基础的所有概念。打开第2章，我们继续前行。</p>
 
+        <section class="quiz" aria-labelledby="quiz-01-h">
+            <h3 id="quiz-01-h">自测：Cargo 与 rustc 的分工</h3>
+            <p>下面哪个命令会生成包含 <code>Cargo.toml</code> 的项目骨架？</p>
+            <div class="quiz-options" role="group" aria-label="选择答案">
+                <button type="button" class="quiz-opt" data-ok="0" data-msg="rustc 只负责编译单个源文件，不会生成任何项目结构。">rustc main.rs</button>
+                <button type="button" class="quiz-opt" data-ok="1" data-msg="正确。cargo new 会创建目录、Cargo.toml 与 src/main.rs 骨架。">cargo new hello_cargo</button>
+                <button type="button" class="quiz-opt" data-ok="0" data-msg="cargo run 用于编译并运行一个已存在的项目，不会创建骨架。">cargo run</button>
+            </div>
+            <p class="quiz-feedback" role="status" aria-live="polite"></p>
+        </section>
+
         <div class="footer-nav">
             <a href="javascript:void(0)">← 上一章</a>
             <a href="index.html">📖 返回目录</a>
@@ -404,5 +415,25 @@ cargo fmt</code></pre>
     </main>
 </div>
 </div>
+<script>
+(function () {
+    Array.prototype.forEach.call(document.querySelectorAll('.quiz'), function (quiz) {
+        var fb = quiz.querySelector('.quiz-feedback');
+        Array.prototype.forEach.call(quiz.querySelectorAll('.quiz-opt'), function (btn) {
+            btn.addEventListener('click', function () {
+                var ok = btn.getAttribute('data-ok') === '1';
+                Array.prototype.forEach.call(quiz.querySelectorAll('.quiz-opt'), function (b) {
+                    b.removeAttribute('aria-pressed');
+                    b.removeAttribute('data-state');
+                });
+                btn.setAttribute('aria-pressed', 'true');
+                btn.setAttribute('data-state', ok ? 'right' : 'wrong');
+                fb.textContent = btn.getAttribute('data-msg') || '';
+                fb.className = 'quiz-feedback ' + (ok ? 'ok' : 'no');
+            });
+        });
+    });
+})();
+</script>
 </body>
 </html>

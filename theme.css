@@ -165,6 +165,26 @@ th {
     background: #fef9c3; border: 1px solid #facc15;
 }
 
+/* === Self-check widget (progressive enhancement) === */
+.quiz {
+    background: #fffbf5; border: 1px solid #fed7aa; border-radius: 16px;
+    padding: 14px 18px; margin: 18px 0;
+}
+.quiz-options { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
+.quiz-opt {
+    padding: 8px 16px; border: 2px solid #fed7aa; background: #fff7ed; color: #9a3412;
+    border-radius: 30px; font-weight: 600; font-size: 0.9rem; cursor: pointer;
+    font-family: inherit; line-height: 1.5;
+}
+.quiz-opt:hover { background: #ffedd5; }
+.quiz-opt:focus-visible { outline: 3px solid #ea580c; outline-offset: 2px; }
+.quiz-opt[data-state="right"] { background: #dcfce7; color: #14532d; border-color: #16a34a; }
+.quiz-opt[data-state="wrong"] { background: #fee2e2; color: #991b1b; border-color: #ef4444; }
+.quiz-feedback { min-height: 1.5em; line-height: 1.7; margin-top: 6px; font-weight: 600; color: #9a3412; }
+.quiz-feedback.ok { color: #166534; }
+.quiz-feedback.no { color: #b91c1c; }
+.quiz pre { margin: 8px 0; }
+
 /* === Footer Navigation === */
 .footer-nav {
     margin-top: 45px; padding-top: 20px;

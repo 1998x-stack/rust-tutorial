@@ -348,6 +348,17 @@ spaces = spaces.len();     // 类型不匹配！&amp;str != usize</code></pre>
 
         <p>这些是Rust类型系统的基础砖石。下一章，我们将用这些砖石搭建程序的结构——学习<strong>函数与控制流</strong>，看看Rust如何用表达式导向的设计让代码更优雅。</p>
 
+        <section class="quiz" aria-labelledby="quiz-02-h">
+            <h3 id="quiz-02-h">自测：阴影与 mut 的区别</h3>
+            <p>关于阴影（shadowing）与 <code>mut</code>，下列说法哪一项是正确的？</p>
+            <div class="quiz-options" role="group" aria-label="选择答案">
+                <button type="button" class="quiz-opt" data-ok="0" data-msg="mut 只能修改同一个绑定的值，不能改变它的类型。">用 <code>mut</code> 可以改变变量的类型</button>
+                <button type="button" class="quiz-opt" data-ok="1" data-msg="正确。阴影会用 let 创建新绑定，因此可以改变类型；mut 不行。">用阴影重新绑定可以改变变量的类型</button>
+                <button type="button" class="quiz-opt" data-ok="0" data-msg="两者语义不同：mut 改变值，阴影创建新绑定。">两者完全等价，只是写法不同</button>
+            </div>
+            <p class="quiz-feedback" role="status" aria-live="polite"></p>
+        </section>
+
         <div class="footer-nav">
             <a href="01.html">← 上一章</a>
             <a href="index.html">📖 返回目录</a>
@@ -356,5 +367,25 @@ spaces = spaces.len();     // 类型不匹配！&amp;str != usize</code></pre>
     </main>
 </div>
 </div>
+<script>
+(function () {
+    Array.prototype.forEach.call(document.querySelectorAll('.quiz'), function (quiz) {
+        var fb = quiz.querySelector('.quiz-feedback');
+        Array.prototype.forEach.call(quiz.querySelectorAll('.quiz-opt'), function (btn) {
+            btn.addEventListener('click', function () {
+                var ok = btn.getAttribute('data-ok') === '1';
+                Array.prototype.forEach.call(quiz.querySelectorAll('.quiz-opt'), function (b) {
+                    b.removeAttribute('aria-pressed');
+                    b.removeAttribute('data-state');
+                });
+                btn.setAttribute('aria-pressed', 'true');
+                btn.setAttribute('data-state', ok ? 'right' : 'wrong');
+                fb.textContent = btn.getAttribute('data-msg') || '';
+                fb.className = 'quiz-feedback ' + (ok ? 'ok' : 'no');
+            });
+        });
+    });
+})();
+</script>
 </body>
 </html>

@@ -358,6 +358,17 @@ fn main() {
 
         <p>到这一步，你已经能用Rust写一些有实际功能的程序了。但Rust真正的"独门绝技"才刚刚开始——下一章我们将深入Rust最核心的概念：<strong>所有权</strong>。它是Rust内存安全的基石，也是让无数初学者"卡住"的知识点。放松心态，我们一章一章来。</p>
 
+        <section class="quiz" aria-labelledby="quiz-03-h">
+            <h3 id="quiz-03-h">自测：if 作为表达式</h3>
+            <p>下面哪段代码能编译通过？</p>
+            <div class="quiz-options" role="group" aria-label="选择答案">
+                <button type="button" class="quiz-opt" data-ok="0" data-msg="if 作为赋值表达式时必须有 else 分支，否则可能返回 ()，与 i32 不匹配。">let x = if true { 1 };</button>
+                <button type="button" class="quiz-opt" data-ok="1" data-msg="正确。两个分支都返回 i32，整个 if 表达式的类型就是 i32。">let x = if true { 1 } else { 2 };</button>
+                <button type="button" class="quiz-opt" data-ok="0" data-msg="else 分支里的 2; 带分号，该分支返回 ()，与 if 分支的 i32 类型不一致。">let x = if true { 1 } else { 2; };</button>
+            </div>
+            <p class="quiz-feedback" role="status" aria-live="polite"></p>
+        </section>
+
         <div class="footer-nav">
             <a href="02.html">← 上一章</a>
             <a href="index.html">📖 返回目录</a>
@@ -366,5 +377,25 @@ fn main() {
     </main>
 </div>
 </div>
+<script>
+(function () {
+    Array.prototype.forEach.call(document.querySelectorAll('.quiz'), function (quiz) {
+        var fb = quiz.querySelector('.quiz-feedback');
+        Array.prototype.forEach.call(quiz.querySelectorAll('.quiz-opt'), function (btn) {
+            btn.addEventListener('click', function () {
+                var ok = btn.getAttribute('data-ok') === '1';
+                Array.prototype.forEach.call(quiz.querySelectorAll('.quiz-opt'), function (b) {
+                    b.removeAttribute('aria-pressed');
+                    b.removeAttribute('data-state');
+                });
+                btn.setAttribute('aria-pressed', 'true');
+                btn.setAttribute('data-state', ok ? 'right' : 'wrong');
+                fb.textContent = btn.getAttribute('data-msg') || '';
+                fb.className = 'quiz-feedback ' + (ok ? 'ok' : 'no');
+            });
+        });
+    });
+})();
+</script>
 </body>
 </html>
