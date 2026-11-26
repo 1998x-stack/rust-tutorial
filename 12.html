@@ -207,6 +207,36 @@ where
             <figcaption>图 1：两种分发方式（教学示意）。需要极致性能、类型集合固定时选静态分发；需要把不同类型放进同一集合、按接口编程时选 <code>dyn Trait</code>。</figcaption>
         </figure>
 
+        <figure class="step-figure" data-step="1" data-labels="调用点固定：item 是一个 &dyn Summary 胖指针，持有数据指针和 vtable 指针|当 item 实际指向 Article，vtable 的 summarize 槽指向 Article::summarize|当 item 换成 Tweet，同一个调用点经 vtable 间接跳转到 Tweet::summarize——这就是动态分发">
+            <svg viewBox="0 0 860 200" role="img" aria-labelledby="dynStepTitle dynStepDesc">
+                <title id="dynStepTitle">dyn Trait 调用点的运行时解析</title>
+                <desc id="dynStepDesc">同一个 item.summarize() 调用点，当底层具体类型不同时，通过虚表里存的方法指针跳到不同的实现。</desc>
+                <g font-family="system-ui, 'PingFang SC', sans-serif">
+                    <rect data-s="1" x="30" y="30" width="250" height="140" rx="14" fill="#e0f2fe" stroke="#0ea5e9" stroke-width="2"/>
+                    <text data-s="1" x="155" y="62" text-anchor="middle" font-size="14" font-weight="700" fill="#075985">① 调用点</text>
+                    <text data-s="1" x="155" y="98" text-anchor="middle" font-size="13" font-family="monospace" fill="#0c4a6e">item.summarize()</text>
+                    <text data-s="1" x="155" y="128" text-anchor="middle" font-size="12" fill="#0c4a6e">item: &amp;dyn Summary</text>
+                    <text data-s="1" x="155" y="150" text-anchor="middle" font-size="12" fill="#0c4a6e">胖指针 = 数据 + vtable</text>
+                    <rect data-s="2" x="305" y="30" width="250" height="140" rx="14" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+                    <text data-s="2" x="430" y="62" text-anchor="middle" font-size="14" font-weight="700" fill="#14532d">② 底层是 Article</text>
+                    <text data-s="2" x="430" y="98" text-anchor="middle" font-size="12" font-family="monospace" fill="#166534">vtable.summarize</text>
+                    <text data-s="2" x="430" y="128" text-anchor="middle" font-size="12" fill="#166534">↓</text>
+                    <text data-s="2" x="430" y="150" text-anchor="middle" font-size="12" font-family="monospace" fill="#166534">Article::summarize</text>
+                    <rect data-s="3" x="580" y="30" width="250" height="140" rx="14" fill="#fef9c3" stroke="#eab308" stroke-width="2"/>
+                    <text data-s="3" x="705" y="62" text-anchor="middle" font-size="14" font-weight="700" fill="#713f12">③ 底层换成 Tweet</text>
+                    <text data-s="3" x="705" y="98" text-anchor="middle" font-size="12" font-family="monospace" fill="#854d0e">vtable.summarize</text>
+                    <text data-s="3" x="705" y="128" text-anchor="middle" font-size="12" fill="#854d0e">↓ 间接跳转</text>
+                    <text data-s="3" x="705" y="150" text-anchor="middle" font-size="12" font-family="monospace" fill="#166534">Tweet::summarize</text>
+                </g>
+            </svg>
+            <div class="step-controls">
+                <button type="button" class="step-btn" data-dir="-1" disabled>上一步</button>
+                <p class="step-status" role="status" aria-live="polite"></p>
+                <button type="button" class="step-btn" data-dir="1">下一步</button>
+            </div>
+            <figcaption>图 2：<code>dyn Trait</code> 的调用解析（教学示意）。调用点只认接口，不认具体类型；每个具体类型自带一张表，运行时期经表里的函数指针完成分发，代价是无法内联。</figcaption>
+        </figure>
+
         <h2>Trait对象与动态分发</h2>
 
         <p>前面的<code>impl Trait</code>和泛型绑定的方式都是<strong>静态分发</strong>（Static Dispatch）——编译器为每个具体类型生成独立的函数副本。另一种方式是<strong>动态分发</strong>（Dynamic Dispatch）——通过<code>dyn Trait</code>在运行时通过虚函数表调用方法。</p>
@@ -362,6 +392,33 @@ println!("{}", u1 == u2);     // PartialEq</code></pre>
                 fb.className = 'quiz-feedback ' + (ok ? 'ok' : 'no');
             });
         });
+    });
+})();
+</script>
+<script>
+(function () {
+    Array.prototype.forEach.call(document.querySelectorAll('.step-figure'), function (fig) {
+        var labels = (fig.getAttribute('data-labels') || '').split('|');
+        var status = fig.querySelector('.step-status');
+        var buttons = Array.prototype.slice.call(fig.querySelectorAll('.step-btn'));
+        function render() {
+            var step = parseInt(fig.getAttribute('data-step'), 10);
+            status.textContent = '步骤 ' + step + ' / ' + labels.length + '：' + labels[step - 1];
+            buttons.forEach(function (btn) {
+                var dir = parseInt(btn.getAttribute('data-dir'), 10);
+                btn.disabled = (step + dir < 1) || (step + dir > labels.length);
+            });
+        }
+        buttons.forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var step = parseInt(fig.getAttribute('data-step'), 10);
+                var next = step + parseInt(btn.getAttribute('data-dir'), 10);
+                if (next < 1 || next > labels.length) return;
+                fig.setAttribute('data-step', String(next));
+                render();
+            });
+        });
+        render();
     });
 })();
 </script>
