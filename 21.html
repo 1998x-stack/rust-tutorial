@@ -191,6 +191,33 @@ async fn main() {
             <figcaption>图 1：<code>async fn</code> 的执行模型（教学示意）。异步函数编译成状态机 Future，必须由 executor 驱动；<code>Pending</code> 时挂起而非阻塞，<code>Ready</code> 时带出结果。</figcaption>
         </figure>
 
+        <figure class="step-figure" data-step="1" data-labels="任务A 运行到 .await：子 Future 未就绪，返回 Pending，A 挂起并让出控制权|同一 OS 线程切到任务B 继续执行——线程从未阻塞|任务A 的 I/O 就绪，Waker 唤醒 executor，回到 A 并得到 Ready">
+            <svg viewBox="0 0 860 210" role="img" aria-labelledby="taskStepTitle taskStepDesc">
+                <title id="taskStepTitle">单个 OS 线程交替推进两个任务</title>
+                <desc id="taskStepDesc">时间从左到右：任务A 在 .await 处挂起，线程转而执行任务B；A 就绪后被唤醒并恢复。线程全程不阻塞。</desc>
+                <g font-family="system-ui, 'PingFang SC', sans-serif">
+                    <line x1="100" y1="168" x2="830" y2="168" stroke="#94a3b8" stroke-width="2"/>
+                    <text x="830" y="188" text-anchor="end" font-size="12" fill="#64748b">时间 →</text>
+                    <rect data-s="1" x="110" y="56" width="200" height="56" rx="10" fill="#bae6fd" stroke="#0ea5e9" stroke-width="2"/>
+                    <text data-s="1" x="210" y="80" text-anchor="middle" font-size="12" font-weight="700" fill="#075985">① 任务A 运行</text>
+                    <text data-s="1" x="210" y="98" text-anchor="middle" font-size="11" fill="#0c4a6e">.await → Pending，让出</text>
+                    <rect data-s="2" x="320" y="56" width="200" height="56" rx="10" fill="#bbf7d0" stroke="#16a34a" stroke-width="2"/>
+                    <text data-s="2" x="420" y="80" text-anchor="middle" font-size="12" font-weight="700" fill="#14532d">② 任务B 运行</text>
+                    <text data-s="2" x="420" y="98" text-anchor="middle" font-size="11" fill="#166534">同一线程，不阻塞</text>
+                    <rect data-s="3" x="530" y="56" width="240" height="56" rx="10" fill="#fde68a" stroke="#eab308" stroke-width="2"/>
+                    <text data-s="3" x="650" y="80" text-anchor="middle" font-size="12" font-weight="700" fill="#713f12">③ Waker 唤醒任务A</text>
+                    <text data-s="3" x="650" y="98" text-anchor="middle" font-size="11" fill="#854d0e">重新 poll → Ready(v)</text>
+                    <text x="210" y="146" text-anchor="middle" font-size="12" fill="#475569">一个 executor 工作线程</text>
+                </g>
+            </svg>
+            <div class="step-controls">
+                <button type="button" class="step-btn" data-dir="-1" disabled>上一步</button>
+                <p class="step-status" role="status" aria-live="polite"></p>
+                <button type="button" class="step-btn" data-dir="1">下一步</button>
+            </div>
+            <figcaption>图 2：单线程上的任务交错（教学示意）。<code>.await</code> 只是把任务状态机挂起、把控制权交回 executor；被挂起的任务由 <code>Waker</code> 在就绪时重新入队——这就是用少数线程支撑大量并发任务的原因。</figcaption>
+        </figure>
+
         <h2>Tokio运行时</h2>
 
         <p>Tokio是Rust最流行的异步运行时，提供了事件循环（I/O驱动）、任务调度器和定时器等核心组件。要在项目中使用Tokio，在<code>Cargo.toml</code>中添加：</p>
@@ -534,6 +561,33 @@ async fn handler() -&gt; Json&lt;UserPosts&gt; {
                 fb.className = 'quiz-feedback ' + (ok ? 'ok' : 'no');
             });
         });
+    });
+})();
+</script>
+<script>
+(function () {
+    Array.prototype.forEach.call(document.querySelectorAll('.step-figure'), function (fig) {
+        var labels = (fig.getAttribute('data-labels') || '').split('|');
+        var status = fig.querySelector('.step-status');
+        var buttons = Array.prototype.slice.call(fig.querySelectorAll('.step-btn'));
+        function render() {
+            var step = parseInt(fig.getAttribute('data-step'), 10);
+            status.textContent = '步骤 ' + step + ' / ' + labels.length + '：' + labels[step - 1];
+            buttons.forEach(function (btn) {
+                var dir = parseInt(btn.getAttribute('data-dir'), 10);
+                btn.disabled = (step + dir < 1) || (step + dir > labels.length);
+            });
+        }
+        buttons.forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var step = parseInt(fig.getAttribute('data-step'), 10);
+                var next = step + parseInt(btn.getAttribute('data-dir'), 10);
+                if (next < 1 || next > labels.length) return;
+                fig.setAttribute('data-step', String(next));
+                render();
+            });
+        });
+        render();
     });
 })();
 </script>
