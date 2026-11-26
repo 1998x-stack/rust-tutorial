@@ -147,6 +147,32 @@ impl&lt;'a&gt; Excerpt&lt;'a&gt; {
             <figcaption>图 1：<code>longest&lt;'a&gt;(x: &amp;'a str, y: &amp;'a str) -&gt; &amp;'a str</code> 的生命周期关系（教学示意）。标注 <code>'a</code> 取两个输入的较小者，保证返回的引用永不会悬垂。</figcaption>
         </figure>
 
+        <figure class="step-figure" data-step="1" data-labels="两个作用域都存活：调用 longest 后 result 指向较长的那个引用|内层作用域结束：s2 被 drop；若 result 曾指向 s2，它已悬垂|在外层使用 result：编译器因 s2 已失效而拒绝，borrow does not live long enough">
+            <svg viewBox="0 0 860 210" role="img" aria-labelledby="lifeStepTitle lifeStepDesc">
+                <title id="lifeStepTitle">result 借用的有效性随时间的三步变化</title>
+                <desc id="lifeStepDesc">时间从左到右：s1 在外层存活，s2 仅在内层块存活。result 只能在两个作用域的交集内安全使用，内层结束后再使用会被编译器拒绝。</desc>
+                <g font-family="system-ui, 'PingFang SC', sans-serif">
+                    <line x1="60" y1="176" x2="820" y2="176" stroke="#94a3b8" stroke-width="2"/>
+                    <text x="820" y="196" text-anchor="end" font-size="12" fill="#64748b">时间 →</text>
+                    <rect x="60" y="52" width="740" height="26" rx="8" fill="#bbf7d0" stroke="#16a34a"/>
+                    <text x="70" y="44" font-size="13" font-weight="700" fill="#14532d">s1 的生命周期（外层）</text>
+                    <rect x="260" y="98" width="300" height="26" rx="8" fill="#fde68a" stroke="#eab308"/>
+                    <text x="270" y="90" font-size="13" font-weight="700" fill="#713f12">s2 的生命周期（内层块）</text>
+                    <text data-s="1" x="410" y="150" text-anchor="middle" font-size="13" font-weight="700" fill="#166534">① result = longest(s1, s2) —— 此处 result 有效</text>
+                    <path data-s="2" d="M560 124 V176" stroke="#ea580c" stroke-width="2" stroke-dasharray="5 4"/>
+                    <text data-s="2" x="570" y="150" font-size="13" font-weight="700" fill="#c2410c">② 内层结束，s2 被 drop</text>
+                    <path data-s="3" d="M640 124 V176" stroke="#dc2626" stroke-width="2" stroke-dasharray="5 4"/>
+                    <text data-s="3" x="650" y="150" font-size="13" font-weight="700" fill="#b91c1c">③ 再使用 result：编译错误</text>
+                </g>
+            </svg>
+            <div class="step-controls">
+                <button type="button" class="step-btn" data-dir="-1" disabled>上一步</button>
+                <p class="step-status" role="status" aria-live="polite"></p>
+                <button type="button" class="step-btn" data-dir="1">下一步</button>
+            </div>
+            <figcaption>图 2：借用有效性的时间轴（教学示意）。<code>result</code> 的安全使用区间是两个输入生命周期的<strong>交集</strong>；内层块结束后 <code>s2</code> 被释放，此时外层若仍使用可能指向 <code>s2</code> 的 <code>result</code>，编译器就会报 “does not live long enough”。</figcaption>
+        </figure>
+
         <h2>生命周期省略规则</h2>
 
         <p>你可能注意到：我们之前写过的很多代码（如<code>fn first_word(s: &amp;str) -&gt; &amp;str</code>）并没有显式标注生命周期。这是因为Rust有一套<strong>生命周期省略规则</strong>（Lifetime Elision Rules）——编译器在特定模式下可以自动推断生命周期。</p>
@@ -309,6 +335,33 @@ fn process&lt;T: 'static&gt;(val: T) {
                 fb.className = 'quiz-feedback ' + (ok ? 'ok' : 'no');
             });
         });
+    });
+})();
+</script>
+<script>
+(function () {
+    Array.prototype.forEach.call(document.querySelectorAll('.step-figure'), function (fig) {
+        var labels = (fig.getAttribute('data-labels') || '').split('|');
+        var status = fig.querySelector('.step-status');
+        var buttons = Array.prototype.slice.call(fig.querySelectorAll('.step-btn'));
+        function render() {
+            var step = parseInt(fig.getAttribute('data-step'), 10);
+            status.textContent = '步骤 ' + step + ' / ' + labels.length + '：' + labels[step - 1];
+            buttons.forEach(function (btn) {
+                var dir = parseInt(btn.getAttribute('data-dir'), 10);
+                btn.disabled = (step + dir < 1) || (step + dir > labels.length);
+            });
+        }
+        buttons.forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var step = parseInt(fig.getAttribute('data-step'), 10);
+                var next = step + parseInt(btn.getAttribute('data-dir'), 10);
+                if (next < 1 || next > labels.length) return;
+                fig.setAttribute('data-step', String(next));
+                render();
+            });
+        });
+        render();
     });
 })();
 </script>

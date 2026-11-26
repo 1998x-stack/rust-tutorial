@@ -185,6 +185,22 @@ th {
 .quiz-feedback.no { color: #b91c1c; }
 .quiz pre { margin: 8px 0; }
 
+/* === Step-through figure (progressive disclosure) === */
+.step-figure [data-s] { transition: opacity .2s ease; }
+.step-figure[data-step="1"] [data-s]:not([data-s="1"]),
+.step-figure[data-step="2"] [data-s]:not([data-s="2"]),
+.step-figure[data-step="3"] [data-s]:not([data-s="3"]),
+.step-figure[data-step="4"] [data-s]:not([data-s="4"]) { opacity: .16; }
+.step-controls { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; margin-top: .8rem; }
+.step-btn {
+    padding: 8px 18px; border: 2px solid #fed7aa; background: #fff7ed; color: #9a3412;
+    border-radius: 30px; font-weight: 600; font-family: inherit; cursor: pointer;
+}
+.step-btn:hover { background: #ffedd5; }
+.step-btn:focus-visible { outline: 3px solid #ea580c; outline-offset: 2px; }
+.step-btn[disabled] { opacity: .45; cursor: not-allowed; }
+.step-status { margin: 0; font-weight: 600; color: #7c2d12; line-height: 1.5; }
+
 /* === Footer Navigation === */
 .footer-nav {
     margin-top: 45px; padding-top: 20px;
