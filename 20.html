@@ -279,6 +279,37 @@ fn main() {
             <figcaption>图 1：<code>Arc&lt;Mutex&lt;T&gt;&gt;</code> 共享状态模式（教学示意）。<code>Arc</code> 负责多线程下的共享所有权，<code>Mutex</code> 负责把并发写变成互斥访问；<code>Send</code> / <code>Sync</code> 则保证这套组合在编译期是安全的。</figcaption>
         </figure>
 
+        <figure class="step-figure" data-step="1" data-labels="线程1 先调用 lock() 拿到锁，线程2 在 lock() 处阻塞等待|线程1 的 guard 离开作用域，锁自动释放；数据已从 0 变为 1|线程2 获得锁，读到已更新的值；两次写严格串行，无数据竞争">
+            <svg viewBox="0 0 860 230" role="img" aria-labelledby="lockStepTitle lockStepDesc">
+                <title id="lockStepTitle">两个线程争用同一把 Mutex 锁的三步交错</title>
+                <desc id="lockStepDesc">时间从左到右：线程1 持有锁时线程2 阻塞；线程1 释放后线程2 才能进入临界区，两次修改不会重叠。</desc>
+                <g font-family="system-ui, 'PingFang SC', sans-serif">
+                    <line x1="100" y1="196" x2="830" y2="196" stroke="#94a3b8" stroke-width="2"/>
+                    <text x="830" y="214" text-anchor="end" font-size="12" fill="#64748b">时间 →</text>
+                    <text x="40" y="72" font-size="13" font-weight="700" fill="#075985">线程1</text>
+                    <text x="40" y="142" font-size="13" font-weight="700" fill="#14532d">线程2</text>
+                    <rect data-s="1" x="110" y="48" width="190" height="44" rx="10" fill="#bae6fd" stroke="#0ea5e9" stroke-width="2"/>
+                    <text data-s="1" x="205" y="68" text-anchor="middle" font-size="12" font-weight="700" fill="#075985">① lock() 成功</text>
+                    <text data-s="1" x="205" y="84" text-anchor="middle" font-size="11" fill="#0c4a6e">临界区：*num += 1</text>
+                    <rect data-s="2" x="310" y="48" width="180" height="44" rx="10" fill="#fde68a" stroke="#eab308" stroke-width="2"/>
+                    <text data-s="2" x="400" y="76" text-anchor="middle" font-size="12" font-weight="700" fill="#713f12">② guard drop → 锁释放</text>
+                    <rect data-s="3" x="330" y="118" width="190" height="44" rx="10" fill="#bbf7d0" stroke="#16a34a" stroke-width="2"/>
+                    <text data-s="3" x="425" y="138" text-anchor="middle" font-size="12" font-weight="700" fill="#14532d">③ lock() 成功</text>
+                    <text data-s="3" x="425" y="154" text-anchor="middle" font-size="11" fill="#166534">读到 counter = 1</text>
+                    <rect x="560" y="48" width="270" height="114" rx="12" fill="#fef9c3" stroke="#eab308" stroke-width="2"/>
+                    <text x="695" y="80" text-anchor="middle" font-size="13" font-weight="700" fill="#713f12">Mutex&lt;Vec&lt;i32&gt;&gt; · 共享数据</text>
+                    <text x="695" y="108" text-anchor="middle" font-size="12" fill="#854d0e">同一时刻至多一个 guard</text>
+                    <text x="695" y="134" text-anchor="middle" font-size="12" fill="#166534">最终结果确定：1</text>
+                </g>
+            </svg>
+            <div class="step-controls">
+                <button type="button" class="step-btn" data-dir="-1" disabled>上一步</button>
+                <p class="step-status" role="status" aria-live="polite"></p>
+                <button type="button" class="step-btn" data-dir="1">下一步</button>
+            </div>
+            <figcaption>图 2：两线程争用一把 <code>Mutex</code> 的交错执行（教学示意）。真正互斥的是 <code>MutexGuard</code> 的存活区间；guard 一离开作用域，锁就释放，下一个线程才能进入临界区。</figcaption>
+        </figure>
+
         <h2>Send与Sync — 自动trait</h2>
 
         <p>Rust中并发安全的核心是两个<strong>标记trait</strong>（没有方法的trait）：</p>
@@ -475,6 +506,33 @@ fn main() {
                 fb.className = 'quiz-feedback ' + (ok ? 'ok' : 'no');
             });
         });
+    });
+})();
+</script>
+<script>
+(function () {
+    Array.prototype.forEach.call(document.querySelectorAll('.step-figure'), function (fig) {
+        var labels = (fig.getAttribute('data-labels') || '').split('|');
+        var status = fig.querySelector('.step-status');
+        var buttons = Array.prototype.slice.call(fig.querySelectorAll('.step-btn'));
+        function render() {
+            var step = parseInt(fig.getAttribute('data-step'), 10);
+            status.textContent = '步骤 ' + step + ' / ' + labels.length + '：' + labels[step - 1];
+            buttons.forEach(function (btn) {
+                var dir = parseInt(btn.getAttribute('data-dir'), 10);
+                btn.disabled = (step + dir < 1) || (step + dir > labels.length);
+            });
+        }
+        buttons.forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var step = parseInt(fig.getAttribute('data-step'), 10);
+                var next = step + parseInt(btn.getAttribute('data-dir'), 10);
+                if (next < 1 || next > labels.length) return;
+                fig.setAttribute('data-step', String(next));
+                render();
+            });
+        });
+        render();
     });
 })();
 </script>
