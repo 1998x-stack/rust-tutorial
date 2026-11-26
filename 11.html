@@ -214,6 +214,33 @@ where
             <figcaption>图 1：泛型的单态化（教学示意）。编译器为每种具体类型各生成一份代码，得到静态调用、无运行时查找——这就是“零成本抽象”的来源，代价是代码体积可能增大。</figcaption>
         </figure>
 
+        <figure class="step-figure" data-step="1" data-labels="源码里只写了一份泛型函数，类型 T 在定义处还是待定的占位|编译器枚举所有实际调用点，得到两个具体实例：largest::&lt;i32&gt; 与 largest::&lt;f64&gt;|生成两份专用机器码，调用点改成静态调用：无虚表查找，代价是代码体积变大">
+            <svg viewBox="0 0 860 200" role="img" aria-labelledby="monoStepTitle monoStepDesc">
+                <title id="monoStepTitle">单态化的三个步骤</title>
+                <desc id="monoStepDesc">从一份泛型源码出发，编译器按实际用到的具体类型逐个生成专用函数，使调用变成无查找的静态调用。</desc>
+                <g font-family="system-ui, 'PingFang SC', sans-serif">
+                    <rect data-s="1" x="30" y="30" width="250" height="140" rx="14" fill="#fff7ed" stroke="#f97316" stroke-width="2"/>
+                    <text data-s="1" x="155" y="62" text-anchor="middle" font-size="14" font-weight="700" fill="#7c2d12">① 泛型定义</text>
+                    <text data-s="1" x="155" y="102" text-anchor="middle" font-size="11" font-family="monospace" fill="#9a3412">fn largest&lt;T&gt;(list: &amp;[T])</text>
+                    <text data-s="1" x="155" y="140" text-anchor="middle" font-size="12" fill="#9a3412">类型待定，一份源码</text>
+                    <rect data-s="2" x="305" y="30" width="250" height="140" rx="14" fill="#e0f2fe" stroke="#0ea5e9" stroke-width="2"/>
+                    <text data-s="2" x="430" y="62" text-anchor="middle" font-size="14" font-weight="700" fill="#075985">② 枚举实例</text>
+                    <text data-s="2" x="430" y="102" text-anchor="middle" font-size="12" font-family="monospace" fill="#0c4a6e">largest::&lt;i32&gt;</text>
+                    <text data-s="2" x="430" y="130" text-anchor="middle" font-size="12" font-family="monospace" fill="#0c4a6e">largest::&lt;f64&gt;</text>
+                    <rect data-s="3" x="580" y="30" width="250" height="140" rx="14" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+                    <text data-s="3" x="705" y="62" text-anchor="middle" font-size="14" font-weight="700" fill="#14532d">③ 专用代码</text>
+                    <text data-s="3" x="705" y="102" text-anchor="middle" font-size="12" fill="#166534">静态调用，可内联</text>
+                    <text data-s="3" x="705" y="140" text-anchor="middle" font-size="12" fill="#166534">代价：代码膨胀</text>
+                </g>
+            </svg>
+            <div class="step-controls">
+                <button type="button" class="step-btn" data-dir="-1" disabled>上一步</button>
+                <p class="step-status" role="status" aria-live="polite"></p>
+                <button type="button" class="step-btn" data-dir="1">下一步</button>
+            </div>
+            <figcaption>图 2：单态化的过程（教学示意）。编译器只对<strong>实际用到</strong>的具体类型生成代码；未实例化的泛型不会产生任何输出，因此“零成本抽象”的前提是调用点确实被单态化。</figcaption>
+        </figure>
+
         <h2>性能与Monomorphization</h2>
 
         <p>很多人不愿意用泛型，是担心"泛型有运行时开销"。在Rust中，这个担心完全多余。<strong>Monomorphization</strong>（单态化）是Rust编译器处理泛型的方式——<strong>在编译时为每个具体类型生成独立的代码副本</strong>。</p>
@@ -311,6 +338,33 @@ let sum: u32 = my_counter.sum();</code></pre>
                 fb.className = 'quiz-feedback ' + (ok ? 'ok' : 'no');
             });
         });
+    });
+})();
+</script>
+<script>
+(function () {
+    Array.prototype.forEach.call(document.querySelectorAll('.step-figure'), function (fig) {
+        var labels = (fig.getAttribute('data-labels') || '').split('|');
+        var status = fig.querySelector('.step-status');
+        var buttons = Array.prototype.slice.call(fig.querySelectorAll('.step-btn'));
+        function render() {
+            var step = parseInt(fig.getAttribute('data-step'), 10);
+            status.textContent = '步骤 ' + step + ' / ' + labels.length + '：' + labels[step - 1];
+            buttons.forEach(function (btn) {
+                var dir = parseInt(btn.getAttribute('data-dir'), 10);
+                btn.disabled = (step + dir < 1) || (step + dir > labels.length);
+            });
+        }
+        buttons.forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var step = parseInt(fig.getAttribute('data-step'), 10);
+                var next = step + parseInt(btn.getAttribute('data-dir'), 10);
+                if (next < 1 || next > labels.length) return;
+                fig.setAttribute('data-step', String(next));
+                render();
+            });
+        });
+        render();
     });
 })();
 </script>
