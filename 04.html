@@ -11,6 +11,16 @@
         code { overflow-wrap: anywhere; }
         .main-content { min-width: 0; }
         @media (max-width: 768px) { .container { display: block; } }
+        .own-stage svg [data-s] { transition: opacity .2s ease; }
+        .own-stage[data-step="1"] [data-s="2"], .own-stage[data-step="1"] [data-s="3"],
+        .own-stage[data-step="2"] [data-s="1"], .own-stage[data-step="2"] [data-s="3"],
+        .own-stage[data-step="3"] [data-s="1"], .own-stage[data-step="3"] [data-s="2"] { opacity: .16; }
+        .own-controls { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; margin-top: .8rem; }
+        .own-btn { padding: 8px 18px; border: 2px solid #fed7aa; background: #fff7ed; color: #9a3412; border-radius: 30px; font-weight: 600; font-family: inherit; cursor: pointer; }
+        .own-btn:hover { background: #ffedd5; }
+        .own-btn:focus-visible { outline: 3px solid #ea580c; outline-offset: 2px; }
+        .own-btn[disabled] { opacity: .45; cursor: not-allowed; }
+        .own-count { margin: 0; font-weight: 600; color: #7c2d12; line-height: 1.5; }
     </style>
 </head>
 <body>
@@ -154,6 +164,44 @@ println!("{s2}");  // 正确，s2 是新的所有者</code></pre>
         <div class="tip">
             <strong>内存视角</strong>：<code>let s2 = s1</code>时，<code>s1</code>的栈上数据（指针、长度、容量）被复制给<code>s2</code>，但堆上的字符串内容没有被复制。然后Rust编译器把<code>s1</code>标记为"已移动"，使其失效。所以堆内存只被<code>s2</code>拥有——当<code>s2</code>离开作用域时，它被安全地释放一次。
         </div>
+
+        <figure class="own-stage" data-step="1">
+            <svg viewBox="0 0 860 250" role="img" aria-labelledby="ownStepTitle ownStepDesc">
+                <title id="ownStepTitle">所有权移动的三个状态</title>
+                <desc id="ownStepDesc">用“上一步 / 下一步”切换三个状态：s1 拥有堆数据；let s2 = s1 后栈数据被复制、s1 失效而 s2 成为唯一所有者；作用域结束时堆内存被释放一次。</desc>
+                <defs>
+                    <marker id="ownStepArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                        <path d="M0 0 L10 5 L0 10 z" fill="#ea580c"/>
+                    </marker>
+                </defs>
+                <g font-family="system-ui, 'PingFang SC', sans-serif">
+                    <rect x="20" y="20" width="330" height="210" rx="14" fill="#eff6ff" stroke="#0ea5e9" stroke-width="2"/>
+                    <text x="185" y="46" text-anchor="middle" font-size="16" font-weight="700" fill="#075985">栈（Stack）</text>
+                    <rect data-s="1" x="44" y="66" width="282" height="58" rx="10" fill="#ffffff" stroke="#22c55e" stroke-width="2"/>
+                    <text data-s="1" x="60" y="92" font-size="14" font-weight="700" fill="#166534">s1 : String</text>
+                    <text data-s="1" x="60" y="114" font-size="12" fill="#334155">ptr → 堆 · len=5 · cap=5</text>
+                    <rect data-s="2" x="44" y="66" width="282" height="58" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+                    <text data-s="2" x="60" y="92" font-size="14" font-weight="700" fill="#94a3b8">s1（已 Move，失效）</text>
+                    <text data-s="2" x="60" y="114" font-size="12" fill="#94a3b8">不可再读取或打印</text>
+                    <rect data-s="2" x="44" y="136" width="282" height="58" rx="10" fill="#ffffff" stroke="#22c55e" stroke-width="2"/>
+                    <text data-s="2" x="60" y="162" font-size="14" font-weight="700" fill="#166534">s2 : String</text>
+                    <text data-s="2" x="60" y="184" font-size="12" fill="#334155">ptr 复制自 s1 · 现为唯一所有者</text>
+                    <rect x="510" y="20" width="330" height="210" rx="14" fill="#fefce8" stroke="#eab308" stroke-width="2"/>
+                    <text x="675" y="46" text-anchor="middle" font-size="16" font-weight="700" fill="#713f12">堆（Heap）</text>
+                    <rect x="534" y="86" width="282" height="64" rx="10" fill="#ffffff" stroke="#facc15"/>
+                    <text x="675" y="126" text-anchor="middle" font-size="22" font-family="monospace" fill="#1e293b">"hello"</text>
+                    <text data-s="3" x="675" y="184" text-anchor="middle" font-size="13" fill="#b91c1c">↑ 只释放一次：drop 由唯一所有者调用</text>
+                    <path data-s="1" d="M196 95 H530" stroke="#ea580c" stroke-width="2" marker-end="url(#ownStepArrow)"/>
+                    <path data-s="2" d="M196 165 H530" stroke="#ea580c" stroke-width="2" marker-end="url(#ownStepArrow)"/>
+                </g>
+            </svg>
+            <div class="own-controls">
+                <button type="button" class="own-btn" data-dir="-1" disabled>上一步</button>
+                <p class="own-count" role="status" aria-live="polite">步骤 1 / 3：s1 拥有堆上的字符串</p>
+                <button type="button" class="own-btn" data-dir="1">下一步</button>
+            </div>
+            <figcaption>图 2：<code>let s2 = s1</code> 的所有权移动（教学示意）。栈上的指针、长度与容量被复制，堆内容不复制；<code>s1</code> 随即失效，堆内存最终只释放一次——也就是“同一时间只有一个所有者”。</figcaption>
+        </figure>
 
         <h3>函数传参与返回值</h3>
 
@@ -381,6 +429,37 @@ println!("{r3}");</code></pre>
                 fb.className = 'quiz-feedback ' + (ok ? 'ok' : 'no');
             });
         });
+    });
+})();
+</script>
+<script>
+(function () {
+    Array.prototype.forEach.call(document.querySelectorAll('.own-stage'), function (stage) {
+        var buttons = Array.prototype.slice.call(stage.querySelectorAll('.own-btn'));
+        var count = stage.querySelector('.own-count');
+        var labels = [
+            '步骤 1 / 3：s1 拥有堆上的字符串',
+            '步骤 2 / 3：let s2 = s1 —— 栈数据被复制，s1 失效，s2 成为唯一所有者',
+            '步骤 3 / 3：作用域结束，唯一所有者 s2 调用 drop，堆内存释放一次'
+        ];
+        function render() {
+            var step = parseInt(stage.getAttribute('data-step'), 10);
+            count.textContent = labels[step - 1];
+            buttons.forEach(function (btn) {
+                var dir = parseInt(btn.getAttribute('data-dir'), 10);
+                btn.disabled = (step + dir < 1) || (step + dir > labels.length);
+            });
+        }
+        buttons.forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var step = parseInt(stage.getAttribute('data-step'), 10);
+                var next = step + parseInt(btn.getAttribute('data-dir'), 10);
+                if (next < 1 || next > labels.length) return;
+                stage.setAttribute('data-step', String(next));
+                render();
+            });
+        });
+        render();
     });
 })();
 </script>
