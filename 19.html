@@ -219,6 +219,36 @@ let m2 = value.borrow_mut(); // 运行时 panic: already borrowed: BorrowMutErro
             这意味着<code>RefCell</code>将bug从编译期带到了生产环境——使用它就是在主动降低Rust的安全保障。只在确定无法通过编译期借用规则解决时使用，并确保代码审查仔细检查。
         </div>
 
+        <figure class="step-figure" data-step="1" data-labels="空闲状态：不可变与可变借用数都为 0，borrow() 与 borrow_mut() 都能成功|两次 borrow()：不可变借用数 = 2，此时再 borrow_mut() 会 panic|borrow_mut()：可变借用数 = 1，独占访问；期间任何新借用都会 panic">
+            <svg viewBox="0 0 860 210" role="img" aria-labelledby="cellStepTitle cellStepDesc">
+                <title id="cellStepTitle">RefCell 运行时借用标记的三种状态</title>
+                <desc id="cellStepDesc">RefCell 用一个借用计数器在运行时记录：要么多个不可变借用，要么一个可变借用，二者不能共存；违规时 panic 而不是编译错误。</desc>
+                <g font-family="system-ui, 'PingFang SC', sans-serif">
+                    <rect data-s="1" x="30" y="24" width="250" height="158" rx="14" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+                    <text data-s="1" x="155" y="52" text-anchor="middle" font-size="14" font-weight="700" fill="#14532d">① 空闲</text>
+                    <text data-s="1" x="155" y="86" text-anchor="middle" font-size="13" fill="#334155">不可变借用 = 0</text>
+                    <text data-s="1" x="155" y="110" text-anchor="middle" font-size="13" fill="#334155">可变借用 = 0</text>
+                    <text data-s="1" x="155" y="150" text-anchor="middle" font-size="12" font-weight="700" fill="#166534">borrow() / borrow_mut() 均可</text>
+                    <rect data-s="2" x="305" y="24" width="250" height="158" rx="14" fill="#f0f9ff" stroke="#0ea5e9" stroke-width="2"/>
+                    <text data-s="2" x="430" y="52" text-anchor="middle" font-size="14" font-weight="700" fill="#075985">② 只读共享</text>
+                    <text data-s="2" x="430" y="86" text-anchor="middle" font-size="13" fill="#334155">不可变借用 = 2</text>
+                    <text data-s="2" x="430" y="110" text-anchor="middle" font-size="13" fill="#334155">可变借用 = 0</text>
+                    <text data-s="2" x="430" y="150" text-anchor="middle" font-size="12" font-weight="700" fill="#075985">borrow() 可，borrow_mut() 会 panic</text>
+                    <rect data-s="3" x="580" y="24" width="250" height="158" rx="14" fill="#fef2f2" stroke="#ef4444" stroke-width="2"/>
+                    <text data-s="3" x="705" y="52" text-anchor="middle" font-size="14" font-weight="700" fill="#991b1b">③ 独占可写</text>
+                    <text data-s="3" x="705" y="86" text-anchor="middle" font-size="13" fill="#334155">不可变借用 = 0</text>
+                    <text data-s="3" x="705" y="110" text-anchor="middle" font-size="13" fill="#334155">可变借用 = 1</text>
+                    <text data-s="3" x="705" y="150" text-anchor="middle" font-size="12" font-weight="700" fill="#b91c1c">任何新借用都会 panic</text>
+                </g>
+            </svg>
+            <div class="step-controls">
+                <button type="button" class="step-btn" data-dir="-1" disabled>上一步</button>
+                <p class="step-status" role="status" aria-live="polite"></p>
+                <button type="button" class="step-btn" data-dir="1">下一步</button>
+            </div>
+            <figcaption>图 1：<code>RefCell</code> 的运行时借用状态（教学示意）。同一套“要么多个只读、要么一个可写”的规则被搬到运行时：违规不再编译报错，而是直接 <code>panic</code>。</figcaption>
+        </figure>
+
         <h3>Rc&lt;RefCell&lt;T&gt;&gt; — 组合模式</h3>
 
         <p>最经典的模式是将<code>Rc</code>和<code>RefCell</code>组合使用：<code>Rc</code>提供共享所有权，<code>RefCell</code>提供内部可变性。这在树状结构或图结构中非常常见：</p>
@@ -483,6 +513,33 @@ fn main() {
                 fb.className = 'quiz-feedback ' + (ok ? 'ok' : 'no');
             });
         });
+    });
+})();
+</script>
+<script>
+(function () {
+    Array.prototype.forEach.call(document.querySelectorAll('.step-figure'), function (fig) {
+        var labels = (fig.getAttribute('data-labels') || '').split('|');
+        var status = fig.querySelector('.step-status');
+        var buttons = Array.prototype.slice.call(fig.querySelectorAll('.step-btn'));
+        function render() {
+            var step = parseInt(fig.getAttribute('data-step'), 10);
+            status.textContent = '步骤 ' + step + ' / ' + labels.length + '：' + labels[step - 1];
+            buttons.forEach(function (btn) {
+                var dir = parseInt(btn.getAttribute('data-dir'), 10);
+                btn.disabled = (step + dir < 1) || (step + dir > labels.length);
+            });
+        }
+        buttons.forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var step = parseInt(fig.getAttribute('data-step'), 10);
+                var next = step + parseInt(btn.getAttribute('data-dir'), 10);
+                if (next < 1 || next > labels.length) return;
+                fig.setAttribute('data-step', String(next));
+                render();
+            });
+        });
+        render();
     });
 })();
 </script>
