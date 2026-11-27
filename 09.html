@@ -142,7 +142,7 @@ v.insert(0, 0);                // 指定位置插入（O(n)）</code></pre>
                 <p class="step-status" role="status" aria-live="polite"></p>
                 <button type="button" class="step-btn" data-dir="1">下一步</button>
             </div>
-            <figcaption>图 2：<code>Vec</code> 的增长与重新分配（教学示意，具体增长因子属于实现细节）。容量不足时 Vec 分配更大的块、拷贝旧元素再释放旧块，因此事先用 <code>with_capacity</code> 可减少重新分配。</figcaption>
+            <figcaption>图 1：<code>Vec</code> 的增长与重新分配（教学示意，具体增长因子属于实现细节）。容量不足时 Vec 分配更大的块、拷贝旧元素再释放旧块，因此事先用 <code>with_capacity</code> 可减少重新分配。</figcaption>
         </figure>
 
         <h2>HashMap&lt;K, V&gt;：键值对字典</h2>
@@ -298,7 +298,7 @@ let back = deque.back();        // Some(&3)</code></pre>
                     <text x="610" y="211" font-size="13" fill="#1e293b">去重 / 集合运算</text>
                 </g>
             </svg>
-            <figcaption>图 1：四种标准集合选型对照（教学示意）。复杂度为平均情况；哈希集合的最坏情况可能退化，需要良好的哈希与容量规划。</figcaption>
+            <figcaption>图 2：四种标准集合选型对照（教学示意）。复杂度为平均情况；哈希集合的最坏情况可能退化，需要良好的哈希与容量规划。</figcaption>
         </figure>
 
         <h2>四种集合的选型指南</h2>
