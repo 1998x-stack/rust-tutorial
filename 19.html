@@ -466,7 +466,7 @@ fn main() {
                     <text x="28" y="278" font-size="12" fill="#475569">组合常见用法：Arc&lt;Mutex&lt;T&gt;&gt; 跨线程共享可变状态；Rc&lt;RefCell&lt;T&gt;&gt; 单线程共享可变数据。</text>
                 </g>
             </svg>
-            <figcaption>图 1：智能指针能力对照（教学示意）。独占用 <code>Box</code>，单线程共享用 <code>Rc</code>，跨线程共享用 <code>Arc</code>，需要在不可变共享下修改则叠加 <code>RefCell</code> / <code>Mutex</code>。</figcaption>
+            <figcaption>图 2：智能指针能力对照（教学示意）。独占用 <code>Box</code>，单线程共享用 <code>Rc</code>，跨线程共享用 <code>Arc</code>，需要在不可变共享下修改则叠加 <code>RefCell</code> / <code>Mutex</code>。</figcaption>
         </figure>
 
         <h2>本章小结</h2>
