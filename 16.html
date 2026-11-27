@@ -191,6 +191,41 @@ my_crate = { version = "0.1", default-features = false, features = ["serde_suppo
 
         <p>这个设计对<strong>no_std环境</strong>（嵌入式开发、WASM等）至关重要。没有这个机制，每个no_std crate都要维护一个独立的代码分支——有了features，同一个crate可以同时为std和no_std服务。</p>
 
+        <figure class="step-figure" data-step="1" data-labels="crate 声明了四个 feature：default=[&quot;std&quot;]、std、serde_support=[&quot;dep:serde&quot;]、async=[&quot;dep:tokio&quot;]|用户写 default-features = false：默认的 std 不再自动启用|用户又写 features = [&quot;serde_support&quot;]：该 feature 被启用，并拉入可选依赖 serde|cargo 把启用集合交给编译器：cfg(feature=...) 决定哪些代码参与编译">
+            <svg viewBox="0 0 860 190" role="img" aria-labelledby="featStepTitle featStepDesc">
+                <title id="featStepTitle">Cargo feature 的启用与条件编译</title>
+                <desc id="featStepDesc">用“上一步 / 下一步”展示四次：从 crate 声明的 feature 出发，用户关闭默认 feature 并开启 serde_support，最终 cfg 决定哪些代码被编译。</desc>
+                <g font-family="system-ui, 'PingFang SC', sans-serif">
+                    <rect data-s="1" x="20" y="30" width="195" height="130" rx="12" fill="#eff6ff" stroke="#0ea5e9" stroke-width="2"/>
+                    <text data-s="1" x="117" y="54" text-anchor="middle" font-size="13" font-weight="700" fill="#075985">① 声明的 feature</text>
+                    <text data-s="1" x="117" y="86" text-anchor="middle" font-size="10" font-family="monospace" fill="#334155">default=["std"]</text>
+                    <text data-s="1" x="117" y="104" text-anchor="middle" font-size="10" font-family="monospace" fill="#334155">serde_support</text>
+                    <text data-s="1" x="117" y="122" text-anchor="middle" font-size="10" font-family="monospace" fill="#334155">async</text>
+                    <rect data-s="2" x="223" y="30" width="195" height="130" rx="12" fill="#fef9c3" stroke="#eab308" stroke-width="2"/>
+                    <text data-s="2" x="320" y="54" text-anchor="middle" font-size="13" font-weight="700" fill="#713f12">② 关闭默认</text>
+                    <text data-s="2" x="320" y="92" text-anchor="middle" font-size="10" font-family="monospace" fill="#854d0e">default-features</text>
+                    <text data-s="2" x="320" y="108" text-anchor="middle" font-size="10" font-family="monospace" fill="#854d0e">= false</text>
+                    <text data-s="2" x="320" y="130" text-anchor="middle" font-size="11" fill="#854d0e">std 不启用</text>
+                    <rect data-s="3" x="426" y="30" width="195" height="130" rx="12" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+                    <text data-s="3" x="523" y="54" text-anchor="middle" font-size="13" font-weight="700" fill="#14532d">③ 显式启用</text>
+                    <text data-s="3" x="523" y="92" text-anchor="middle" font-size="10" font-family="monospace" fill="#166534">features=[</text>
+                    <text data-s="3" x="523" y="108" text-anchor="middle" font-size="10" font-family="monospace" fill="#166534">"serde_support"]</text>
+                    <text data-s="3" x="523" y="130" text-anchor="middle" font-size="11" fill="#166534">拉入 dep:serde</text>
+                    <rect data-s="4" x="629" y="30" width="195" height="130" rx="12" fill="#f5f3ff" stroke="#8b5cf6" stroke-width="2"/>
+                    <text data-s="4" x="726" y="54" text-anchor="middle" font-size="13" font-weight="700" fill="#5b21b6">④ 条件编译</text>
+                    <text data-s="4" x="726" y="94" text-anchor="middle" font-size="10" font-family="monospace" fill="#4c1d95">#[cfg(feature=</text>
+                    <text data-s="4" x="726" y="110" text-anchor="middle" font-size="10" font-family="monospace" fill="#4c1d95">"serde_support")]</text>
+                    <text data-s="4" x="726" y="132" text-anchor="middle" font-size="11" fill="#4c1d95">决定参与编译的代码</text>
+                </g>
+            </svg>
+            <div class="step-controls">
+                <button type="button" class="step-btn" data-dir="-1" disabled>上一步</button>
+                <p class="step-status" role="status" aria-live="polite"></p>
+                <button type="button" class="step-btn" data-dir="1">下一步</button>
+            </div>
+            <figcaption>图 2：Cargo feature 的启用路径（教学示意）。用户对 <code>default-features</code> 与 <code>features</code> 的选择被汇总成一份启用集合，交给 <code>cfg</code> 决定哪些代码参与编译，因此同一份源码能同时服务 std 与 no_std。</figcaption>
+        </figure>
+
         <h3>Feature组合的技巧</h3>
 
         <p>Feature名有一个隐含约定：如果feature触发某个依赖，可以用<code>dep:</code>前缀来避免歧义（Rust 2024 Edition已稳定支持）。同时要注意feature之间会产生组合爆炸——每增加一个feature，你要保证它与其他所有feature的组合都是正确的。这也是Rust社区强调"feature应该尽量正交"的原因。</p>
@@ -417,6 +452,33 @@ members = [
                 fb.className = 'quiz-feedback ' + (ok ? 'ok' : 'no');
             });
         });
+    });
+})();
+</script>
+<script>
+(function () {
+    Array.prototype.forEach.call(document.querySelectorAll('.step-figure'), function (fig) {
+        var labels = (fig.getAttribute('data-labels') || '').split('|');
+        var status = fig.querySelector('.step-status');
+        var buttons = Array.prototype.slice.call(fig.querySelectorAll('.step-btn'));
+        function render() {
+            var step = parseInt(fig.getAttribute('data-step'), 10);
+            status.textContent = '步骤 ' + step + ' / ' + labels.length + '：' + labels[step - 1];
+            buttons.forEach(function (btn) {
+                var dir = parseInt(btn.getAttribute('data-dir'), 10);
+                btn.disabled = (step + dir < 1) || (step + dir > labels.length);
+            });
+        }
+        buttons.forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var step = parseInt(fig.getAttribute('data-step'), 10);
+                var next = step + parseInt(btn.getAttribute('data-dir'), 10);
+                if (next < 1 || next > labels.length) return;
+                fig.setAttribute('data-step', String(next));
+                render();
+            });
+        });
+        render();
     });
 })();
 </script>
