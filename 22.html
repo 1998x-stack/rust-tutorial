@@ -158,6 +158,37 @@
 
         <p>注意创建裸指针本身是安全的——"违规"发生在你解引用的时候。这就是为什么<code>as *const T</code>可以在安全代码中执行——真正危险的操作是<code>*r1</code>。</p>
 
+        <figure class="step-figure" data-step="1" data-labels="创建裸指针 &amp;x as *const i32 是安全操作：仅仅把地址存起来|unsafe { *r1 }：解引用，编译器暂停生命周期与别名检查|必须由你自己保证：指针非空、指向有效内存、遵守别名规则|一旦保证被破坏，行为就是未定义的（UB）——unsafe 并不等于错误">
+            <svg viewBox="0 0 860 190" role="img" aria-labelledby="ptrStepTitle ptrStepDesc">
+                <title id="ptrStepTitle">裸指针的安全边界</title>
+                <desc id="ptrStepDesc">用“上一步 / 下一步”展示四次：创建裸指针是安全的，解引用需要在 unsafe 块中，安全保证转为程序员的责任，破坏保证则导致未定义行为。</desc>
+                <g font-family="system-ui, 'PingFang SC', sans-serif">
+                    <rect data-s="1" x="20" y="30" width="195" height="130" rx="12" fill="#eff6ff" stroke="#0ea5e9" stroke-width="2"/>
+                    <text data-s="1" x="117" y="56" text-anchor="middle" font-size="13" font-weight="700" fill="#075985">① 创建指针</text>
+                    <text data-s="1" x="117" y="94" text-anchor="middle" font-size="11" font-family="monospace" fill="#334155">&amp;x as *const i32</text>
+                    <text data-s="1" x="117" y="122" text-anchor="middle" font-size="11" fill="#475569">安全：只保存地址</text>
+                    <rect data-s="2" x="223" y="30" width="195" height="130" rx="12" fill="#fef9c3" stroke="#eab308" stroke-width="2"/>
+                    <text data-s="2" x="320" y="56" text-anchor="middle" font-size="13" font-weight="700" fill="#713f12">② 解引用</text>
+                    <text data-s="2" x="320" y="94" text-anchor="middle" font-size="12" font-family="monospace" fill="#854d0e">unsafe { *r1 }</text>
+                    <text data-s="2" x="320" y="122" text-anchor="middle" font-size="11" fill="#854d0e">暂停检查</text>
+                    <rect data-s="3" x="426" y="30" width="195" height="130" rx="12" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+                    <text data-s="3" x="523" y="56" text-anchor="middle" font-size="13" font-weight="700" fill="#14532d">③ 你的责任</text>
+                    <text data-s="3" x="523" y="94" text-anchor="middle" font-size="11" fill="#166534">非空 · 有效 · 别名</text>
+                    <text data-s="3" x="523" y="122" text-anchor="middle" font-size="11" fill="#166534">由程序员保证</text>
+                    <rect data-s="4" x="629" y="30" width="195" height="130" rx="12" fill="#fef2f2" stroke="#ef4444" stroke-width="2"/>
+                    <text data-s="4" x="726" y="56" text-anchor="middle" font-size="13" font-weight="700" fill="#991b1b">④ 违反后果</text>
+                    <text data-s="4" x="726" y="94" text-anchor="middle" font-size="12" font-family="monospace" fill="#7f1d1d">UB</text>
+                    <text data-s="4" x="726" y="122" text-anchor="middle" font-size="11" fill="#7f1d1d">unsafe ≠ 错误</text>
+                </g>
+            </svg>
+            <div class="step-controls">
+                <button type="button" class="step-btn" data-dir="-1" disabled>上一步</button>
+                <p class="step-status" role="status" aria-live="polite"></p>
+                <button type="button" class="step-btn" data-dir="1">下一步</button>
+            </div>
+            <figcaption>图 2：裸指针的安全边界（教学示意）。<code>unsafe</code> 只是把某段代码的安全责任从编译器交给你，它不会验证你的假设；一旦假设不成立，后果是未定义行为而非可靠的报错。</figcaption>
+        </figure>
+
         <h3>与引用对比</h3>
 
         <table>
@@ -447,6 +478,33 @@ unsafe impl&lt;T: Sync&gt; Sync for MySendPtr&lt;T&gt; {}</code></pre>
                 fb.className = 'quiz-feedback ' + (ok ? 'ok' : 'no');
             });
         });
+    });
+})();
+</script>
+<script>
+(function () {
+    Array.prototype.forEach.call(document.querySelectorAll('.step-figure'), function (fig) {
+        var labels = (fig.getAttribute('data-labels') || '').split('|');
+        var status = fig.querySelector('.step-status');
+        var buttons = Array.prototype.slice.call(fig.querySelectorAll('.step-btn'));
+        function render() {
+            var step = parseInt(fig.getAttribute('data-step'), 10);
+            status.textContent = '步骤 ' + step + ' / ' + labels.length + '：' + labels[step - 1];
+            buttons.forEach(function (btn) {
+                var dir = parseInt(btn.getAttribute('data-dir'), 10);
+                btn.disabled = (step + dir < 1) || (step + dir > labels.length);
+            });
+        }
+        buttons.forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var step = parseInt(fig.getAttribute('data-step'), 10);
+                var next = step + parseInt(btn.getAttribute('data-dir'), 10);
+                if (next < 1 || next > labels.length) return;
+                fig.setAttribute('data-step', String(next));
+                render();
+            });
+        });
+        render();
     });
 })();
 </script>
