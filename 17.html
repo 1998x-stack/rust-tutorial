@@ -308,6 +308,37 @@ fn main() {
 
         <p>这个过程是编译期的、零成本的——编译器在生成代码时直接插入了正确的地址计算，没有任何运行时开销。</p>
 
+        <figure class="step-figure" data-step="1" data-labels="调用方传入的引用类型是 &amp;MyBox&lt;String&gt;|第一跳：MyBox&lt;T&gt; 实现 Deref&lt;Target = T&gt; → &amp;String|第二跳：String 实现 Deref&lt;Target = str&gt; → &amp;str|到达形参 &amp;str；整个过程在编译期完成，运行时只传递一个指针">
+            <svg viewBox="0 0 860 190" role="img" aria-labelledby="derefStepTitle derefStepDesc">
+                <title id="derefStepTitle">Deref coercion 的连解过程</title>
+                <desc id="derefStepDesc">用“上一步 / 下一步”展示四次转换：&amp;MyBox&lt;String&gt; 经两层 Deref 自动解为 &amp;String 再到 &amp;str，最终匹配函数形参，全程零运行时开销。</desc>
+                <g font-family="system-ui, 'PingFang SC', sans-serif">
+                    <rect data-s="1" x="20" y="30" width="195" height="130" rx="12" fill="#eff6ff" stroke="#0ea5e9" stroke-width="2"/>
+                    <text data-s="1" x="117" y="56" text-anchor="middle" font-size="13" font-weight="700" fill="#075985">① 实参</text>
+                    <text data-s="1" x="117" y="96" text-anchor="middle" font-size="13" font-family="monospace" fill="#334155">&amp;MyBox&lt;String&gt;</text>
+                    <text data-s="1" x="117" y="124" text-anchor="middle" font-size="11" fill="#475569">hello(&amp;m) 传入</text>
+                    <rect data-s="2" x="223" y="30" width="195" height="130" rx="12" fill="#fef9c3" stroke="#eab308" stroke-width="2"/>
+                    <text data-s="2" x="320" y="56" text-anchor="middle" font-size="13" font-weight="700" fill="#713f12">② Deref</text>
+                    <text data-s="2" x="320" y="96" text-anchor="middle" font-size="13" font-family="monospace" fill="#854d0e">&amp;String</text>
+                    <text data-s="2" x="320" y="124" text-anchor="middle" font-size="11" fill="#854d0e">MyBox&lt;T&gt;: Target = T</text>
+                    <rect data-s="3" x="426" y="30" width="195" height="130" rx="12" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+                    <text data-s="3" x="523" y="56" text-anchor="middle" font-size="13" font-weight="700" fill="#14532d">③ Deref</text>
+                    <text data-s="3" x="523" y="96" text-anchor="middle" font-size="13" font-family="monospace" fill="#166534">&amp;str</text>
+                    <text data-s="3" x="523" y="124" text-anchor="middle" font-size="11" fill="#166534">String: Target = str</text>
+                    <rect data-s="4" x="629" y="30" width="195" height="130" rx="12" fill="#f5f3ff" stroke="#8b5cf6" stroke-width="2"/>
+                    <text data-s="4" x="726" y="56" text-anchor="middle" font-size="13" font-weight="700" fill="#5b21b6">④ 匹配形参</text>
+                    <text data-s="4" x="726" y="96" text-anchor="middle" font-size="13" font-family="monospace" fill="#4c1d95">name: &amp;str</text>
+                    <text data-s="4" x="726" y="124" text-anchor="middle" font-size="11" fill="#4c1d95">编译期插入地址计算</text>
+                </g>
+            </svg>
+            <div class="step-controls">
+                <button type="button" class="step-btn" data-dir="-1" disabled>上一步</button>
+                <p class="step-status" role="status" aria-live="polite"></p>
+                <button type="button" class="step-btn" data-dir="1">下一步</button>
+            </div>
+            <figcaption>图 2：<code>Deref coercion</code> 的连解（教学示意）。编译器在必要时沿 <code>Deref</code> 链一层层推进，直到类型匹配；这一步只影响编译结果，运行期不多花任何代价。</figcaption>
+        </figure>
+
         <div class="warning">
             <strong>Deref多态滥用</strong>：C++开发者刚接触Rust时最容易犯的错误之一，是用<code>Deref</code>来实现"继承式的多态"——比如让<code>SmartSocket</code>实现<code>Deref&lt;Target = SmartDevice&gt;</code>来复用父类型的方法。在Rust中这是<strong>反模式</strong>。Deref的设计意图是让智能指针表现得像内部值，而不是用于实现类型间的继承关系。正确的做法是用组合+委托，或者用Trait来共享行为。<strong>永远不要</strong>为了"继承"而实现Deref——这会严重误导代码阅读者。
         </div>
@@ -488,6 +519,33 @@ trait Copy: Clone { }  // Copy 是 Clone 的子trait</code></pre>
                 fb.className = 'quiz-feedback ' + (ok ? 'ok' : 'no');
             });
         });
+    });
+})();
+</script>
+<script>
+(function () {
+    Array.prototype.forEach.call(document.querySelectorAll('.step-figure'), function (fig) {
+        var labels = (fig.getAttribute('data-labels') || '').split('|');
+        var status = fig.querySelector('.step-status');
+        var buttons = Array.prototype.slice.call(fig.querySelectorAll('.step-btn'));
+        function render() {
+            var step = parseInt(fig.getAttribute('data-step'), 10);
+            status.textContent = '步骤 ' + step + ' / ' + labels.length + '：' + labels[step - 1];
+            buttons.forEach(function (btn) {
+                var dir = parseInt(btn.getAttribute('data-dir'), 10);
+                btn.disabled = (step + dir < 1) || (step + dir > labels.length);
+            });
+        }
+        buttons.forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var step = parseInt(fig.getAttribute('data-step'), 10);
+                var next = step + parseInt(btn.getAttribute('data-dir'), 10);
+                if (next < 1 || next > labels.length) return;
+                fig.setAttribute('data-step', String(next));
+                render();
+            });
+        });
+        render();
     });
 })();
 </script>
