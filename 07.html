@@ -238,6 +238,38 @@ match num {
             <strong>match穷尽性是安全网，通配符是逃生舱</strong>。在编写库代码时，尽量使用穷尽匹配（列出所有变体），这样当你增加新变体时，编译器会帮你找到所有需要修改的地方。在应用代码中，合理使用<code>_</code>通配符来简化代码。关键是有意识地选择，而不是随手写下<code>_</code>。
         </div>
 
+        <figure class="step-figure" data-step="1" data-labels="输入是一个具体的枚举值 Coin::Dime|编译器从上往下逐个比较模式：Coin::Penny、Coin::Nickel 都不匹配|匹配到 Coin::Dime，执行其分支并返回 10|穷尽性检查：四个变体都被覆盖，不需要 _ 也合法">
+            <svg viewBox="0 0 860 190" role="img" aria-labelledby="matchStepTitle matchStepDesc">
+                <title id="matchStepTitle">match 的逐臂匹配与穷尽性</title>
+                <desc id="matchStepDesc">用“上一步 / 下一步”展示四次：从枚举值出发，依次比较各个模式，命中 Dime 分支返回 10，并说明四个变体全覆盖即满足穷尽性。</desc>
+                <g font-family="system-ui, 'PingFang SC', sans-serif">
+                    <rect data-s="1" x="20" y="30" width="195" height="130" rx="12" fill="#eff6ff" stroke="#0ea5e9" stroke-width="2"/>
+                    <text data-s="1" x="117" y="56" text-anchor="middle" font-size="13" font-weight="700" fill="#075985">① 输入</text>
+                    <text data-s="1" x="117" y="96" text-anchor="middle" font-size="13" font-family="monospace" fill="#334155">Coin::Dime</text>
+                    <text data-s="1" x="117" y="124" text-anchor="middle" font-size="11" fill="#475569">一个具体值</text>
+                    <rect data-s="2" x="223" y="30" width="195" height="130" rx="12" fill="#fef9c3" stroke="#eab308" stroke-width="2"/>
+                    <text data-s="2" x="320" y="56" text-anchor="middle" font-size="13" font-weight="700" fill="#713f12">② 逐臂比较</text>
+                    <text data-s="2" x="320" y="94" text-anchor="middle" font-size="12" font-family="monospace" fill="#854d0e">Penny ✗</text>
+                    <text data-s="2" x="320" y="116" text-anchor="middle" font-size="12" font-family="monospace" fill="#854d0e">Nickel ✗</text>
+                    <rect data-s="3" x="426" y="30" width="195" height="130" rx="12" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+                    <text data-s="3" x="523" y="56" text-anchor="middle" font-size="13" font-weight="700" fill="#14532d">③ 命中分支</text>
+                    <text data-s="3" x="523" y="96" text-anchor="middle" font-size="13" font-family="monospace" fill="#166534">Dime → 10</text>
+                    <text data-s="3" x="523" y="124" text-anchor="middle" font-size="11" fill="#166534">返回 10</text>
+                    <rect data-s="4" x="629" y="30" width="195" height="130" rx="12" fill="#f5f3ff" stroke="#8b5cf6" stroke-width="2"/>
+                    <text data-s="4" x="726" y="56" text-anchor="middle" font-size="13" font-weight="700" fill="#5b21b6">④ 穷尽性</text>
+                    <text data-s="4" x="726" y="94" text-anchor="middle" font-size="11" fill="#4c1d95">Penny/Nickel/</text>
+                    <text data-s="4" x="726" y="112" text-anchor="middle" font-size="11" fill="#4c1d95">Dime/Quarter 全覆盖</text>
+                    <text data-s="4" x="726" y="136" text-anchor="middle" font-size="11" fill="#4c1d95">无需 _ 也合法</text>
+                </g>
+            </svg>
+            <div class="step-controls">
+                <button type="button" class="step-btn" data-dir="-1" disabled>上一步</button>
+                <p class="step-status" role="status" aria-live="polite"></p>
+                <button type="button" class="step-btn" data-dir="1">下一步</button>
+            </div>
+            <figcaption>图 2：<code>match</code> 的逐臂匹配与穷尽性（教学示意）。模式自上而下依次尝试，首个命中者执行；若未覆盖枚举的全部变体，编译器会直接报错。</figcaption>
+        </figure>
+
         <h2>if let 与 while let</h2>
 
         <p>当你只关心<strong>一个特定的模式</strong>时，使用<code>match</code>会显得有些冗长：</p>
@@ -408,6 +440,33 @@ match c {
                 fb.className = 'quiz-feedback ' + (ok ? 'ok' : 'no');
             });
         });
+    });
+})();
+</script>
+<script>
+(function () {
+    Array.prototype.forEach.call(document.querySelectorAll('.step-figure'), function (fig) {
+        var labels = (fig.getAttribute('data-labels') || '').split('|');
+        var status = fig.querySelector('.step-status');
+        var buttons = Array.prototype.slice.call(fig.querySelectorAll('.step-btn'));
+        function render() {
+            var step = parseInt(fig.getAttribute('data-step'), 10);
+            status.textContent = '步骤 ' + step + ' / ' + labels.length + '：' + labels[step - 1];
+            buttons.forEach(function (btn) {
+                var dir = parseInt(btn.getAttribute('data-dir'), 10);
+                btn.disabled = (step + dir < 1) || (step + dir > labels.length);
+            });
+        }
+        buttons.forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var step = parseInt(fig.getAttribute('data-step'), 10);
+                var next = step + parseInt(btn.getAttribute('data-dir'), 10);
+                if (next < 1 || next > labels.length) return;
+                fig.setAttribute('data-step', String(next));
+                render();
+            });
+        });
+        render();
     });
 })();
 </script>
