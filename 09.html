@@ -114,6 +114,37 @@ v.insert(0, 0);                // 指定位置插入（O(n)）</code></pre>
             <li><strong>扩容</strong>：容量不够时加倍，重新分配并复制所有元素</li>
         </ul>
 
+        <figure class="step-figure" data-step="1" data-labels="Vec::new()：len=0、cap=0，堆上还没分配内存|push(1)：首次分配一块容量（教学示意取 cap=4），len 变为 1|继续 push 到第 5 个：容量已满，Vec 重新分配更大的块并把旧元素拷贝过去|扩容完成：len=5、cap=8；旧指针已失效，但多次 push 平均仍是分摊 O(1)">
+            <svg viewBox="0 0 860 190" role="img" aria-labelledby="vecStepTitle vecStepDesc">
+                <title id="vecStepTitle">Vec 的增长与重新分配</title>
+                <desc id="vecStepDesc">用“上一步 / 下一步”展示四次：从空 Vec 开始，首次 push 分配容量，容量满后重新分配更大块并拷贝元素，最终展示 len 与 cap 的变化。</desc>
+                <g font-family="system-ui, 'PingFang SC', sans-serif">
+                    <rect data-s="1" x="20" y="30" width="195" height="130" rx="12" fill="#eff6ff" stroke="#0ea5e9" stroke-width="2"/>
+                    <text data-s="1" x="117" y="56" text-anchor="middle" font-size="13" font-weight="700" fill="#075985">① 空 Vec</text>
+                    <text data-s="1" x="117" y="94" text-anchor="middle" font-size="12" font-family="monospace" fill="#334155">len=0 cap=0</text>
+                    <text data-s="1" x="117" y="122" text-anchor="middle" font-size="11" fill="#475569">堆上无分配</text>
+                    <rect data-s="2" x="223" y="30" width="195" height="130" rx="12" fill="#fef9c3" stroke="#eab308" stroke-width="2"/>
+                    <text data-s="2" x="320" y="56" text-anchor="middle" font-size="13" font-weight="700" fill="#713f12">② push(1)</text>
+                    <text data-s="2" x="320" y="94" text-anchor="middle" font-size="12" font-family="monospace" fill="#854d0e">len=1 cap=4</text>
+                    <text data-s="2" x="320" y="122" text-anchor="middle" font-size="11" fill="#854d0e">首次分配</text>
+                    <rect data-s="3" x="426" y="30" width="195" height="130" rx="12" fill="#fef2f2" stroke="#ef4444" stroke-width="2"/>
+                    <text data-s="3" x="523" y="56" text-anchor="middle" font-size="13" font-weight="700" fill="#991b1b">③ 容量满</text>
+                    <text data-s="3" x="523" y="94" text-anchor="middle" font-size="11" font-family="monospace" fill="#7f1d1d">push 第 5 个</text>
+                    <text data-s="3" x="523" y="120" text-anchor="middle" font-size="11" fill="#7f1d1d">重新分配 + 拷贝</text>
+                    <rect data-s="4" x="629" y="30" width="195" height="130" rx="12" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+                    <text data-s="4" x="726" y="56" text-anchor="middle" font-size="13" font-weight="700" fill="#14532d">④ 扩容后</text>
+                    <text data-s="4" x="726" y="94" text-anchor="middle" font-size="12" font-family="monospace" fill="#166534">len=5 cap=8</text>
+                    <text data-s="4" x="726" y="122" text-anchor="middle" font-size="11" fill="#166534">旧指针失效</text>
+                </g>
+            </svg>
+            <div class="step-controls">
+                <button type="button" class="step-btn" data-dir="-1" disabled>上一步</button>
+                <p class="step-status" role="status" aria-live="polite"></p>
+                <button type="button" class="step-btn" data-dir="1">下一步</button>
+            </div>
+            <figcaption>图 2：<code>Vec</code> 的增长与重新分配（教学示意，具体增长因子属于实现细节）。容量不足时 Vec 分配更大的块、拷贝旧元素再释放旧块，因此事先用 <code>with_capacity</code> 可减少重新分配。</figcaption>
+        </figure>
+
         <h2>HashMap&lt;K, V&gt;：键值对字典</h2>
 
         <p>当你需要按键名快速查找值的时候——<code>HashMap</code>是首选。它在内部使用哈希表实现，平均情况下增删查都是O(1)。</p>
@@ -389,6 +420,33 @@ let doubled: Vec&lt;i32&gt; = v.iter().map(|x| x * 2).collect();</code></pre>
                 fb.className = 'quiz-feedback ' + (ok ? 'ok' : 'no');
             });
         });
+    });
+})();
+</script>
+<script>
+(function () {
+    Array.prototype.forEach.call(document.querySelectorAll('.step-figure'), function (fig) {
+        var labels = (fig.getAttribute('data-labels') || '').split('|');
+        var status = fig.querySelector('.step-status');
+        var buttons = Array.prototype.slice.call(fig.querySelectorAll('.step-btn'));
+        function render() {
+            var step = parseInt(fig.getAttribute('data-step'), 10);
+            status.textContent = '步骤 ' + step + ' / ' + labels.length + '：' + labels[step - 1];
+            buttons.forEach(function (btn) {
+                var dir = parseInt(btn.getAttribute('data-dir'), 10);
+                btn.disabled = (step + dir < 1) || (step + dir > labels.length);
+            });
+        }
+        buttons.forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var step = parseInt(fig.getAttribute('data-step'), 10);
+                var next = step + parseInt(btn.getAttribute('data-dir'), 10);
+                if (next < 1 || next > labels.length) return;
+                fig.setAttribute('data-step', String(next));
+                render();
+            });
+        });
+        render();
     });
 })();
 </script>
