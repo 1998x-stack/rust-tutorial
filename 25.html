@@ -180,7 +180,7 @@ fn main() {
                 <p class="step-status" role="status" aria-live="polite"></p>
                 <button type="button" class="step-btn" data-dir="1">下一步</button>
             </div>
-            <figcaption>图 2：声明宏的匹配与展开（教学示意）。宏在编译期把输入 token 流按分支捕获、替换模板，最终展开为普通代码再参与编译，因此运行时没有额外开销。</figcaption>
+            <figcaption>图 1：声明宏的匹配与展开（教学示意）。宏在编译期把输入 token 流按分支捕获、替换模板，最终展开为普通代码再参与编译，因此运行时没有额外开销。</figcaption>
         </figure>
 
         <h3>重复（Repetition）</h3>
@@ -428,7 +428,7 @@ fn main() {
                     <text x="472" y="204" font-size="12" fill="#475569">需单独的 proc-macro crate</text>
                 </g>
             </svg>
-            <figcaption>图 1：两类宏的对比（教学示意）。需要批量生成样板、且能用模式描述时用 <code>macro_rules!</code>；需要写逻辑解析语法树（如 derive 新 trait）时才上过程宏。</figcaption>
+            <figcaption>图 2：两类宏的对比（教学示意）。需要批量生成样板、且能用模式描述时用 <code>macro_rules!</code>；需要写逻辑解析语法树（如 derive 新 trait）时才上过程宏。</figcaption>
         </figure>
 
         <h2>derive宏简介</h2>
