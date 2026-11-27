@@ -190,7 +190,8 @@ th {
 .step-figure[data-step="1"] [data-s]:not([data-s="1"]),
 .step-figure[data-step="2"] [data-s]:not([data-s="2"]),
 .step-figure[data-step="3"] [data-s]:not([data-s="3"]),
-.step-figure[data-step="4"] [data-s]:not([data-s="4"]) { opacity: .16; }
+.step-figure[data-step="4"] [data-s]:not([data-s="4"]),
+.step-figure[data-step="5"] [data-s]:not([data-s="5"]) { opacity: .16; }
 .step-controls { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; margin-top: .8rem; }
 .step-btn {
     padding: 8px 18px; border: 2px solid #fed7aa; background: #fff7ed; color: #9a3412;
